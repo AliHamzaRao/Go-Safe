@@ -1,0 +1,327 @@
+.d-none {
+  display: none !important;
+}
+.fw-400 {
+  font-weight: 400;
+}
+.gmnoprint {
+  margin: 200px !important;
+}
+.panelKeysContainer {
+  display: flex;
+  background: #18497d !important;
+  margin-bottom: 3px;
+}
+.userPanelKeys {
+  color: white !important;
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% / 3) !important;
+}
+.mat-tab-label {
+  height: 48px;
+  padding: 0 !important;
+  cursor: pointer;
+  box-sizing: border-box;
+  opacity: 0.6;
+  min-width: fit-content !important;
+  text-align: center;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  position: relative;
+}
+.SearchInput {
+  border: none;
+  outline: none;
+  box-shadow: inset 0px 0px 2px 0px black;
+  margin: 5px 0px;
+  width: 100%;
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+.sideList {
+  font-size: 11.9px;
+  font-weight: bolder;
+  background-color: #18497d;
+  color: white;
+  padding: 4px 0px 4px 7px;
+  border-right: 4px solid white;
+  font-family: "Times New Roman";
+  border-radius: 4px 8px 0px 0px;
+}
+.mat-expansion-panel-header {
+  background-color: #18497d !important;
+}
+.mat-expansion-panel-header.nestedPanelHeader {
+  background: #4b89b9 !important;
+}
+.mat-expansion-panel-header-title {
+  color: white !important;
+  width: 100% !important;
+}
+.singleDevice {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center !important;
+}
+
+.listText {
+  padding: 5px 0px 0px 2px;
+}
+
+.listTextWarning {
+  padding: 5px 0px 0px 10px;
+}
+
+.listHeading {
+  margin-top: 10px;
+  background-color: #18497d;
+  color: white;
+  padding: 10px 0px 10px 0px;
+  border-right: 4px solid white;
+}
+
+.heading {
+  word-spacing: 15px;
+  padding-left: 10px;
+  font-weight: bolder;
+  font-size: 18px;
+}
+.tree {
+  overflow-y: scroll;
+  height: 77.4vh !important;
+}
+
+.tree::-webkit-scrollbar {
+  display: none;
+}
+#tree3 li {
+  // border: 1px solid red;
+  max-width: max-content;
+}
+
+.vehicleCard {
+  position: absolute;
+  width: 40%;
+  height: fit-content;
+  z-index: 1111111;
+  bottom: 4%;
+  left: 30%;
+  background-color: rgb(255, 255, 255);
+  padding: 3px 2px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 10px;
+}
+
+.carName {
+  font-size: 20px;
+  color: #18497d;
+  border-bottom: 2px solid #bca0dc;
+}
+
+.showMoreButton {
+  background-color: #ffc922;
+  color: #18497d;
+  // width: 200px !important;
+  // margin: 10px 0px 10px 90px;
+}
+
+.vehicleCardMore {
+  position: absolute;
+  width: 90%;
+  z-index: 1111111;
+  bottom: 4%;
+  left: 5%;
+  background-color: rgb(255, 255, 255);
+  padding: 7px 2px;
+  padding-bottom: 0px !important;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.vehicleCardMore i {
+  color: #00c190 !important;
+}
+.locationIcon {
+  margin-top: 10px;
+  padding-top: 40px;
+  padding-bottom: 70px;
+  margin-bottom: 10px;
+
+  border-right: 2px solid #bca0dc;
+}
+
+.headingStatus {
+  padding-left: 20%;
+  font-size: 18px;
+  color: #18497d;
+}
+
+.deviceStatus {
+  padding: 0;
+  margin-top: 4px;
+}
+
+.showLessButton {
+  background-color: #ffc922;
+  color: #18497d;
+  margin-top: 2px;
+  // width: 200px !important;
+  // margin: 10px 0px 10px 90px;
+}
+
+.Icon {
+  margin-top: 10px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  margin-bottom: 10px;
+}
+
+.iconImg {
+  margin-top: -10px;
+}
+
+.vehicleSpeedDescription3 {
+  color: grey;
+  font-size: 12px;
+}
+
+.shortdes {
+  font-size: 10px;
+}
+
+.secondContainer {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-left: 2px solid #bca0dc;
+}
+
+.tree,
+.tree ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.tree ul {
+  margin-left: 1em;
+  position: relative;
+}
+.tree ul ul {
+  margin-left: 0.5em;
+}
+
+.tree li {
+  margin: 0;
+  padding: 0 1em;
+  line-height: 2em;
+  color: #369;
+  font-weight: 700;
+  position: relative;
+}
+.historyDialogTitle {
+  background: #18497d !important;
+  padding: 15px 10px !important;
+  color: white !important;
+  margin: 0px !important;
+}
+.historyInput {
+  border: none !important;
+  outline: none;
+  border-radius: 20px;
+  width: 80% !important;
+  padding: 5px 10px;
+  box-shadow: 0px 0px 4px 0px #000;
+  color: lightgray;
+}
+.historyInputDate {
+  border: none !important;
+  outline: none;
+  border-radius: 20px;
+  width: 100% !important;
+  padding: 5px 10px;
+  box-shadow: 0px 0px 4px 0px #000;
+  color: lightgray;
+}
+.historyInput:focus {
+  outline: none;
+  box-shadow: 0px 0px 5px 2px #2282e9;
+}
+.historyInputDate:focus {
+  outline: none;
+  box-shadow: 0px 0px 5px 2px #2282e9;
+}
+.historyDialogContent {
+  margin: 10px 20px !important;
+}
+.recordDialogOffset {
+  position: absolute;
+  bottom: 50px !important;
+  padding: 0px !important;
+  background-color: #18497d;
+  border-radius: 10px;
+  left: 33%;
+  width: 50%;
+}
+.recordDialogOffset button {
+  height: 50px !important;
+  width: calc(80% / 6) !important;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  background-size: 40%;
+  background-position: center;
+  margin-right: calc(10rem / 5);
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.recordControl:nth-of-type(1) {
+  background-image: url("../../../assets/icons/Export.png");
+}
+.recordControl:nth-of-type(2) {
+  background-image: url("../../../assets/icons/Route.png");
+}
+.recordControl:nth-of-type(3) {
+  background-image: url("../../../assets/icons/Pause.png");
+}
+.recordControl:nth-of-type(4) {
+  background-image: url("../../../assets/icons/Play.png");
+}
+.recordControl:nth-of-type(5) {
+  background-image: url("../../../assets/icons/Speed.png");
+}
+.recordControl:nth-of-type(6) {
+  background-size: 30% !important;
+  background-image: url("../../../assets/icons/Stop.png");
+}
+.recordControl:nth-of-type(7) {
+  background-image: url("../../../assets/icons/HistoryInfo.png");
+  margin: 0 !important;
+}
+.export {
+  position: absolute;
+  top: -203% !important;
+  left: 27px;
+}
+.export button {
+  height: 45px !important;
+  width: 45px !important;
+  border: none;
+  outline: none;
+  background-color: white;
+  background-size: 90%;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 50% !important;
+  box-shadow: 0px 0px 5px 0px black !important;
+  margin-bottom: 10px;
+}
+.export button:nth-of-type(1) {
+  background-image: url("../../../assets/icons/ExportToExcel.png");
+}
+.export button:nth-of-type(2) {
+  background-image: url("../../../assets/icons/ExportToPDF.png");
+}

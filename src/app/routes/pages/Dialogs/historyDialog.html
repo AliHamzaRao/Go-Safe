@@ -1,0 +1,145 @@
+<h2 mat-dialog-title class="historyDialogTitle">History</h2>
+<div class="m-0 p-0 row historyDialogContent">
+  <div class="col-md-7 m-0 p-0">
+    <form class="row m-0 p-0" style="padding: 10px !important">
+      <div
+        class="col-md-12 m-0 p-0 row"
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 25px !important;
+        "
+      >
+        <div class="col-md-3">
+          <label>View Type</label>
+        </div>
+        <div class="col-md-9">
+          <select class="historyInput">
+            <option value="View Type" selected disabled>View Type</option>
+            <option value="Test">Test</option>
+          </select>
+        </div>
+      </div>
+      <div
+        class="col-md-12 m-0 p-0 row"
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 25px !important;
+        "
+      >
+        <div class="col-md-3">
+          <label>Period Type</label>
+        </div>
+        <div class="col-md-9">
+          <select class="historyInput">
+            <option value="View Type" selected disabled>Select Period</option>
+            <option value="Monthly">Monthly</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Daily">Daily</option>
+          </select>
+        </div>
+      </div>
+      <div
+        class="col-md-12 m-0 p-0 row"
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 25px !important;
+        "
+      >
+        <div class="col-md-3">
+          <label>Date</label>
+        </div>
+        <div class="col-md-9 row m-0">
+          <div class="col-md-4 p-0 m-0" style="margin-right: 58px !important">
+            <input
+              type="date"
+              class="historyInputDate"
+              placeholder="Start Date"
+            />
+          </div>
+          <div class="col-md-4 p-0 m-0">
+            <input
+              type="date"
+              class="historyInputDate"
+              placeholder="End Date"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="col-md-12 m-0 p-0 row"
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 25px !important;
+        "
+      >
+        <div class="col-md-3">
+          <label>Speed</label>
+        </div>
+        <div class="col-md-9">
+          <input type="text" class="historyInput" placeholder="Speed > 0 km" />
+        </div>
+      </div>
+      <div
+        class="col-md-12 m-0 p-0 row"
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-bottom: 25px !important;
+        "
+      >
+        <div class="col-md-3">
+          <label>Alarm Trace</label>
+        </div>
+        <div class="col-md-9">
+          <input
+            type="text"
+            class="historyInput"
+            placeholder="Show Alarm Trace"
+          />
+        </div>
+      </div>
+      <div
+        class="col-md-12 m-0 p-0 row"
+        style="display: flex; justify-content: center; align-items: center"
+      >
+        <div class="col-md-2">
+          <button
+            mat-button
+            style="
+              border: none;
+              outline: none;
+              color: white;
+              background: #18497d !important;
+              border-radius: 20px !important;
+              padding: 5px 20px;
+            "
+            type="button"
+            role="button"
+            (click)="closeHistoryDialog()"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div
+    class="col-md-5 m-0 p-0"
+    style="
+      overflow: hidden !important;
+      background-image: url('../../../assets/images/loginleftimage.png');
+      background-size: cover;
+      background-position: center;
+      height: 46.7vh;
+    "
+  ></div>
+</div>

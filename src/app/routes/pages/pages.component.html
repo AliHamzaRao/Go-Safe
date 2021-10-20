@@ -1,0 +1,385 @@
+<!-- <mat-sidenav-container>
+  <mat-sidenav
+    *ngIf="settings.menu == 'vertical'"
+    [opened]="settings.sidenavIsOpened"
+    [mode]="settings.sidenavIsPinned ? 'side' : 'over'"
+    #sidenav
+    class="sidenav mat-elevation-z6"
+  > -->
+<!-- <app-sidenav></app-sidenav> -->
+<!-- </mat-sidenav> -->
+<!-- <mat-sidenav-content
+  id="main"
+  perfectScrollbar
+  [disabled]="settings.fixedHeader"
+  (psScrollY)="onPsScrollY($event)"
+> -->
+<mat-toolbar style="background-color: #18497d; color: white" class="flex-p-x">
+  <a
+    *ngIf="settings.menu == 'horizontal'"
+    mat-raised-button
+    color="accent"
+    routerLink="/"
+    (click)="closeSubMenus()"
+    class="small-logo"
+    >G</a
+  >
+  <a
+    *ngIf="settings.menu == 'horizontal'"
+    class="logo"
+    routerLink="/"
+    (click)="closeSubMenus()"
+    >GoSafe</a
+  >
+  <div fxLayout="row" fxLayoutAlign="space-between" class="w-100">
+    <div fxLayout="row" style="align-items: center">
+      <button mat-button class="mat-hover">Live Tacking</button>
+      <button mat-button class="mat-hover">Vehicles</button>
+      <button mat-button class="mat-hover">Geofence</button>
+      <button mat-button class="mat-hover" [matMenuTriggerFor]="routeMenu">
+        Route <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+      <mat-menu #routeMenu="matMenu">
+        <button mat-menu-item>Item 1</button>
+        <button mat-menu-item>Item 2</button>
+      </mat-menu>
+      <div class="form-group">
+        <label for="mapType"></label>
+        <select
+          class="form-control mapDropdown"
+          name="mapType"
+          id="mapType"
+          value="Google Maps"
+        >
+          <option disabled value="Google Maps">Select Map</option>
+          <option value="Google Maps">Google Maps</option>
+          <option value="Open Street Maps" selected>Open Street Maps</option>
+        </select>
+      </div>
+      <!-- <button mat-button class="mat-hover" [matMenuTriggerFor]="mapMenu">
+        Map Type <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+      <mat-menu #mapMenu="matMenu" class="mapMenu">
+        <button mat-menu-item class="mapType" (click)="mapType('Google Maps')">
+          Google Maps
+        </button>
+        <button
+          mat-menu-item
+          class="mapType"
+          (click)="mapType('Open Street Maps')"
+        >
+          Open Street Maps
+        </button>
+      </mat-menu> -->
+
+      <button mat-button class="mat-hover" [matMenuTriggerFor]="reportsMenu">
+        Reports <mat-icon>keyboard_arrow_down</mat-icon></button
+      ><mat-menu #reportsMenu="matMenu">
+        <button
+          mat-menu-item
+          [matMenuTriggerFor]="trackingReportsMenu"
+          class="mat-child border-bottom"
+        >
+          Tracking Reports
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Fuel Reports
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Temprature Reports
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Management Reports
+        </button>
+      </mat-menu>
+      <mat-menu #trackingReportsMenu="matMenu">
+        <button mat-menu-item class="mat-child border-bottom">
+          Asset History
+        </button>
+        <button
+          mat-menu-item
+          class="mat-child border-bottom"
+          routerLink="asset-trip-report"
+        >
+          Asset Trips
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Multi Assets Kilometer
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Asset Activity
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Asset Alarm
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Asset Commands
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Accumulative Trips Fuel
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Alarms Close Report
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Asset Route Report
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Asset Sensor History
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Driver Activity
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Driver Activity Summary
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Asset Driver Trips
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Asset Engine RPM History
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Over Speed Report
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Driver Behaviour Report
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Container Trip Report
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Alarm Audit Report
+        </button>
+      </mat-menu>
+    </div>
+
+    <div
+      fxLayout="row"
+      fxLayoutAlign="center center"
+      style="width: max-content !important"
+    >
+      <span class="border-right">
+        <button mat-icon-button>
+          <mat-icon>notifications</mat-icon>
+        </button>
+      </span>
+      <span style="font-size: small; margin-left: 10px">Bhoomia Sharma</span>
+      <button
+        mat-button
+        class="mat-hover"
+        [matMenuTriggerFor]="userAccessablilityMenu"
+      >
+        <mat-icon>person_outline</mat-icon>
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+      <mat-menu #userAccessablilityMenu="matMenu">
+        <button mat-menu-item (click)="Logout()">Sign Out</button>
+      </mat-menu>
+    </div>
+  </div>
+</mat-toolbar>
+
+<div
+  id="main-content"
+  class="inner-sidenav-content transition-2"
+  perfectScrollbar
+  [disabled]="!settings.fixedHeader"
+  (psScrollY)="onPsScrollY($event)"
+>
+  <app-breadcrumb></app-breadcrumb>
+  <div [class.has-footer]="settings.hasFooter">
+    <!-- Sidebar -->
+    <div class="col-md-12 row p-1 m-0">
+      <div class="col-md-2 p-1">
+        <div class="shadow p-1 rounded" style="height: fit-content !important">
+          <div class="panelKeysContainer rounded">
+            <button mat-button class="userPanelKeys" routerLink="test">
+              <mat-icon style="height: 0 !important">settings</mat-icon>
+              <br />
+              Control
+            </button>
+            <button mat-button class="userPanelKeys">
+              <mat-icon style="height: 0 !important"
+                >settings_applications</mat-icon
+              >
+              <br />Settings
+            </button>
+            <button
+              mat-button
+              class="userPanelKeys"
+              (click)="openHistoryDialog()"
+            >
+              <mat-icon style="height: 0 !important">history</mat-icon>
+              <br />History
+            </button>
+          </div>
+          <div class="vehicleList">
+            <mat-tab-group [disablePagination]="true">
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  <mat-icon>assignment</mat-icon>
+                  <span>List ({{ TREE_DATA.length }})</span>
+                </ng-template>
+                <input type="text" placeholder="Search" class="SearchInput" />
+                <mat-accordion>
+                  <mat-expansion-panel
+                    style="margin-bottom: 0.6rem"
+                    class="ParentCheckBox"
+                  >
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        <input
+                          type="checkbox"
+                          style="margin-right: 10px"
+                          (change)="onParentCheckBox($event)"
+                        />
+                        Devices ({{ TREE_DATA[0].SubMenu.length }})
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <span *ngFor="let item of TREE_DATA; let i = index">
+                      <span *ngIf="item.grp_name === 'Devices'">
+                        <div
+                          class="m-0 singleDevice border-bottom"
+                          *ngFor="let t1 of item.SubMenu; let j = index"
+                        >
+                          <input
+                            type="checkbox"
+                            [attr.data-dataTrack]="t1.datatrack"
+                            [attr.data-device_id]="t1.device_id"
+                            (change)="
+                              onCheck($event, t1.datatrack, t1.device_id)
+                            "
+                          />
+                          <mat-icon>drive_eta</mat-icon>
+                          <span
+                            style="
+                              max-width: 10ch;
+                              white-space: nowrap;
+                              overflow: hidden;
+                              text-overflow: ellipsis;
+                            "
+                            >{{ t1.device_id }}
+                          </span>
+                          <small class="text-center"
+                            >Car's <br />
+                            Speed</small
+                          >
+                          <mat-icon>arrow_forward</mat-icon>
+                        </div>
+                      </span>
+                    </span>
+                  </mat-expansion-panel>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        <input type="checkbox" style="margin-right: 10px" />
+                        Assets ({{ TREE_DATA[1].SubMenu.length }})
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <span *ngFor="let item of TREE_DATA; let i = index">
+                      <span *ngIf="item.grp_name === 'Assets'">
+                        <mat-accordion>
+                          <mat-expansion-panel
+                            *ngFor="let t1 of item.SubMenu; let j = index"
+                          >
+                            <mat-expansion-panel-header
+                              class="nestedPanelHeader"
+                            >
+                              <mat-panel-title>
+                                <input
+                                  type="checkbox"
+                                  style="margin-right: 10px"
+                                />
+                                {{ t1.grp_name }} ({{ t1.SubMenu.length }})
+                              </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <span *ngIf="t1.SubMenu.length">
+                              <mat-expansion-panel
+                                *ngFor="let t2 of t1.SubMenu; let k = index"
+                              >
+                                <mat-expansion-panel-header
+                                  class="MorenestedPanelHeader"
+                                >
+                                  <mat-panel-title>
+                                    <input
+                                      type="checkbox"
+                                      style="margin-right: 10px"
+                                    />
+                                    <span *ngIf="t2.vrn !== null">{{
+                                      t2.vrn
+                                    }}</span>
+                                    <span ngElse>
+                                      {{ t2.grp_name }} ({{
+                                        t2.SubMenu.length
+                                      }})
+                                    </span>
+                                  </mat-panel-title>
+                                </mat-expansion-panel-header>
+                                <span *ngIf="t2.SubMenu.length">
+                                  <mat-expansion-panel
+                                    *ngFor="let t3 of t2.SubMenu; let l = index"
+                                    ><mat-expansion-panel-header
+                                      class="nestedPanelHeader"
+                                    >
+                                      <mat-panel-title>
+                                        <input
+                                          type="checkbox"
+                                          style="margin-right: 10px"
+                                        />
+                                        <span *ngIf="t3.vrn !== null">{{
+                                          t3.vrn
+                                        }}</span>
+                                        <span ngElse>
+                                          {{ t3.grp_name }}
+                                        </span>
+                                      </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                  </mat-expansion-panel>
+                                </span>
+                              </mat-expansion-panel>
+                            </span>
+                          </mat-expansion-panel>
+                        </mat-accordion>
+                      </span>
+                    </span>
+                  </mat-expansion-panel>
+                </mat-accordion>
+              </mat-tab>
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  <mat-icon>supervisor_account</mat-icon>
+                  <span> Users </span>
+                </ng-template>
+                Content 1 </mat-tab
+              ><mat-tab>
+                <ng-template mat-tab-label>
+                  <mat-icon>warning</mat-icon>
+                  <span> Users </span>
+                </ng-template>
+                Content 1
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-10 p-1" style="position: relative">
+        <div class="m-0 p-0 shadow rounded" style="height: 89vh !important">
+          <router-outlet></router-outlet>
+        </div>
+        <!-- <app-dashboard></app-dashboard> -->
+      </div>
+    </div>
+  </div>
+</div>
+<div
+  #backToTop
+  fxLayout="row"
+  fxLayoutAlign="center center"
+  class="back-to-top"
+  (click)="scrollToTop()"
+>
+  <mat-icon>arrow_upward</mat-icon>
+</div>
+<!-- </mat-sidenav-content> -->
+<!-- </mat-sidenav-container> -->

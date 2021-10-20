@@ -1,0 +1,199 @@
+<div class="recordDialogOffset">
+  <div class="export d-none">
+    <button></button>
+    <br />
+    <button></button>
+  </div>
+  <button class="recordControl expBtn" (click)="export()"></button>
+  <button class="recordControl"></button>
+  <button class="recordControl playPause" (click)="toggleDisplay()"></button>
+  <button
+    class="recordControl playPause d-none"
+    (click)="toggleDisplay()"
+  ></button>
+  <button class="recordControl"></button>
+  <button class="recordControl"></button>
+  <button class="recordControl" (click)="toggleInfoCard()"></button>
+  <div
+    class="card rounded d-none infoCard"
+    style="position: absolute; top: -480% !important"
+  >
+    <div
+      class="card-header rounded"
+      style="
+        color: white !important;
+        padding: 5px;
+        font-weight: lighter !important;
+        background-color: #18497d !important;
+        border-bottom-right-radius: 0px !important;
+        border-bottom-left-radius: 0px !important;
+      "
+    >
+      <h3 class="m-0">Information</h3>
+    </div>
+    <div
+      class="card-body row m-0 p-2 rounded"
+      style="
+        background-color: white !important;
+        border-top-right-radius: 0px !important;
+        border-top-left-radius: 0px !important;
+      "
+    >
+      <div class="col-md-12">
+        <h4 style="color: #27b489 !important">General Information</h4>
+        <div
+          style="
+            display: flex;
+            justify-content: space-evenly;
+            margin-bottom: 10px;
+          "
+        >
+          <div class="border-right" style="padding: 10px">
+            <h6
+              class="m-0"
+              style="color: #18497d; margin-bottom: 5px !important"
+            >
+              Serial
+            </h6>
+            <h6 class="text-muted m-0 p-0">1209114</h6>
+          </div>
+          <div class="border-right" style="padding: 10px">
+            <h6
+              class="m-0"
+              style="color: #18497d; margin-bottom: 5px !important"
+            >
+              Name
+            </h6>
+            <h6 class="text-muted m-0 p-0">LMG 1020</h6>
+          </div>
+          <div class="border-right" style="padding: 10px">
+            <h6
+              class="m-0"
+              style="color: #18497d; margin-bottom: 5px !important"
+            >
+              Latitude
+            </h6>
+            <h6 class="text-muted m-0 p-0">32.4533 / 32* 31* 43.7* N</h6>
+          </div>
+          <div class="border-right" style="padding: 10px">
+            <h6
+              class="m-0"
+              style="color: #18497d; margin-bottom: 5px !important"
+            >
+              Latitude
+            </h6>
+            <h6 class="text-muted m-0 p-0">32.4533 / 32* 31* 43.7* N</h6>
+          </div>
+          <div style="padding: 10px">
+            <h6
+              class="m-0"
+              style="color: #18497d; margin-bottom: 5px !important"
+            >
+              Last Updated
+            </h6>
+            <h6 class="text-muted m-0 p-0">Dec 17 2020 4:02:34 PM</h6>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-12">
+        <h4 style="color: #27b489 !important">Sensor Information</h4>
+        <div style="display: flex; margin-bottom: 10px">
+          <div
+            class="border-right"
+            style="
+              padding: 10px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+              width: calc(100% / 5);
+            "
+          >
+            <h6
+              class="m-0"
+              style="color: #18497d; margin-bottom: 5px !important"
+            >
+              Velocity
+            </h6>
+            <h6 class="text-muted m-0 p-0">21.0 MPH / 35KPH</h6>
+          </div>
+          <div
+            class="border-right"
+            style="
+              padding: 10px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+              width: calc(100% / 5);
+            "
+          >
+            <h6
+              class="m-0"
+              style="color: #18497d; margin-bottom: 5px !important"
+            >
+              Heading
+            </h6>
+            <h6 class="text-muted m-0 p-0">184* South</h6>
+          </div>
+          <div
+            class="border-right"
+            style="
+              padding: 10px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+              width: calc(100% / 5);
+            "
+          >
+            <h6
+              class="m-0"
+              style="color: #18497d; margin-bottom: 5px !important"
+            >
+              GPS Satellites
+            </h6>
+            <h6 class="text-muted m-0 p-0">0</h6>
+          </div>
+          <div
+            class="border-right"
+            style="
+              padding: 10px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+              width: calc(100% / 5);
+            "
+          >
+            <h6
+              class="m-0"
+              style="color: #18497d; margin-bottom: 5px !important"
+            >
+              Ignition
+            </h6>
+            <h6 class="text-muted m-0 p-0">Off</h6>
+          </div>
+          <div
+            style="
+              padding: 10px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              flex-direction: column;
+              width: calc(100% / 5);
+            "
+          >
+            <h6
+              class="m-0"
+              style="color: #18497d; margin-bottom: 5px !important"
+            >
+              Power
+            </h6>
+            <h6 class="text-muted m-0 p-0">0%</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

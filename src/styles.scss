@@ -1,0 +1,230 @@
+$roboto-font-path: "~roboto-fontface/fonts" !default;
+@import "~roboto-fontface/css/roboto/sass/roboto-fontface";
+
+// for npm material-icons package (to load local files)
+$material-icons-font-path: "~material-icons/iconfont/";
+@import "~material-icons/iconfont/material-icons.scss";
+
+@import url("https://cdn.quilljs.com/1.2.2/quill.snow.css");
+@import url("https://cdn.quilljs.com/1.2.2/quill.bubble.css");
+
+// indigo-pink, deeppurple-amber, purple-green and pink-bluegrey.
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
+@import "../node_modules/dragula/dist/dragula.min.css";
+@import "../node_modules/@swimlane/ngx-datatable/themes/material.css";
+@import "../node_modules/@swimlane/ngx-datatable/assets/icons.css";
+@import "../node_modules/leaflet-map/node_modules/leaflet/dist/leaflet.css";
+
+@import "app/theme/styles/base";
+@import "app/theme/styles/theme";
+@import "app/theme/styles/libs-override";
+@import "app/theme/styles/rtl";
+// add for selectable dropdown
+@import "~@ng-select/ng-select/themes/default.theme.css";
+@import "~ngx-toastr/toastr";
+/* Importing Bootstrap SCSS file. */
+// @import '~bootstrap/scss/bootstrap';
+
+/* Importing Bootstrap SCSS file. */
+// @import '~bootstrap/scss/bootstrap';
+
+.mat-tab-label {
+  height: 48px;
+  padding: 0px !important;
+  cursor: pointer;
+  min-width: calc(100% / 3) !important;
+  text-align: center;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  position: relative;
+  color: rgb(251, 182, 42) !important;
+  opacity: 1 !important;
+  font-size: 1.4rem !important;
+}
+.mat-tab-label:focus,
+.mat-tab-label:active {
+  color: #18497d !important;
+  background-color: rgb(251, 182, 42) !important;
+}
+.mat-tab-labels {
+  justify-content: space-evenly;
+  background-color: #18497d;
+  color: rgb(251, 182, 42) !important;
+  border-radius: 5px !important;
+}
+.mat-tab-label-content {
+  flex-direction: column !important;
+  width: 30%;
+}
+
+.mat-expansion-panel-body {
+  padding: 0 !important;
+  height: 30vh !important;
+  max-height: 40vh !important;
+  overflow-y: scroll;
+}
+.mat-expansion-panel-body .mat-expansion-panel-body {
+  padding: 0 !important;
+  height: fit-content !important;
+  max-height: fit-content !important;
+  overflow-y: scroll;
+}
+.mat-expansion-panel-header.mat-expanded {
+  height: 48px !important;
+}
+.mat-expansion-panel-header.mat-expanded {
+  margin: 0px !important;
+}
+.mat-expansion-panel-body::-webkit-scrollbar {
+  display: none;
+}
+.mat-expansion-panel-spacing {
+  margin: 0 !important;
+}
+.nestedPanelHeader {
+  background: #4b89b9 !important;
+  font-size: 10px;
+}
+.MorenestedPanelHeader {
+  background: #5ea5db !important;
+  font-size: 10px;
+}
+.d-none {
+  display: none !important;
+}
+.rounded {
+  border-radius: 5px !important;
+}
+.border {
+  border: 1px solid lightgrey !important;
+}
+.border-top {
+  border-top: 1px solid lightgrey !important;
+}
+.border-left {
+  border-left: 1px solid lightgrey !important;
+}
+.border-top {
+  border-top: 1px solid lightgrey !important;
+}
+.border-right {
+  border-right: 1px solid lightgrey !important;
+}
+.border-bottom {
+  border-bottom: 1px solid lightgrey !important;
+}
+.cursor-alias {
+  cursor: alias;
+}
+.cursor-all-scroll {
+  cursor: all-scroll;
+}
+.cursor-auto {
+  cursor: auto;
+}
+.cursor-cell {
+  cursor: cell;
+}
+.cursor-context-menu {
+  cursor: context-menu;
+}
+.cursor-col-resize {
+  cursor: col-resize;
+}
+.cursor-copy {
+  cursor: copy;
+}
+.cursor-crosshair {
+  cursor: crosshair;
+}
+.cursor-default {
+  cursor: default;
+}
+.cursor-e-resize {
+  cursor: e-resize;
+}
+.cursor-ew-resize {
+  cursor: ew-resize;
+}
+.cursor-grab {
+  cursor: -webkit-grab;
+  cursor: grab;
+}
+.cursor-grabbing {
+  cursor: -webkit-grabbing;
+  cursor: grabbing;
+}
+.cursor-help {
+  cursor: help;
+}
+.cursor-move {
+  cursor: move;
+}
+.cursor-n-resize {
+  cursor: n-resize;
+}
+.cursor-ne-resize {
+  cursor: ne-resize;
+}
+.cursor-nesw-resize {
+  cursor: nesw-resize;
+}
+.cursor-ns-resize {
+  cursor: ns-resize;
+}
+.cursor-nw-resize {
+  cursor: nw-resize;
+}
+.cursor-nwse-resize {
+  cursor: nwse-resize;
+}
+.cursor-no-drop {
+  cursor: no-drop;
+}
+.cursor-none {
+  cursor: none;
+}
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+.cursor-pointer {
+  cursor: pointer;
+}
+.cursor-progress {
+  cursor: progress;
+}
+.cursor-row-resize {
+  cursor: row-resize;
+}
+.cursor-s-resize {
+  cursor: s-resize;
+}
+.cursor-se-resize {
+  cursor: se-resize;
+}
+.cursor-sw-resize {
+  cursor: sw-resize;
+}
+.cursor-text {
+  cursor: text;
+}
+.cursor-w-resize {
+  cursor: w-resize;
+}
+.cursor-wait {
+  cursor: wait;
+}
+.cursor-zoom-in {
+  cursor: zoom-in;
+}
+.cursor-zoom-out {
+  cursor: zoom-out;
+}
+
+.shadow {
+  box-shadow: 0px 0px 10px 0px black;
+}
