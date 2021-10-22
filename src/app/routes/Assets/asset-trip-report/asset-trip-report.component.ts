@@ -8,8 +8,6 @@ import { Component, OnInit } from '@angular/core';
 export class AssetTripReportComponent implements OnInit {
 
   constructor() { }
-
   ngOnInit(): void {
   }
-
 }

@@ -1,10 +1,10 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PagesComponent, historyDialogComponent, historyRecordDialogComponent } from './pages.component';
+import { PagesComponent, historyDialogComponent, historyRecordDialogComponent, AssetTripDialogComponent, ControlDialogComponent } from './pages.component';
 import { AgmCoreModule } from '@agm/core';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
@@ -43,7 +43,9 @@ export const routes = [
   ],
   declarations: [
     historyDialogComponent,
-    historyRecordDialogComponent
+    historyRecordDialogComponent,
+    AssetTripDialogComponent,
+    ControlDialogComponent
   ],
   providers:[
     VehicleListResolver

@@ -1,0 +1,31 @@
+.assetTripReportCard {
+  height: 100% !important;
+  width: 100% !important;
+}
+#table {
+  width: 100% !important;
+  height: 100% !important;
+  thead {
+    //   width: 81.23%;
+    //   position: fixed;
+    background-color: rgb(251, 184, 42) !important;
+    color: #18497d !important;
+    th {
+      padding: 5px !important;
+    }
+  }
+  tbody {
+    tr {
+      cursor: pointer;
+      &:nth-of-type(even) {
+        background-color: #e9e8e8;
+      }
+      &:hover {
+        background-color: #cfcfcf;
+      }
+    }
+    td {
+      padding: 5px !important;
+    }
+  }
+}

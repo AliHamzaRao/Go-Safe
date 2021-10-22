@@ -15,22 +15,9 @@
   (psScrollY)="onPsScrollY($event)"
 > -->
 <mat-toolbar style="background-color: #18497d; color: white" class="flex-p-x">
-  <a
-    *ngIf="settings.menu == 'horizontal'"
-    mat-raised-button
-    color="accent"
-    routerLink="/"
-    (click)="closeSubMenus()"
-    class="small-logo"
-    >G</a
-  >
-  <a
-    *ngIf="settings.menu == 'horizontal'"
-    class="logo"
-    routerLink="/"
-    (click)="closeSubMenus()"
-    >GoSafe</a
-  >
+  <a *ngIf="settings.menu == 'horizontal'" mat-raised-button color="accent" routerLink="/" (click)="closeSubMenus()"
+    class="small-logo">G</a>
+  <a *ngIf="settings.menu == 'horizontal'" class="logo" routerLink="/" (click)="closeSubMenus()">GoSafe</a>
   <div fxLayout="row" fxLayoutAlign="space-between" class="w-100">
     <div fxLayout="row" style="align-items: center">
       <button mat-button class="mat-hover">Live Tacking</button>
@@ -45,12 +32,7 @@
       </mat-menu>
       <div class="form-group">
         <label for="mapType"></label>
-        <select
-          class="form-control mapDropdown"
-          name="mapType"
-          id="mapType"
-          value="Google Maps"
-        >
+        <select class="form-control mapDropdown" name="mapType" id="mapType" value="Google Maps">
           <option disabled value="Google Maps">Select Map</option>
           <option value="Google Maps">Google Maps</option>
           <option value="Open Street Maps" selected>Open Street Maps</option>
@@ -73,13 +55,9 @@
       </mat-menu> -->
 
       <button mat-button class="mat-hover" [matMenuTriggerFor]="reportsMenu">
-        Reports <mat-icon>keyboard_arrow_down</mat-icon></button
-      ><mat-menu #reportsMenu="matMenu">
-        <button
-          mat-menu-item
-          [matMenuTriggerFor]="trackingReportsMenu"
-          class="mat-child border-bottom"
-        >
+        Reports <mat-icon>keyboard_arrow_down</mat-icon></button>
+      <mat-menu #reportsMenu="matMenu">
+        <button mat-menu-item [matMenuTriggerFor]="trackingReportsMenu" class="mat-child border-bottom">
           Tracking Reports
         </button>
         <button mat-menu-item class="mat-child border-bottom">
@@ -96,11 +74,10 @@
         <button mat-menu-item class="mat-child border-bottom">
           Asset History
         </button>
-        <button
-          mat-menu-item
-          class="mat-child border-bottom"
-          routerLink="asset-trip-report"
-        >
+        <!-- <button mat-menu-item class="mat-child border-bottom" (click)='openAssetTripDialog()'>
+          Asset Trips
+        </button> -->
+        <button mat-menu-item class="mat-child border-bottom" routerLink='asset-trip-report'>
           Asset Trips
         </button>
         <button mat-menu-item class="mat-child border-bottom">
@@ -154,22 +131,14 @@
       </mat-menu>
     </div>
 
-    <div
-      fxLayout="row"
-      fxLayoutAlign="center center"
-      style="width: max-content !important"
-    >
+    <div fxLayout="row" fxLayoutAlign="center center" style="width: max-content !important">
       <span class="border-right">
         <button mat-icon-button>
           <mat-icon>notifications</mat-icon>
         </button>
       </span>
       <span style="font-size: small; margin-left: 10px">Bhoomia Sharma</span>
-      <button
-        mat-button
-        class="mat-hover"
-        [matMenuTriggerFor]="userAccessablilityMenu"
-      >
+      <button mat-button class="mat-hover" [matMenuTriggerFor]="userAccessablilityMenu">
         <mat-icon>person_outline</mat-icon>
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
@@ -180,13 +149,8 @@
   </div>
 </mat-toolbar>
 
-<div
-  id="main-content"
-  class="inner-sidenav-content transition-2"
-  perfectScrollbar
-  [disabled]="!settings.fixedHeader"
-  (psScrollY)="onPsScrollY($event)"
->
+<div id="main-content" class="inner-sidenav-content transition-2" perfectScrollbar [disabled]="!settings.fixedHeader"
+  (psScrollY)="onPsScrollY($event)">
   <app-breadcrumb></app-breadcrumb>
   <div [class.has-footer]="settings.hasFooter">
     <!-- Sidebar -->
@@ -194,22 +158,16 @@
       <div class="col-md-2 p-1">
         <div class="shadow p-1 rounded" style="height: fit-content !important">
           <div class="panelKeysContainer rounded">
-            <button mat-button class="userPanelKeys" routerLink="test">
+            <button mat-button class="userPanelKeys" (click)="openControlDialog()">
               <mat-icon style="height: 0 !important">settings</mat-icon>
               <br />
               Control
             </button>
             <button mat-button class="userPanelKeys">
-              <mat-icon style="height: 0 !important"
-                >settings_applications</mat-icon
-              >
+              <mat-icon style="height: 0 !important">settings_applications</mat-icon>
               <br />Settings
             </button>
-            <button
-              mat-button
-              class="userPanelKeys"
-              (click)="openHistoryDialog()"
-            >
+            <button mat-button class="userPanelKeys" (click)="openHistoryDialog()">
               <mat-icon style="height: 0 !important">history</mat-icon>
               <br />History
             </button>
@@ -223,48 +181,30 @@
                 </ng-template>
                 <input type="text" placeholder="Search" class="SearchInput" />
                 <mat-accordion>
-                  <mat-expansion-panel
-                    style="margin-bottom: 0.6rem"
-                    class="ParentCheckBox"
-                  >
+                  <mat-expansion-panel style="margin-bottom: 0.6rem" class="ParentCheckBox">
                     <mat-expansion-panel-header>
                       <mat-panel-title>
-                        <input
-                          type="checkbox"
-                          style="margin-right: 10px"
-                          (change)="onParentCheckBox($event)"
-                        />
+                        <input type="checkbox" style="margin-right: 10px" (change)="onParentCheckBox($event)" />
                         Devices ({{ TREE_DATA[0].SubMenu.length }})
                       </mat-panel-title>
                     </mat-expansion-panel-header>
                     <span *ngFor="let item of TREE_DATA; let i = index">
                       <span *ngIf="item.grp_name === 'Devices'">
-                        <div
-                          class="m-0 singleDevice border-bottom"
-                          *ngFor="let t1 of item.SubMenu; let j = index"
-                        >
-                          <input
-                            type="checkbox"
-                            [attr.data-dataTrack]="t1.datatrack"
-                            [attr.data-device_id]="t1.device_id"
-                            (change)="
+                        <div class="m-0 singleDevice border-bottom" *ngFor="let t1 of item.SubMenu; let j = index">
+                          <input type="checkbox" [attr.data-dataTrack]="t1.datatrack"
+                            [attr.data-device_id]="t1.device_id" (change)="
                               onCheck($event, t1.datatrack, t1.device_id)
-                            "
-                          />
+                            " />
                           <mat-icon>drive_eta</mat-icon>
-                          <span
-                            style="
+                          <span style="
                               max-width: 10ch;
                               white-space: nowrap;
                               overflow: hidden;
                               text-overflow: ellipsis;
-                            "
-                            >{{ t1.device_id }}
+                            ">{{ t1.device_id }}
                           </span>
-                          <small class="text-center"
-                            >Car's <br />
-                            Speed</small
-                          >
+                          <small class="text-center">Car's <br />
+                            Speed</small>
                           <mat-icon>arrow_forward</mat-icon>
                         </div>
                       </span>
@@ -280,56 +220,36 @@
                     <span *ngFor="let item of TREE_DATA; let i = index">
                       <span *ngIf="item.grp_name === 'Assets'">
                         <mat-accordion>
-                          <mat-expansion-panel
-                            *ngFor="let t1 of item.SubMenu; let j = index"
-                          >
-                            <mat-expansion-panel-header
-                              class="nestedPanelHeader"
-                            >
+                          <mat-expansion-panel *ngFor="let t1 of item.SubMenu; let j = index">
+                            <mat-expansion-panel-header class="nestedPanelHeader">
                               <mat-panel-title>
-                                <input
-                                  type="checkbox"
-                                  style="margin-right: 10px"
-                                />
+                                <input type="checkbox" style="margin-right: 10px" />
                                 {{ t1.grp_name }} ({{ t1.SubMenu.length }})
                               </mat-panel-title>
                             </mat-expansion-panel-header>
                             <span *ngIf="t1.SubMenu.length">
-                              <mat-expansion-panel
-                                *ngFor="let t2 of t1.SubMenu; let k = index"
-                              >
-                                <mat-expansion-panel-header
-                                  class="MorenestedPanelHeader"
-                                >
+                              <mat-expansion-panel *ngFor="let t2 of t1.SubMenu; let k = index">
+                                <mat-expansion-panel-header class="MorenestedPanelHeader">
                                   <mat-panel-title>
-                                    <input
-                                      type="checkbox"
-                                      style="margin-right: 10px"
-                                    />
+                                    <input type="checkbox" style="margin-right: 10px" />
                                     <span *ngIf="t2.vrn !== null">{{
                                       t2.vrn
-                                    }}</span>
+                                      }}</span>
                                     <span ngElse>
                                       {{ t2.grp_name }} ({{
-                                        t2.SubMenu.length
+                                      t2.SubMenu.length
                                       }})
                                     </span>
                                   </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <span *ngIf="t2.SubMenu.length">
-                                  <mat-expansion-panel
-                                    *ngFor="let t3 of t2.SubMenu; let l = index"
-                                    ><mat-expansion-panel-header
-                                      class="nestedPanelHeader"
-                                    >
+                                  <mat-expansion-panel *ngFor="let t3 of t2.SubMenu; let l = index">
+                                    <mat-expansion-panel-header class="nestedPanelHeader">
                                       <mat-panel-title>
-                                        <input
-                                          type="checkbox"
-                                          style="margin-right: 10px"
-                                        />
+                                        <input type="checkbox" style="margin-right: 10px" />
                                         <span *ngIf="t3.vrn !== null">{{
                                           t3.vrn
-                                        }}</span>
+                                          }}</span>
                                         <span ngElse>
                                           {{ t3.grp_name }}
                                         </span>
@@ -351,8 +271,9 @@
                   <mat-icon>supervisor_account</mat-icon>
                   <span> Users </span>
                 </ng-template>
-                Content 1 </mat-tab
-              ><mat-tab>
+                Content 1
+              </mat-tab>
+              <mat-tab>
                 <ng-template mat-tab-label>
                   <mat-icon>warning</mat-icon>
                   <span> Users </span>
@@ -364,21 +285,13 @@
         </div>
       </div>
       <div class="col-md-10 p-1" style="position: relative">
-        <div class="m-0 p-0 shadow rounded" style="height: 89vh !important">
-          <router-outlet></router-outlet>
-        </div>
+        <router-outlet></router-outlet>
         <!-- <app-dashboard></app-dashboard> -->
       </div>
     </div>
   </div>
 </div>
-<div
-  #backToTop
-  fxLayout="row"
-  fxLayoutAlign="center center"
-  class="back-to-top"
-  (click)="scrollToTop()"
->
+<div #backToTop fxLayout="row" fxLayoutAlign="center center" class="back-to-top" (click)="scrollToTop()">
   <mat-icon>arrow_upward</mat-icon>
 </div>
 <!-- </mat-sidenav-content> -->
