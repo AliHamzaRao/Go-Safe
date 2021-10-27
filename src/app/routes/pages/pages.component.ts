@@ -338,8 +338,42 @@ export class AssetTripDialogComponent {
 @Component({
   selector: 'app-control-dialog',
   templateUrl: './Dialogs/ControlDialog.html',
-  styleUrls: ["../pages/pages.component.scss"]
+  styleUrls: ["../pages/pages.component.scss","../pages/Dialogs/ControlDialog.scss"]
 })
 export class ControlDialogComponent {
   constructor(public dialog: MatDialog) { }
+  resetOdometer(){
+    this.dialog.closeAll();
+    this.dialog.open(ResetOdometerDialogComponent);
+  }
+};
+@Component({
+  selector: 'app-reset-odometer-dialog',
+  templateUrl: './Dialogs/ResetOdometerDialog.html',
+  styleUrls: ["../pages/pages.component.scss","../pages/Dialogs/ResetOdometerDialog.scss"]
+})
+export class ResetOdometerDialogComponent {
+  constructor(public dialog: MatDialog) { }
+  onOdometerReset(){
+    this.dialog.closeAll();
+    this.dialog.open(OdometerResetSuccessDialogComponent)
+  
+  }
+  closeResetOdometer(){
+    this.dialog.closeAll();
+    this.dialog.open(ControlDialogComponent)
+  }
+};
+@Component({
+  selector: 'app-reset-odometer-success-dialog',
+  templateUrl: './Dialogs/OdometerResetSuccessDialog.html',
+  styleUrls: ["../pages/pages.component.scss","../pages/Dialogs/ResetOdometerDialog.scss"]
+})
+export class OdometerResetSuccessDialogComponent {
+  constructor(public dialog: MatDialog) { }
+  
+  closeResetOdometer(){
+    this.dialog.closeAll();
+    this.dialog.open(ControlDialogComponent)
+  }
 };

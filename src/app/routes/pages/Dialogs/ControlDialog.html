@@ -1,12 +1,62 @@
 <h2 mat-dialog-title class="dialogTitle">Control</h2>
-<div class="m-0 p-0 row dialogContent">
-    <!-- <mat-accordion>
-        <mat-expansion-panel style="margin-bottom: 0.6rem" class="ParentCheckBox">
+<div class="m-0 p-0 dialogContent" mat-dialog-content>
+    <mat-accordion>
+        <mat-expansion-panel class="ParentCheckBox">
             <mat-expansion-panel-header>
-                <mat-panel-title> -->
-    Commands
-    <!-- </mat-panel-title>
+                <mat-panel-title>
+                    Commands
+                </mat-panel-title>
             </mat-expansion-panel-header>
         </mat-expansion-panel>
-    </mat-accordion> -->
+        <mat-expansion-panel class="ParentCheckBox">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    Settings
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div class="row m-0 p-0">
+                <div class="col-md-12 p-0 m-0 settingType row mb-2 border-bottom">
+                    <div class="col-md-11">
+                        <h4 style="color: #18497D;" class="m-0">Change APN</h4>
+                        <p class="text-muted m-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste delectus
+                        </p>
+                    </div>
+                    <button mat-button class="col-md-1 m-0 p-0" style="color: rgb(29, 184, 140);display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    min-width: max-content  !important;
+                    line-height:  normal !important;
+                    padding: 0px !important;
+                ">
+                        <mat-icon style="font-size: 20px;">send</mat-icon>
+                        <p class="m-0 p-0">
+                            Send
+                        </p>
+                    </button>
+                </div>
+                <div class="col-md-12 p-0 m-0 settingType row mb-2 border-bottom">
+                    <div class="col-md-11">
+                        <h4 style="color: #18497D;" class="m-0">Reset Odometer</h4>
+                        <p class="text-muted m-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste delectus
+                        </p>
+                    </div>
+                    <button mat-button class="col-md-1 m-0 p-0" style="color: rgb(29, 184, 140);display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    min-width: max-content  !important;
+                    line-height:  normal !important;
+                    padding: 0px !important;
+                " (click)="resetOdometer()">
+                        <mat-icon style="font-size: 20px;">send</mat-icon>
+                        <p class="m-0 p-0">
+                            Send
+                        </p>
+                    </button>
+                </div>
+                <!-- <div class="col-md-12 m-0 p-0 settingType row"></div> -->
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
 </div>

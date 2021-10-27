@@ -10,7 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { VehicleListResolver } from 'src/app/_resolvers/Vehicle_Post_Resolver';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MatExpansionModule } from '@angular/material/expansion';
+// import { MatExpansionModule } from '@angular/material/expansion';
 import {MatDividerModule} from "@angular/material/divider"
 import {MatDialogModule} from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -33,7 +33,7 @@ export const routes = [
     MatIconModule, 
     MatButtonModule,
     MatTabsModule,
-    MatExpansionModule,
+    // MatExpansionModule,
     MatDividerModule,
     MatDialogModule,
     MatDatepickerModule,
