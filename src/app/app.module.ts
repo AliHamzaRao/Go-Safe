@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
- 
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CustomOverlayContainer } from './theme/utils/custom-overlay-container';
 
@@ -12,10 +12,10 @@ import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   wheelPropagation: true,
-  suppressScrollX: true               
+  suppressScrollX: true
 };
 import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns'; 
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 import { SharedModule } from './shared/shared.module';
 import { PipesModule } from './theme/pipes/pipes.module';
@@ -49,15 +49,15 @@ import { Vehicles } from './_interfaces/vehicle.model';
 @NgModule({
   imports: [
     BrowserModule,
-    BrowserAnimationsModule,     
+    BrowserAnimationsModule,
     FormsModule,
-    ReactiveFormsModule, 
+    ReactiveFormsModule,
     HttpClientModule,
-    NgSelectModule,   
+    NgSelectModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAO7Mg2Cs1qzo_3jkKkZAKY6jtwIlm41-I'
-    }), 
-    PerfectScrollbarModule, 
+    }),
+    PerfectScrollbarModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
@@ -93,21 +93,21 @@ import { Vehicles } from './_interfaces/vehicle.model';
     AssetTripDialogComponent,
     historyDialogComponent,
     ControlDialogComponent,
-    ResetOdometerDialogComponent,OdometerResetSuccessDialogComponent
+    ResetOdometerDialogComponent, OdometerResetSuccessDialogComponent
   ],
- 
+
   providers: [
     VehicleListResolver,
     Vehicles,
     AppSettings,
     { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG },
     { provide: OverlayContainer, useClass: CustomOverlayContainer },
-      { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },{
-        provide: 'moment', useFactory: (): any => moment
-     }
+    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+    { provide: 'moment', useFactory: (): any => moment },
+    // mapInforProviderService
   ],
-  schemas:[
-    NO_ERRORS_SCHEMA,CUSTOM_ELEMENTS_SCHEMA
+  schemas: [
+    NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA
   ],
   bootstrap: [AppComponent]
 })

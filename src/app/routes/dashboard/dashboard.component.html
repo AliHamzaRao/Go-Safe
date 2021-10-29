@@ -282,35 +282,20 @@
 </div>
 
 <div class="m-0 p-0 shadow rounded" style="height: 89vh !important">
-  <!-- <div *ngIf="mapType === 'Open Street Maps'"> -->
-  <div id="leaflet-map" style="height: 89vh !important" class="rounded"></div>
-  <!-- </div>
+  <div *ngIf="mapType === 'Open Street Maps'">
+    <div id="leaflet-map" style="height: 89vh !important" class="rounded"></div>
+  </div>
   <div *ngIf="mapType === 'Google Maps'">
-    <agm-map
-      style="height: 89vh !important"
-      class="rounded"
-      [disableDefaultUI]="true"
-      [latitude]="lat"
-      [longitude]="lng"
-      [mapTypeId]="googleMapType"
-      [fullscreenControl]="true"
-      [mapTypeControl]="true"
-      [fitBounds]="true"
-    >
+    <agm-map style="height: 89vh !important" class="rounded" [disableDefaultUI]="true" [latitude]="lat"
+      [longitude]="lng" [mapTypeId]="googleMapType" [fullscreenControl]="true" [mapTypeControl]="true"
+      [fitBounds]="true">
       <span *ngFor="let data of markers; let i = index">
         <span *ngIf="data[1] != 0 && data[2] != 0">
-          <agm-marker
-            [latitude]="data[1]"
-            [longitude]="data[2]"
-            [zoom]="zoom"
-            [markerClickable]="true"
-            [agmFitBounds]="true"
-            (markerClick)="getMarkerInfo([data[0], data[1], data[2]])"
-          >
+          <agm-marker [latitude]="data[1]" [longitude]="data[2]" [zoom]="zoom" [markerClickable]="true"
+            [agmFitBounds]="true" (markerClick)="getMarkerInfo([data[0], data[1], data[2]])">
           </agm-marker>
         </span>
       </span>
     </agm-map>
   </div>
-</div> -->
 </div>

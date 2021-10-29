@@ -9,6 +9,8 @@ import { PacketParser } from "../dashboard/PacketParser"
 // import { VehicleListResolver } from '../../_resolvers/Vehicle_Post_Resolver';
 import 'leaflet-map';
 import { MatDialog } from '@angular/material/dialog';
+import { markerService } from 'src/app/services/MarkerService';
+import { mapTypeService } from 'src/app/services/MapTypeService';
 declare var L;
 @Component({
   selector: 'app-pages',
@@ -33,6 +35,7 @@ export class PagesComponent implements OnInit {
   mapBounds: any = [];
   newPacketParse: any;
   data: any;
+  message: string;
   @ViewChild('sidenav') sidenav: any;
   @ViewChild('backToTop') backToTop: any;
   @ViewChildren(PerfectScrollbarDirective) pss: QueryList<PerfectScrollbarDirective>;
@@ -45,21 +48,22 @@ export class PagesComponent implements OnInit {
   public toggleSearchBar: boolean = false;
   private defaultMenu: string; //declared for return default menu when window resized 
 
-  constructor(public appSettings: AppSettings, public router: Router, private menuService: MenuService, public dialog: MatDialog, public route: ActivatedRoute) {
+  constructor(public appSettings: AppSettings, public router: Router, private menuService: MenuService, public dialog: MatDialog, public route: ActivatedRoute, public markersService: markerService, public mapTypeService: mapTypeService) {
     this.settings = this.appSettings.settings;
+
   }
 
   ngOnInit() {
+    this.mapTypeService.newMap.subscribe((mapType) => this.mapType = mapType)
     this.route.data.subscribe((data) => {
       data["model"].data.forEach((item: any, index: any) => {
         this.TREE_DATA.push(item);
       });
       this.TREE_DATA[1].SubMenu.sort((a: { grp_name: number; }, b: { grp_name: number; }) => (a.grp_name > b.grp_name) ? 1 : ((b.grp_name > a.grp_name) ? -1 : 0))
     });
-
     this.mapType = $(".mapDropdown").find(':selected').val()
     $('.mapDropdown').on('change', ($event) => {
-      console.log($event)
+      debugger;
       $(".vehicleCard").addClass('d-none');
       $('.vehicleCardMore').addClass('d-none')
       $('.agm-map-container-inner').addClass('rounded')
@@ -258,6 +262,7 @@ export class PagesComponent implements OnInit {
 
   onCheck(e, DataTrack: string, _id: any) {
     debugger;
+    debugger;
     $(".vehicleCard").addClass('d-none');
     $('.vehicleCardMore').addClass('d-none')
     let marker: string[];
@@ -268,6 +273,8 @@ export class PagesComponent implements OnInit {
       this.lng = parseFloat(this.data.lng);
       marker = [this.data.device_id, this.data.lat, this.data.lng];
       this.markers.push(marker);
+      let markerString = JSON.stringify(this.markers)
+      this.markersService.SetMarkers(markerString);
       this.AllDevices.push(this.data);
       this.setLeafLetMarkers();
     }
@@ -282,6 +289,8 @@ export class PagesComponent implements OnInit {
       this.AllDevices.splice(index, 1)
       let MarkerIndex = this.markers.findIndex((item: any[]) => item[0] === _id);
       this.markers.splice(MarkerIndex, 1)
+      let markerString = JSON.stringify(this.markers)
+      this.markersService.SetMarkers(markerString);
       if (!this.AllDevices.length) {
         $('.vehicleCard').addClass('d-none')
       }
@@ -338,11 +347,11 @@ export class AssetTripDialogComponent {
 @Component({
   selector: 'app-control-dialog',
   templateUrl: './Dialogs/ControlDialog.html',
-  styleUrls: ["../pages/pages.component.scss","../pages/Dialogs/ControlDialog.scss"]
+  styleUrls: ["../pages/pages.component.scss", "../pages/Dialogs/ControlDialog.scss"]
 })
 export class ControlDialogComponent {
   constructor(public dialog: MatDialog) { }
-  resetOdometer(){
+  resetOdometer() {
     this.dialog.closeAll();
     this.dialog.open(ResetOdometerDialogComponent);
   }
@@ -350,16 +359,16 @@ export class ControlDialogComponent {
 @Component({
   selector: 'app-reset-odometer-dialog',
   templateUrl: './Dialogs/ResetOdometerDialog.html',
-  styleUrls: ["../pages/pages.component.scss","../pages/Dialogs/ResetOdometerDialog.scss"]
+  styleUrls: ["../pages/pages.component.scss", "../pages/Dialogs/ResetOdometerDialog.scss"]
 })
 export class ResetOdometerDialogComponent {
   constructor(public dialog: MatDialog) { }
-  onOdometerReset(){
+  onOdometerReset() {
     this.dialog.closeAll();
     this.dialog.open(OdometerResetSuccessDialogComponent)
-  
+
   }
-  closeResetOdometer(){
+  closeResetOdometer() {
     this.dialog.closeAll();
     this.dialog.open(ControlDialogComponent)
   }
@@ -367,12 +376,12 @@ export class ResetOdometerDialogComponent {
 @Component({
   selector: 'app-reset-odometer-success-dialog',
   templateUrl: './Dialogs/OdometerResetSuccessDialog.html',
-  styleUrls: ["../pages/pages.component.scss","../pages/Dialogs/ResetOdometerDialog.scss"]
+  styleUrls: ["../pages/pages.component.scss", "../pages/Dialogs/ResetOdometerDialog.scss"]
 })
 export class OdometerResetSuccessDialogComponent {
   constructor(public dialog: MatDialog) { }
-  
-  closeResetOdometer(){
+
+  closeResetOdometer() {
     this.dialog.closeAll();
     this.dialog.open(ControlDialogComponent)
   }
