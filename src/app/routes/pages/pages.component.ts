@@ -211,23 +211,6 @@ export class PagesComponent implements OnInit {
     $('.vehicleCardMore').addClass('d-none')
   }
 
-  // #region Parent Checkbox
-  onParentCheckBox(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.target.checked) {
-      let singleDevice: any = $('.singleDevice input[type="checkbox"]');
-      for (let i = 0; i <= singleDevice.length; i++) {
-        console.log(singleDevice[i]);
-        singleDevice[i].attr('checked', 'checked')
-        let data_track = singleDevice[i].attr('data-datatrack');
-        let deviceId = singleDevice[i].attr('data-device_id');
-        this.onCheck(e, data_track, deviceId)
-      }
-    }
-  }
-  // #endregion
-
 
   setLeafLetMarkers() {
     this.markers.forEach((element: any, index: string | number) => {
@@ -261,7 +244,6 @@ export class PagesComponent implements OnInit {
   // #endregion
 
   onCheck(e, DataTrack: string, _id: any) {
-    debugger;
     debugger;
     $(".vehicleCard").addClass('d-none');
     $('.vehicleCardMore').addClass('d-none')
