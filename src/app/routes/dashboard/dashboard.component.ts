@@ -1,14 +1,16 @@
-import { Component, OnInit, Output, EventEmitter } from "@angular/core";
+import { Component, OnInit, Input } from "@angular/core";
 import { AppSettings } from "../../_core/settings/app.settings";
 import { Settings } from "../../_core/settings/app.settings.model";
 import { dashboardService } from "../../_core/_AppServices/dashboard.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { PacketParser } from "./PacketParser"
+import { PacketParser } from "./PacketParser";
 import { MatDialog } from "@angular/material/dialog";
-import 'leaflet-map';
-import { markerService } from "src/app/services/MarkerService";
-import { mapTypeService } from "src/app/services/MapTypeService";
-declare var L;
+import "leaflet-map";
+import { markerService } from "src/app/_core/_AppServices/MarkerService";
+import { mapTypeService } from "src/app/_core/_AppServices/MapTypeService";
+import { AllDevicesDataService } from "src/app/_core/_AppServices/AllDevicesDataService";
+import { historyDataService } from "src/app/_core/_AppServices/HistoryDataService";
+// declare var L;
 @Component({
   selector: "app-dashboard",
   templateUrl: "./dashboard.component.html",
@@ -20,7 +22,7 @@ export class DashboardComponent implements OnInit {
   map: any;
   lat = 0;
   lng = 0;
-  zoom = 2;
+  zoom = 6;
   googleMapType = "roadmap";
   TREE_DATA: any = [];
   AllDevices: any = [];
@@ -30,16 +32,40 @@ export class DashboardComponent implements OnInit {
   mapBounds: any = [];
   img: any;
   message: string;
+  latitude = 31.488415;
+  longitude = 74.370465;
+  interval = 500;
+  markerData = [];
+  markersData = [];
+  setTime: any;
+  gpsTime: any;
+  currentState: number = 0;
   //#region Constructor
-  constructor(private dashboardSer: dashboardService, private router: Router, public route: ActivatedRoute, public appSettings: AppSettings, public dialog: MatDialog, public markerService: markerService, public mapTypeService: mapTypeService) {
+  constructor(
+    private dashboardSer: dashboardService,
+    private router: Router,
+    public route: ActivatedRoute,
+    public appSettings: AppSettings,
+    public dialog: MatDialog,
+    public markerService: markerService,
+    public mapTypeService: mapTypeService,
+    public AllDeviceDataService: AllDevicesDataService,
+    public historyDataService: historyDataService
+  ) {
     this.settings = this.appSettings.settings;
   }
   //#endregion
 
   //#region OnInit Hook
   ngOnInit() {
-    this.mapTypeService.newMap.subscribe((mapType) => this.mapType = mapType)
-    this.markerService.newMarkers.subscribe((markers) => this.markers = JSON.parse(markers))
+    this.mapTypeService.newMap.subscribe((mapType) => (this.mapType = mapType));
+    this.markerService.newMarkers.subscribe(
+      (markers) => (this.markers = JSON.parse(markers))
+    );
+    this.AllDeviceDataService.AllDevices.subscribe(
+      (data) => (this.AllDevices = JSON.parse(data))
+    );
+
     // this.route.data.subscribe((data) => {
     //   data["model"].data.forEach((item: any, index: any) => {
     //     this.TREE_DATA.push(item);
@@ -48,8 +74,7 @@ export class DashboardComponent implements OnInit {
     // });
     // this.treed();
     // this.mapType = $(".mapDropdown").find(':selected').val()
-    $('.mapDropdown').on('change', ($event) => {
-      console.log($event)
+    $(".mapDropdown").on("change", ($event) => {
       // this.mapTypeService.newMap.subscribe((mapType) => this.mapType = mapType)
       //   this.markerService.newMarkers.subscribe((markers) => this.markers = JSON.parse(markers))
       //   // this.markerService.newMarkers.subscribe((markers) => this.markers = JSON.parse(markers))
@@ -58,16 +83,15 @@ export class DashboardComponent implements OnInit {
       //   $(".vehicleCard").addClass('d-none');
       //   $('.vehicleCardMore').addClass('d-none')
       //   $('.agm-map-container-inner').addClass('rounded')
-      this.mapType = $(".mapDropdown").find(':selected').val()
+      this.mapType = $(".mapDropdown").find(":selected").val();
       this.mapTypeService.SetMap(this.mapType);
       //   this.loadLeafLetMap();
       //   setTimeout(() => {
       //     this.setLeafLetMarkers();
       //   }, 1000);
-    })
+    });
   }
   //#endregion
-
   //#region After View Init Hook
   ngAfterViewInit() {
     // this.loadLeafLetMap();
@@ -84,7 +108,53 @@ export class DashboardComponent implements OnInit {
   //   });
   // }
   //#endregion
+  pause() {
+    clearInterval(this.setTime);
+    this.markerData = [];
+    this.historyDataService.newMarkers.subscribe((data) => {
+      this.markersData = JSON.parse(data);
+    });
 
+    this.markersData.forEach((element) => {
+      this.markerData.push({
+        latitude: parseFloat(element.Latitude),
+        longitude: parseFloat(element.Longitude),
+      });
+    });
+    // this.interval = this.interval - 200;
+  }
+  play() {
+    debugger;
+    this.historyDataService.newMarkers.subscribe((data) => {
+      this.markersData = JSON.parse(data);
+    });
+    this.markersData.forEach((element) => {
+      this.markerData.push({
+        latitude: parseFloat(element.Latitude),
+        longitude: parseFloat(element.Longitude),
+      });
+    });
+    this.move()
+    // setInterval(() => {
+    //   this.move()
+    // }, 1000)
+  }
+  move() {
+    if (this.currentState !== this.markerData.length - 1) {
+      this.setTime = setInterval(() => {
+        this.latitude = this.markerData[this.currentState].latitude;
+        this.longitude = this.markerData[this.currentState].longitude;
+        console.log(this.latitude, this.longitude, this.currentState, this.markerData.length)
+        this.currentState++;
+        console.log(this.interval)
+        if (this.currentState === this.markerData.length - 1) {
+          clearInterval(this.setTime)
+          this.interval = null;
+        }
+      }, this.interval);
+
+    }
+  }
   //#region Set Markers to Leaflet Maps
   // setLeafLetMarkers() {
   //   this.markers.forEach((element: any, index: string | number) => {
@@ -106,17 +176,19 @@ export class DashboardComponent implements OnInit {
   //#endregion
 
   //#region Selected Marker Info
-  // getMarkerInfo(data: any[]) {
-  //   debugger;
-  //   this.markerService.SetMarkers(JSON.parse(this.markers));
-  //   let singleDevice = this.AllDevices.filter((item: { device_id: any; }) => item.device_id === data[0]);
-  //   this.singleDeviceData = [...singleDevice]
-  //   this.map.setView([data[1], data[2]], 20)
-  //   this.lat = data[1];
-  //   this.lng = data[2];
-  //   $('.vehicleCard').removeClass('d-none')
-  //   $('.vehicleCardMore').addClass('d-none')
-  // }
+  getMarkerInfo(data: any[]) {
+    debugger;
+    // this.markerService.SetMarkers(JSON.parse(this.markers));
+    let singleDevice = this.AllDevices.filter(
+      (item: { device_id: any }) => item.device_id === data[0]
+    );
+    this.singleDeviceData = [...singleDevice];
+    // this.map.setView([data[1], data[2]], 20)
+    // this.lat = data[1];
+    // this.lng = data[2];
+    $(".vehicleCard").removeClass("d-none");
+    $(".vehicleCardMore").addClass("d-none");
+  }
   //#endregion
 
   //#region CloseDetails Card
@@ -160,10 +232,10 @@ export class DashboardComponent implements OnInit {
   //#endregion
 
   //#region toggleVehicleDetailCard
-  // toggleInfo() {
-  //   $(".vehicleCard").toggleClass('d-none');
-  //   $('.vehicleCardMore').toggleClass('d-none')
-  // }
+  toggleInfo() {
+    $(".vehicleCard").toggleClass("d-none");
+    $(".vehicleCardMore").toggleClass("d-none");
+  }
   //#endregion
 
   //#region GetVehicleTreeList

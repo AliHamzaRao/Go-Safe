@@ -6,8 +6,8 @@
   </div>
   <button class="recordControl expBtn" (click)="export()"></button>
   <button class="recordControl"></button>
-  <button class="recordControl playPause" (click)="toggleDisplay()"></button>
-  <button class="recordControl playPause d-none" (click)="toggleDisplay()"></button>
+  <button class="recordControl playPause" name="pause" (click)="toggleDisplay($event)"></button>
+  <button class="recordControl playPause d-none" name="play" (click)="toggleDisplay($event)"></button>
   <button class="recordControl"></button>
   <button class="recordControl"></button>
   <button class="recordControl" (click)="toggleInfoCard()"></button>

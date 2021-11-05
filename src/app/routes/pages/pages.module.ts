@@ -12,8 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { VehicleListResolver } from 'src/app/_resolvers/Vehicle_Post_Resolver';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatExpansionModule } from '@angular/material/expansion';
-import {MatDividerModule} from "@angular/material/divider"
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDividerModule } from "@angular/material/divider"
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { DashboardModule } from '../dashboard/dashboard.module';
@@ -31,7 +31,7 @@ export const routes = [
     PerfectScrollbarModule,
     AgmCoreModule,
     MatTreeModule,
-    MatIconModule, 
+    MatIconModule,
     MatButtonModule,
     MatTabsModule,
     // MatExpansionModule,
@@ -42,12 +42,9 @@ export const routes = [
     DashboardModule,
   ],
   declarations: [
-    historyDialogComponent,
     historyRecordDialogComponent,
-    AssetTripDialogComponent,
-    ControlDialogComponent
   ],
-  providers:[
+  providers: [
     VehicleListResolver
   ],
 })

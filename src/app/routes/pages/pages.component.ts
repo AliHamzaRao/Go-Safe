@@ -9,14 +9,21 @@ import { PacketParser } from "../dashboard/PacketParser"
 // import { VehicleListResolver } from '../../_resolvers/Vehicle_Post_Resolver';
 import 'leaflet-map';
 import { MatDialog } from '@angular/material/dialog';
-import { markerService } from 'src/app/services/MarkerService';
-import { mapTypeService } from 'src/app/services/MapTypeService';
+import { markerService } from 'src/app/_core/_AppServices/MarkerService';
+import { mapTypeService } from 'src/app/_core/_AppServices/MapTypeService';
+import { AllDevicesDataService } from 'src/app/_core/_AppServices/AllDevicesDataService';
+import { FormGroup } from "@angular/forms"
+import { historyService } from 'src/app/_core/_AppServices/historyService';
+import { historyDataService } from 'src/app/_core/_AppServices/HistoryDataService';
+import { DashboardComponent } from '../dashboard/dashboard.component';
 declare var L;
+var map;
+var el;
 @Component({
   selector: 'app-pages',
   templateUrl: './pages.component.html',
   styleUrls: ['./pages.component.scss'],
-  providers: [MenuService]
+  providers: [MenuService],
 })
 export class PagesComponent implements OnInit {
 
@@ -36,6 +43,16 @@ export class PagesComponent implements OnInit {
   newPacketParse: any;
   data: any;
   message: string;
+  latitude: 0;
+  longitude: 0;
+  interval: number = 1000;
+  markerData = [];
+  markersData = [];
+  currentState: number = 0;
+  setTime: any;
+  marker: any;
+
+  @ViewChild(DashboardComponent, { static: true }) child: DashboardComponent;
   @ViewChild('sidenav') sidenav: any;
   @ViewChild('backToTop') backToTop: any;
   @ViewChildren(PerfectScrollbarDirective) pss: QueryList<PerfectScrollbarDirective>;
@@ -48,24 +65,37 @@ export class PagesComponent implements OnInit {
   public toggleSearchBar: boolean = false;
   private defaultMenu: string; //declared for return default menu when window resized 
 
-  constructor(public appSettings: AppSettings, public router: Router, private menuService: MenuService, public dialog: MatDialog, public route: ActivatedRoute, public markersService: markerService, public mapTypeService: mapTypeService) {
+  constructor(public appSettings: AppSettings, public router: Router, private menuService: MenuService, public dialog: MatDialog, public route: ActivatedRoute, public markersService: markerService, public mapTypeService: mapTypeService, public AllDeviceDataService: AllDevicesDataService, public historyDataService: historyDataService) {
     this.settings = this.appSettings.settings;
-
   }
-
   ngOnInit() {
     this.mapTypeService.newMap.subscribe((mapType) => this.mapType = mapType)
+    this.AllDeviceDataService.AllDevices.subscribe((data) => this.AllDevices = JSON.parse(data))
     this.route.data.subscribe((data) => {
       data["model"].data.forEach((item: any, index: any) => {
         this.TREE_DATA.push(item);
       });
       this.TREE_DATA[1].SubMenu.sort((a: { grp_name: number; }, b: { grp_name: number; }) => (a.grp_name > b.grp_name) ? 1 : ((b.grp_name > a.grp_name) ? -1 : 0))
     });
+    // this.setTime = setInterval(() => {
+    //   this.latitude = this.latitude + 0.0001;
+    //   this.longitude = this.longitude + 0.0002;
+    //   this.markerData.push([
+    //     this.latitude,
+    //     this.longitude,
+    //   ])
+    //   L.polyline(this.markerData).addTo(this.map)
+    //   this.markerData = [];
+    // }, this.interval)
     this.mapType = $(".mapDropdown").find(':selected').val()
     $('.mapDropdown').on('change', ($event) => {
-      debugger;
+      // $('.leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable').remove()
+      // $('.leaflet-marker-shadow.leaflet-zoom-animated').remove()
+      // map.removeLayer(this.marker)
       $(".vehicleCard").addClass('d-none');
       $('.vehicleCardMore').addClass('d-none')
+      $('.leafletDialog').toggleClass("d-none")
+      $('.googleMapRecord').toggleClass('d-none')
       $('.agm-map-container-inner').addClass('rounded')
       this.mapType = $(".mapDropdown").find(':selected').val()
       this.loadLeafLetMap();
@@ -92,7 +122,6 @@ export class PagesComponent implements OnInit {
   }
   ngAfterViewInit() {
     this.loadLeafLetMap();
-
     setTimeout(() => { this.settings.loadingSpinner = false }, 300);
     this.backToTop.nativeElement.style.display = 'none';
     this.router.events.subscribe(event => {
@@ -107,15 +136,6 @@ export class PagesComponent implements OnInit {
     });
     if (this.settings.menu == "vertical")
       this.menuService.expandActiveSubMenu(this.menuService.getVerticalMenuItems());
-  }
-
-  loadLeafLetMap() {
-    setTimeout(() => {
-      this.el = document.getElementById("leaflet-map");
-      L.Icon.Default.imagePath = 'assets/img/vendor/leaflet/';
-      this.map = L.map(this.el).setView([this.lat, this.lng], 10);
-      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(this.map);
-    });
   }
   public chooseMenu() {
     this.settings.menu = this.menuOption;
@@ -192,26 +212,91 @@ export class PagesComponent implements OnInit {
       }
     }
   }
-  openHistoryDialog() {
-    this.dialog.open(historyDialogComponent);
+  //#region Load Leaflet Maps
+  loadLeafLetMap() {
+    setTimeout(() => {
+      el = document.getElementById("leaflet-map");
+      L.Icon.Default.imagePath = 'assets/img/vendor/leaflet/';
+      map = L.map(el).setView([this.lat, this.lng], 10);
+      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(map);
+    });
+  }
+  stop() {
+    console.log("Stopped");
+    $('.leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable').remove()
+    $('.leaflet-marker-shadow.leaflet-zoom-animated').remove()
+    this.currentState = 0;
+    this.pause();
+    this.interval = 1000;
+  }
+  drawLine() {
+    this.historyDataService.newMarkers.subscribe(data => this.markersData = JSON.parse(data))
+    this.markersData.forEach((el) => {
+      this.markerData.push([el.Latitude, el.Longitude])
+    })
+    // L.polyline(this.markerData).addTo(map)
+  }
+  play() {
+    console.log("played");
+    this.drawLine()
+    $('.pauseBtn').removeClass('d-none');
+    $('.playBtn').addClass('d-none')
+    L.polyline(this.markerData).addTo(map)
+    if (this.currentState !== this.markerData.length - 1) {
+      this.setTime = setInterval(() => {
+        this.latitude = this.markerData[this.currentState][0];
+        this.longitude = this.markerData[this.currentState][1];
+        this.currentState++;
+        console.log("Marker Postion :", this.currentState, "Array Length: ", this.markerData.length - 1, "Time Interval AKA Speed: ", this.interval)
+        if (this.currentState === this.markerData.length - 1) {
+          console.log("Ereased")
+          this.pause();
+          this.markerData = [];
+        }
+        this.marker = L.marker([this.latitude, this.longitude]).addTo(map)
+        map.removeLayer(this.marker)
+        $('.leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable').remove()
+        $('.leaflet-marker-shadow.leaflet-zoom-animated').remove()
+        this.marker = L.marker([this.latitude, this.longitude]).addTo(map)
+        map.setView([this.latitude, this.longitude], 17)
+      }, this.interval);
+    }
+  }
+  pause() {
+    console.log("Paused");
+    $('.pauseBtn').addClass('d-none');
+    $('.playBtn').removeClass('d-none')
+    clearInterval(this.setTime)
+    this.interval = null;
+    this.interval = 500
+    this.markerData = [];
+    this.interval = this.interval
+  }
+  speed() {
+    this.pause();
+    clearInterval(this.interval)
+    this.interval = null;
+    this.interval = 1000;
+    this.interval = this.interval - 500
+    this.play();
+    // this.markerData = [];
+    // this.play();
+    // if (this.interval == 1000) {
+    //   this.interval = 100;
+    // }
+  }
+  toggleDisplay() {
     $(".vehicleCard").addClass('d-none');
     $('.vehicleCardMore').addClass('d-none')
   }
-  openAssetTripDialog() {
-    this.dialog.open(AssetTripDialogComponent);
+  export() {
+    $('.export').toggleClass('d-none')
   }
-
-  openControlDialog() {
-    this.dialog.open(ControlDialogComponent);
+  toggleInfoCard() {
+    $('.infoCard').toggleClass('d-none')
   }
-  closeHistoryDialog() {
-    // console.log(e)
-    this.dialog.closeAll();
-    $(".vehicleCard").addClass('d-none');
-    $('.vehicleCardMore').addClass('d-none')
-  }
-
-
+  //#endregion
+  //#region SetLeafLet Markers
   setLeafLetMarkers() {
     this.markers.forEach((element: any, index: string | number) => {
       if (this.markers[index][1] === '0', this.markers[index][2] === '0') {
@@ -219,30 +304,34 @@ export class PagesComponent implements OnInit {
       }
       else {
         new L.marker([this.markers[index][1], this.markers[index][2]])
-          .addTo(this.map).on('click', () => {
+          .addTo(map).on('click', () => {
             this.getMarkerInfo([this.markers[index][0], this.markers[index][1], this.markers[index][2]])
           })
         // $('.leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable').attr('id',this.markers[index][0])
-        this.map.setView([this.lat, this.lng], 12);
+        map.setView([this.lat, this.lng], 12);
         this.mapBounds.push([this.markers[index][1], this.markers[index][2]])
-        this.map.fitBounds(this.mapBounds);
+        map.fitBounds(this.mapBounds);
       }
     });
   }
-
-  // #region Selected Marker Info
+  //#endregion
+  //#region Selected Marker Info
   getMarkerInfo(info: any[]) {
-    debugger;
+
+    this.AllDeviceDataService.AllDevices.subscribe((data) => this.AllDevices = JSON.parse(data))
     let singleDevice = this.AllDevices.filter((item: { device_id: any; }) => item.device_id === info[0]);
     this.singleDeviceData = singleDevice;
-    this.map.setView([info[1], info[2]], 20);
+    console.log(this.singleDeviceData)
+    map.setView([info[1], info[2]], 20);
     this.lat = info[1];
     this.lng = info[2];
-    $('.vehicleCard').removeClass('d-none');
-    $('.vehicleCardMore').addClass('d-none');
+    setTimeout(() => {
+      $('.vehicleCard').removeClass('d-none');
+      $('.vehicleCardMore').addClass('d-none');
+    }, 100)
   }
   // #endregion
-
+  //#region On CheckBox
   onCheck(e, DataTrack: string, _id: any) {
     debugger;
     $(".vehicleCard").addClass('d-none');
@@ -258,6 +347,13 @@ export class PagesComponent implements OnInit {
       let markerString = JSON.stringify(this.markers)
       this.markersService.SetMarkers(markerString);
       this.AllDevices.push(this.data);
+      this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices))
+      this.AllDeviceDataService.AllDevices.subscribe((data) => {
+        // console.log(data);
+        this.AllDevices = JSON.parse(data)
+        // console.log(this.AllDevices)
+      })
+      // this.AllDeviceDataService.AllDevices.subscribe((data) => data = JSON.stringify(this.AllDevices))
       this.setLeafLetMarkers();
     }
     else {
@@ -269,6 +365,10 @@ export class PagesComponent implements OnInit {
       }, 1000)
       let index = this.AllDevices.findIndex((item: { device_id: any; }) => item.device_id === _id)
       this.AllDevices.splice(index, 1)
+      setTimeout(() => {
+        this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices))
+        this.AllDeviceDataService.AllDevices.subscribe((data) => this.AllDevices = JSON.parse(data))
+      }, 100);
       let MarkerIndex = this.markers.findIndex((item: any[]) => item[0] === _id);
       this.markers.splice(MarkerIndex, 1)
       let markerString = JSON.stringify(this.markers)
@@ -278,46 +378,123 @@ export class PagesComponent implements OnInit {
       }
     }
   }
-
+  //#endregion
+  //#region Close Car Details Card
   closeDetails() {
     $('.vehicleCard').addClass('d-none')
     $('.vehicleCardMore').addClass('d-none')
   }
+  //#endregion
+  //#region Dialog Methods 
+  openHistoryDialog() {
+    // console.log(this.AllDevices)
+    // if (this.AllDevices.length > 1 || this.AllDevices.length !== 0 || this.AllDevices.length === 0) {
+    //   alert("Select only one device")
+    //   return false;
+    // }
+    // else {
+    this.dialog.open(historyDialogComponent);
+    $(".vehicleCard").addClass('d-none');
+    $('.vehicleCardMore').addClass('d-none')
+    // }
+  }
+  openAssetTripDialog() {
+    this.dialog.open(AssetTripDialogComponent);
+  }
+  openControlDialog() {
+    this.dialog.open(ControlDialogComponent);
+  }
+  closeHistoryDialog() {
+    this.dialog.closeAll();
+    $(".vehicleCard").addClass('d-none');
+    $('.vehicleCardMore').addClass('d-none')
+  }
+  //#endregion
 }
+//#region Dialogs Component Declarations
 @Component({
   selector: 'app-history-dialog',
   templateUrl: './Dialogs/historyDialog.html',
   styleUrls: ["../pages/pages.component.scss"]
 })
-export class historyDialogComponent {
-  constructor(public dialog: MatDialog) { }
-  closeHistoryDialog() {
-    this.dialog.closeAll();
-    this.dialog.open(historyRecordDialogComponent)
-    $(".vehicleCard").addClass('d-none');
-    $('.vehicleCardMore').addClass('d-none')
+export class historyDialogComponent implements OnInit {
+  markerData = [];
+  response: any;
+  history: any;
+  speed: boolean;
+  lat: any;
+  lng: any;
+  currentState: number = 0;
+  setTime: any;
+  interval: number = 500;
+  public form: FormGroup
+  constructor(public dialog: MatDialog, public historyService: historyService, public historyDataService: historyDataService) { }
+  ngOnInit() {
+  }
+  onCheck(e) {
+    this.speed = e.target.checked;
+  }
+  onSubmit() {
+    let History_type = $('#historyType').val();
+    let dateStart = $('#de_start').val().toLocaleString().replace("T", " ");
+    let dateEnd = $('#de_end').val().toLocaleString().replace("T", " ");
+    let speed = this.speed;
+    var data = {
+      veh_reg_no: "G797W",
+      History_type: "Replay",
+      de_start: "2021-07-21 19:00",
+      de_end: "2021-07-21 21:00",
+      speed: true,
+    }
+    this.historyService.DeviceHistory(data).subscribe((data) => {
+      this.historyDataService.setNewMarkers(JSON.stringify(data.data.History))
+      data.data.History.forEach((el, i) => {
+        this.markerData.push([parseFloat(el.Latitude), parseFloat(el.Longitude)])
+        this.lat = parseFloat(el.Latitude);
+        this.lng = parseFloat(el.Longitude)
+      })
+      map.setView([this.lat, this.lng], 10)
+      L.polyline(this.markerData).addTo(map)
+      this.dialog.closeAll();
+      $(".recordDialogOffset").removeClass("d-none")
+      $('.googleMapRecord').toggleClass("d-none")
+      $(".vehicleCard").addClass('d-none');
+      $('.vehicleCardMore').addClass('d-none')
+    })
+  }
+  play() {
+    // new L.marker([this.markers[index][1], this.markers[index][2]])
+    if (this.currentState !== this.markerData.length - 1) {
+      this.setTime = setInterval(() => {
+        this.lat = this.markerData[this.currentState][0];
+        this.lng = this.markerData[this.currentState][1];
+        this.currentState++;
+        if (this.currentState === this.markerData.length - 1) {
+          clearInterval(this.setTime)
+          this.interval = null;
+        }
+      }, this.interval);
+    }
   }
 };
-
-@Component({
-  selector: 'app-history-record-dialog',
-  templateUrl: './Dialogs/historyRecordDialog.html',
-  styleUrls: ["../pages/pages.component.scss"]
-})
-export class historyRecordDialogComponent {
-  toggleDisplay() {
-    $('.playPause').toggleClass('d-none')
-    $(".vehicleCard").addClass('d-none');
-    $('.vehicleCardMore').addClass('d-none')
-  }
-  export() {
-    console.log("test")
-    $('.export').toggleClass('d-none')
-  }
-  toggleInfoCard() {
-    $('.infoCard').toggleClass('d-none')
-  }
-}
+// @Component({
+//   selector: 'app-history-record-dialog',
+//   templateUrl: './Dialogs/historyRecordDialog.html',
+//   styleUrls: ["../pages/pages.component.scss"]
+// })
+// export class historyRecordDialogComponent {
+//   toggleDisplay() {
+//     $('.playPause').toggleClass('d-none')
+//     $(".vehicleCard").addClass('d-none');
+//     $('.vehicleCardMore').addClass('d-none')
+//   }
+//   export() {
+//     $('.export').toggleClass('d-none')
+//   }
+//   toggleInfoCard() {
+//     $('.infoCard').toggleClass('d-none')
+//   }
+// }
 @Component({
   selector: 'app-asset-report-dialog',
   templateUrl: './Dialogs/AssetTripDialog.html',
@@ -368,3 +545,4 @@ export class OdometerResetSuccessDialogComponent {
     this.dialog.open(ControlDialogComponent)
   }
 };
+//#endregion

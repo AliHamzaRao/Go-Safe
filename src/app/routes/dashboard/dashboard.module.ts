@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { DashboardComponent} from './dashboard.component';
+import { DashboardComponent } from './dashboard.component';
 import { AgmCoreModule } from '@agm/core';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,8 +12,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { VehicleListResolver } from 'src/app/_resolvers/Vehicle_Post_Resolver';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatExpansionModule } from '@angular/material/expansion';
-import {MatDividerModule} from "@angular/material/divider"
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDividerModule } from "@angular/material/divider"
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input'
 
@@ -30,7 +30,7 @@ export const routes = [
     PerfectScrollbarModule,
     AgmCoreModule,
     MatTreeModule,
-    MatIconModule, 
+    MatIconModule,
     MatButtonModule,
     // MatTabsModule,
     // MatExpansionModule,
@@ -48,7 +48,7 @@ export const routes = [
   declarations: [
     DashboardComponent
   ],
-  providers:[
+  providers: [
     VehicleListResolver
   ]
 })

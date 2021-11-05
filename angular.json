@@ -41,6 +41,8 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
+            "optimization":false,
+            "sourceMap": true,
             "assets": [
               "src/favicon32.ico",
               "src/assets",
