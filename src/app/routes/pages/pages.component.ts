@@ -285,6 +285,9 @@ export class PagesComponent implements OnInit {
   export() {
     $('.export').toggleClass('d-none')
   }
+  draw() {
+    $(".shapeSelect").toggleClass("d-none")
+  }
   toggleInfoCard() {
     $('.infoCard').toggleClass('d-none')
   }

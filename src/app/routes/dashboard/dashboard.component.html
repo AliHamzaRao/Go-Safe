@@ -319,10 +319,23 @@
       <img src="../../../assets/icons/ExportToPDF.png" alt="" />
     </button>
   </div>
+  <div class="shapeSelect d-none">
+    <button mat-icon-button>
+      <img src="../../../assets/icons/square.jpg" alt="" />
+    </button>
+    <br />
+    <button mat-icon-button>
+      <img src="../../../assets/icons/polygone.png" alt="" />
+    </button>
+    <br>
+    <button mat-icon-button>
+      <img src="../../../assets/icons/Circle.jpg" alt="" />
+    </button>
+  </div>
   <button mat-icon-button class="recordControl expBtn" (click)="export()" data-title="Export">
     <img src="../../../assets/icons/Export.png" />
   </button>
-  <button mat-icon-button class="recordControl" data-title="Draw Route">
+  <button mat-icon-button class="recordControl" (click)="draw()" data-title="Draw Route">
     <img src="../../../assets/icons/Route.png" />
   </button>
   <button mat-icon-button class="recordControl pauseBtn d-none" (click)="pause()" data-title="Pause">

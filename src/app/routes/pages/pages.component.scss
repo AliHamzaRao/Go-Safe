@@ -386,7 +386,7 @@
 // }
 .export {
   position: absolute;
-  top: -203% !important;
+  bottom: 90% !important;
   left: 27px;
 }
 .export button {
@@ -400,5 +400,24 @@
   margin-bottom: 10px;
 }
 .export button img {
+  height: 100% !important;
+}
+
+.shapeSelect {
+  position: absolute;
+  bottom: 111% !important;
+  left: 148px;
+}
+.shapeSelect button {
+  height: 20px !important;
+  width: 20px !important;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  border-radius: 50% !important;
+  // box-shadow: 0px 0px 5px 0px black !important;
+  margin-bottom: 10px;
+}
+.shapeSelect button img {
   height: 100% !important;
 }

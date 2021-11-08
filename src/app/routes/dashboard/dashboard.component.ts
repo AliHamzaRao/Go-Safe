@@ -194,4 +194,8 @@ export class DashboardComponent implements OnInit {
     $(".vehicleCardMore").toggleClass("d-none");
   }
   //#endregion
+
+  draw() {
+    $(".shapeSelect").toggleClass("d-none")
+  }
 }

@@ -15,22 +15,9 @@
   (psScrollY)="onPsScrollY($event)"
 > -->
 <mat-toolbar style="background-color: #18497d; color: white" class="flex-p-x">
-  <a
-    *ngIf="settings.menu == 'horizontal'"
-    mat-raised-button
-    color="accent"
-    routerLink="/"
-    (click)="closeSubMenus()"
-    class="small-logo"
-    >G</a
-  >
-  <a
-    *ngIf="settings.menu == 'horizontal'"
-    class="logo"
-    routerLink="/"
-    (click)="closeSubMenus()"
-    >GoSafe</a
-  >
+  <a *ngIf="settings.menu == 'horizontal'" mat-raised-button color="accent" routerLink="/" (click)="closeSubMenus()"
+    class="small-logo">G</a>
+  <a *ngIf="settings.menu == 'horizontal'" class="logo" routerLink="/" (click)="closeSubMenus()">GoSafe</a>
   <div fxLayout="row" fxLayoutAlign="space-between" class="w-100">
     <div fxLayout="row" style="align-items: center">
       <button mat-button class="mat-hover">Live Tacking</button>
@@ -45,12 +32,7 @@
       </mat-menu>
       <div class="form-group">
         <label for="mapType"></label>
-        <select
-          class="form-control mapDropdown"
-          name="mapType"
-          id="mapType"
-          value="Google Maps"
-        >
+        <select class="form-control mapDropdown" name="mapType" id="mapType" value="Google Maps">
           <option disabled value="Google Maps">Select Map</option>
           <option value="Google Maps">Google Maps</option>
           <option value="Open Street Maps" selected>Open Street Maps</option>
@@ -76,11 +58,7 @@
         Reports <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
       <mat-menu #reportsMenu="matMenu">
-        <button
-          mat-menu-item
-          [matMenuTriggerFor]="trackingReportsMenu"
-          class="mat-child border-bottom"
-        >
+        <button mat-menu-item [matMenuTriggerFor]="trackingReportsMenu" class="mat-child border-bottom">
           Tracking Reports
         </button>
         <button mat-menu-item class="mat-child border-bottom">
@@ -97,11 +75,7 @@
         <button mat-menu-item class="mat-child border-bottom">
           Asset History
         </button>
-        <button
-          mat-menu-item
-          class="mat-child border-bottom"
-          (click)="openAssetTripDialog()"
-        >
+        <button mat-menu-item class="mat-child border-bottom" (click)="openAssetTripDialog()">
           Asset Trips
         </button>
         <!-- <button mat-menu-item class="mat-child border-bottom" routerLink='asset-trip-report'>
@@ -158,22 +132,14 @@
       </mat-menu>
     </div>
 
-    <div
-      fxLayout="row"
-      fxLayoutAlign="center center"
-      style="width: max-content !important"
-    >
+    <div fxLayout="row" fxLayoutAlign="center center" style="width: max-content !important">
       <span class="border-right">
         <button mat-icon-button>
           <mat-icon>notifications</mat-icon>
         </button>
       </span>
       <span style="font-size: small; margin-left: 10px">Bhoomia Sharma</span>
-      <button
-        mat-button
-        class="mat-hover"
-        [matMenuTriggerFor]="userAccessablilityMenu"
-      >
+      <button mat-button class="mat-hover" [matMenuTriggerFor]="userAccessablilityMenu">
         <mat-icon>person_outline</mat-icon>
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
@@ -184,13 +150,8 @@
   </div>
 </mat-toolbar>
 
-<div
-  id="main-content"
-  class="inner-sidenav-content transition-2"
-  perfectScrollbar
-  [disabled]="!settings.fixedHeader"
-  (psScrollY)="onPsScrollY($event)"
->
+<div id="main-content" class="inner-sidenav-content transition-2" perfectScrollbar [disabled]="!settings.fixedHeader"
+  (psScrollY)="onPsScrollY($event)">
   <app-breadcrumb></app-breadcrumb>
   <div [class.has-footer]="settings.hasFooter">
     <!-- Sidebar -->
@@ -198,26 +159,16 @@
       <div class="col-md-2 p-1">
         <div class="shadow p-1 rounded" style="height: fit-content !important">
           <div class="panelKeysContainer rounded">
-            <button
-              mat-button
-              class="userPanelKeys"
-              (click)="openControlDialog()"
-            >
+            <button mat-button class="userPanelKeys" (click)="openControlDialog()">
               <mat-icon style="height: 0 !important">settings</mat-icon>
               <br />
               Control
             </button>
             <button mat-button class="userPanelKeys">
-              <mat-icon style="height: 0 !important"
-                >settings_applications</mat-icon
-              >
+              <mat-icon style="height: 0 !important">settings_applications</mat-icon>
               <br />Settings
             </button>
-            <button
-              mat-button
-              class="userPanelKeys"
-              (click)="openHistoryDialog()"
-            >
+            <button mat-button class="userPanelKeys" (click)="openHistoryDialog()">
               <mat-icon style="height: 0 !important">history</mat-icon>
               <br />History
             </button>
@@ -231,10 +182,7 @@
                 </ng-template>
                 <input type="text" placeholder="Search" class="SearchInput" />
                 <mat-accordion>
-                  <mat-expansion-panel
-                    style="margin-bottom: 0.6rem"
-                    class="ParentCheckBox"
-                  >
+                  <mat-expansion-panel style="margin-bottom: 0.6rem" class="ParentCheckBox">
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         <input type="checkbox" style="margin-right: 10px" />
@@ -243,32 +191,21 @@
                     </mat-expansion-panel-header>
                     <span *ngFor="let item of TREE_DATA; let i = index">
                       <span *ngIf="item.grp_name === 'Devices'">
-                        <div
-                          class="m-0 singleDevice border-bottom"
-                          *ngFor="let t1 of item.SubMenu; let j = index"
-                        >
-                          <input
-                            type="checkbox"
-                            [attr.data-dataTrack]="t1.datatrack"
-                            [attr.data-device_id]="t1.device_id"
-                            (change)="
+                        <div class="m-0 singleDevice border-bottom" *ngFor="let t1 of item.SubMenu; let j = index">
+                          <input type="checkbox" [attr.data-dataTrack]="t1.datatrack"
+                            [attr.data-device_id]="t1.device_id" (change)="
                               onCheck($event, t1.datatrack, t1.device_id)
-                            "
-                          />
+                            " />
                           <mat-icon>drive_eta</mat-icon>
-                          <span
-                            style="
+                          <span style="
                               max-width: 10ch;
                               white-space: nowrap;
                               overflow: hidden;
                               text-overflow: ellipsis;
-                            "
-                            >{{ t1.device_id }}
+                            ">{{ t1.device_id }}
                           </span>
-                          <small class="text-center"
-                            >Car's <br />
-                            Speed</small
-                          >
+                          <small class="text-center">Car's <br />
+                            Speed</small>
                           <mat-icon>arrow_forward</mat-icon>
                         </div>
                       </span>
@@ -284,57 +221,36 @@
                     <span *ngFor="let item of TREE_DATA; let i = index">
                       <span *ngIf="item.grp_name === 'Assets'">
                         <mat-accordion>
-                          <mat-expansion-panel
-                            *ngFor="let t1 of item.SubMenu; let j = index"
-                          >
-                            <mat-expansion-panel-header
-                              class="nestedPanelHeader"
-                            >
+                          <mat-expansion-panel *ngFor="let t1 of item.SubMenu; let j = index">
+                            <mat-expansion-panel-header class="nestedPanelHeader">
                               <mat-panel-title>
-                                <input
-                                  type="checkbox"
-                                  style="margin-right: 10px"
-                                />
+                                <input type="checkbox" style="margin-right: 10px" />
                                 {{ t1.grp_name }} ({{ t1.SubMenu.length }})
                               </mat-panel-title>
                             </mat-expansion-panel-header>
                             <span *ngIf="t1.SubMenu.length">
-                              <mat-expansion-panel
-                                *ngFor="let t2 of t1.SubMenu; let k = index"
-                              >
-                                <mat-expansion-panel-header
-                                  class="MorenestedPanelHeader"
-                                >
+                              <mat-expansion-panel *ngFor="let t2 of t1.SubMenu; let k = index">
+                                <mat-expansion-panel-header class="MorenestedPanelHeader">
                                   <mat-panel-title>
-                                    <input
-                                      type="checkbox"
-                                      style="margin-right: 10px"
-                                    />
+                                    <input type="checkbox" style="margin-right: 10px" />
                                     <span *ngIf="t2.vrn !== null">{{
                                       t2.vrn
-                                    }}</span>
+                                      }}</span>
                                     <span ngElse>
                                       {{ t2.grp_name }} ({{
-                                        t2.SubMenu.length
+                                      t2.SubMenu.length
                                       }})
                                     </span>
                                   </mat-panel-title>
                                 </mat-expansion-panel-header>
                                 <span *ngIf="t2.SubMenu.length">
-                                  <mat-expansion-panel
-                                    *ngFor="let t3 of t2.SubMenu; let l = index"
-                                  >
-                                    <mat-expansion-panel-header
-                                      class="nestedPanelHeader"
-                                    >
+                                  <mat-expansion-panel *ngFor="let t3 of t2.SubMenu; let l = index">
+                                    <mat-expansion-panel-header class="nestedPanelHeader">
                                       <mat-panel-title>
-                                        <input
-                                          type="checkbox"
-                                          style="margin-right: 10px"
-                                        />
+                                        <input type="checkbox" style="margin-right: 10px" />
                                         <span *ngIf="t3.vrn !== null">{{
                                           t3.vrn
-                                        }}</span>
+                                          }}</span>
                                         <span ngElse>
                                           {{ t3.grp_name }}
                                         </span>
@@ -378,13 +294,7 @@
     </div>
   </div>
 </div>
-<div
-  #backToTop
-  fxLayout="row"
-  fxLayoutAlign="center center"
-  class="back-to-top"
-  (click)="scrollToTop()"
->
+<div #backToTop fxLayout="row" fxLayoutAlign="center center" class="back-to-top" (click)="scrollToTop()">
   <mat-icon>arrow_upward</mat-icon>
 </div>
 <!-- </mat-sidenav-content> -->
@@ -401,77 +311,52 @@
       <img src="../../../assets/icons/ExportToPDF.png" alt="" />
     </button>
   </div>
-  <button
-    mat-icon-button
-    class="recordControl expBtn"
-    (click)="export()"
-    data-title="Export"
-  >
+  <div class="shapeSelect">
+    <button mat-icon-button>
+      <img src="../../../assets/icons/square.jpg" alt="" />
+    </button>
+    <br />
+    <button mat-icon-button>
+      <img src="../../../assets/icons/polygone.png" alt="" />
+    </button>
+    <br>
+    <button mat-icon-button>
+      <img src="../../../assets/icons/Circle.jpg" alt="" />
+    </button>
+  </div>
+  <button mat-icon-button class="recordControl expBtn" (click)="export()" data-title="Export">
     <img src="../../../assets/icons/Export.png" />
   </button>
-  <button mat-icon-button class="recordControl" data-title="Draw Route">
+  <button mat-icon-button class="recordControl drawButton" (click)="draw()" data-title="Draw Route">
     <img src="../../../assets/icons/Route.png" />
   </button>
-  <button
-    mat-icon-button
-    class="recordControl pauseBtn d-none"
-    (click)="pause()"
-    data-title="Pause"
-  >
+  <button mat-icon-button class="recordControl pauseBtn d-none" (click)="pause()" data-title="Pause">
     <img src="../../../assets/icons/Pause.png" />
   </button>
-  <button
-    mat-icon-button
-    class="recordControl playBtn"
-    (click)="play()"
-    data-title="Play"
-  >
+  <button mat-icon-button class="recordControl playBtn" (click)="play()" data-title="Play">
     <img src="../../../assets/icons/Play.png" />
   </button>
-  <button
-    mat-icon-button
-    class="recordControl"
-    (click)="speed()"
-    data-title="Speed"
-  >
+  <button mat-icon-button class="recordControl" (click)="speed()" data-title="Speed">
     <img src="../../../assets/icons/Speed.png" />
   </button>
-  <button
-    mat-icon-button
-    class="recordControl"
-    (click)="stop()"
-    data-title="Stop"
-  >
+  <button mat-icon-button class="recordControl" (click)="stop()" data-title="Stop">
     <img src="../../../assets/icons/Stop.png" />
   </button>
-  <button
-    mat-icon-button
-    class="recordControl"
-    (click)="toggleInfoCard()"
-    data-title="Device Info"
-  >
+  <button mat-icon-button class="recordControl" (click)="toggleInfoCard()" data-title="Device Info">
     <img src="../../../assets/icons/HistoryInfo.png" />
   </button>
-  <div
-    class="card rounded d-none infoCard"
-    style="position: absolute; bottom: 60px !important"
-  >
-    <div
-      class="card-header rounded"
-      style="
+  <div class="card rounded d-none infoCard" style="position: absolute; bottom: 60px !important">
+    <div class="card-header rounded" style="
         color: white !important;
         padding: 5px;
         font-weight: lighter !important;
         background-color: #18497d !important;
         border-bottom-right-radius: 0px !important;
         border-bottom-left-radius: 0px !important;
-      "
-    >
+      ">
       <h3 class="m-0">Information</h3>
     </div>
-    <div
-      class="card-body row m-0 p-2 rounded"
-      style="
+    <div class="card-body row m-0 p-2 rounded" style="
         background-color: #f6f6f6 !important;
         background-image: url('../../../../assets/images/map.png');
 
@@ -480,58 +365,40 @@
         background-position: center;
         border-top-right-radius: 0px !important;
         border-top-left-radius: 0px !important;
-      "
-    >
+      ">
       <div class="col-md-12">
         <h4 style="color: #27b489 !important">General Information</h4>
-        <div
-          style="
+        <div style="
             display: flex;
             justify-content: space-evenly;
             margin-bottom: 10px;
-          "
-        >
+          ">
           <div class="border-right" style="padding: 10px">
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Serial
             </h6>
             <h6 class="text-muted m-0 p-0">1209114</h6>
           </div>
           <div class="border-right" style="padding: 10px">
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Name
             </h6>
             <h6 class="text-muted m-0 p-0">LMG 1020</h6>
           </div>
           <div class="border-right" style="padding: 10px">
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Latitude
             </h6>
             <h6 class="text-muted m-0 p-0">32.4533 / 32* 31* 43.7* N</h6>
           </div>
           <div class="border-right" style="padding: 10px">
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Latitude
             </h6>
             <h6 class="text-muted m-0 p-0">32.4533 / 32* 31* 43.7* N</h6>
           </div>
           <div style="padding: 10px">
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Last Updated
             </h6>
             <h6 class="text-muted m-0 p-0">Dec 17 2020 4:02:34 PM</h6>
@@ -541,96 +408,67 @@
       <div class="col-md-12">
         <h4 style="color: #27b489 !important">Sensor Information</h4>
         <div style="display: flex; margin-bottom: 10px">
-          <div
-            class="border-right"
-            style="
+          <div class="border-right" style="
               padding: 10px;
               display: flex;
               justify-content: center;
               align-items: center;
               flex-direction: column;
               width: calc(100% / 5);
-            "
-          >
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            ">
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Velocity
             </h6>
             <h6 class="text-muted m-0 p-0">21.0 MPH / 35KPH</h6>
           </div>
-          <div
-            class="border-right"
-            style="
+          <div class="border-right" style="
               padding: 10px;
               display: flex;
               justify-content: center;
               align-items: center;
               flex-direction: column;
               width: calc(100% / 5);
-            "
-          >
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            ">
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Heading
             </h6>
             <h6 class="text-muted m-0 p-0">184* South</h6>
           </div>
-          <div
-            class="border-right"
-            style="
+          <div class="border-right" style="
               padding: 10px;
               display: flex;
               justify-content: center;
               align-items: center;
               flex-direction: column;
               width: calc(100% / 5);
-            "
-          >
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            ">
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               GPS Satellites
             </h6>
             <h6 class="text-muted m-0 p-0">0</h6>
           </div>
-          <div
-            class="border-right"
-            style="
+          <div class="border-right" style="
               padding: 10px;
               display: flex;
               justify-content: center;
               align-items: center;
               flex-direction: column;
               width: calc(100% / 5);
-            "
-          >
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            ">
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Ignition
             </h6>
             <h6 class="text-muted m-0 p-0">Off</h6>
           </div>
-          <div
-            style="
+          <div style="
               padding: 10px;
               display: flex;
               justify-content: center;
               align-items: center;
               flex-direction: column;
               width: calc(100% / 5);
-            "
-          >
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            ">
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Power
             </h6>
             <h6 class="text-muted m-0 p-0">0%</h6>
