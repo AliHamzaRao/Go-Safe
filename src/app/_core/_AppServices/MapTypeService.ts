@@ -9,7 +9,6 @@ export class mapTypeService {
     private currentMap = new BehaviorSubject('Open Street Maps');
     newMap = this.currentMap.asObservable();
     SetMap(map: string) {
-        debugger;
         this.currentMap.next(map);
     }
 }

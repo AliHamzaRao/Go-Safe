@@ -8,7 +8,6 @@ export class AllDevicesDataService {
     private AllDevicesData = new BehaviorSubject('[]');
     AllDevices = this.AllDevicesData.asObservable();
     SetDevices(data: string) {
-        debugger;
         this.AllDevicesData.next(data);
     }
 }

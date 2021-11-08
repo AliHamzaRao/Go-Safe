@@ -241,7 +241,6 @@ export class PagesComponent implements OnInit {
     this.drawLine()
     $('.pauseBtn').removeClass('d-none');
     $('.playBtn').addClass('d-none')
-    L.polyline(this.markerData).addTo(map)
     if (this.currentState !== this.markerData.length - 1) {
       this.setTime = setInterval(() => {
         this.latitude = this.markerData[this.currentState][0];
@@ -273,12 +272,20 @@ export class PagesComponent implements OnInit {
     this.interval = this.interval
   }
   speed() {
-    this.pause();
-    clearInterval(this.interval)
-    this.interval = null;
-    this.interval = 1000;
-    this.interval = this.interval - 500
-    this.play();
+    if(this.markerData.length){
+      this.pause();
+      clearInterval(this.interval)
+      this.interval = null;
+      this.interval = 1000;
+      this.interval = this.interval - 500
+      this.play();
+    }
+    else{
+      clearInterval(this.interval)
+      this.interval = null;
+      this.interval = 1000;
+      this.interval = this.interval - 500
+    }
     // this.markerData = [];
     // this.play();
     // if (this.interval == 1000) {
@@ -333,13 +340,13 @@ export class PagesComponent implements OnInit {
   // #endregion
   //#region On CheckBox
   onCheck(e, DataTrack: string, _id: any) {
-    debugger;
     $(".vehicleCard").addClass('d-none');
     $('.vehicleCardMore').addClass('d-none')
     let marker: string[];
     if (e.target.checked) {
       this.newPacketParse = new PacketParser(DataTrack);
       this.data = { ...this.newPacketParse };
+      console.log(this.data)
       this.lat = parseFloat(this.data.lat);
       this.lng = parseFloat(this.data.lng);
       marker = [this.data.device_id, this.data.lat, this.data.lng];

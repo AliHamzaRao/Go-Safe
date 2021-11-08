@@ -9,7 +9,6 @@ export class markerService {
   private currentMarkers = new BehaviorSubject('[[0,0,0]]');
   newMarkers = this.currentMarkers.asObservable();
   SetMarkers(markers: string) {
-    debugger;
     this.currentMarkers.next(markers);
   }
 }

@@ -124,7 +124,6 @@ export class DashboardComponent implements OnInit {
     // this.interval = this.interval - 200;
   }
   play() {
-    debugger;
     this.historyDataService.newMarkers.subscribe((data) => {
       this.markersData = JSON.parse(data);
     });
@@ -177,7 +176,6 @@ export class DashboardComponent implements OnInit {
 
   //#region Selected Marker Info
   getMarkerInfo(data: any[]) {
-    debugger;
     // this.markerService.SetMarkers(JSON.parse(this.markers));
     let singleDevice = this.AllDevices.filter(
       (item: { device_id: any }) => item.device_id === data[0]
