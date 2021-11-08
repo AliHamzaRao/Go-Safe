@@ -23,6 +23,6 @@ export class Data {
   public History: History[];
   public geofence: object[];
   public History_Period: string;
-  public ErrorMessage: object;
+  public ErrorMessage: string;
   public Count: number;
 }

@@ -16,9 +16,13 @@ import { FormGroup } from "@angular/forms"
 import { historyService } from 'src/app/_core/_AppServices/historyService';
 import { historyDataService } from 'src/app/_core/_AppServices/HistoryDataService';
 import { DashboardComponent } from '../dashboard/dashboard.component';
+import { ToastrService } from "ngx-toastr"
+import { SingleDeviceDataService } from 'src/app/_core/_AppServices/SingleDeviceDataService';
 declare var L;
 var map;
 var el;
+var reg_no;
+var mapType;
 @Component({
   selector: 'app-pages',
   templateUrl: './pages.component.html',
@@ -63,13 +67,14 @@ export class PagesComponent implements OnInit {
   public lastScrollTop: number = 0;
   public showBackToTop: boolean = false;
   public toggleSearchBar: boolean = false;
-  private defaultMenu: string; //declared for return default menu when window resized 
+  private defaultMenu: string;
 
-  constructor(public appSettings: AppSettings, public router: Router, private menuService: MenuService, public dialog: MatDialog, public route: ActivatedRoute, public markersService: markerService, public mapTypeService: mapTypeService, public AllDeviceDataService: AllDevicesDataService, public historyDataService: historyDataService) {
+  constructor(public appSettings: AppSettings, public router: Router, private menuService: MenuService, public dialog: MatDialog, public route: ActivatedRoute, public markersService: markerService, public mapTypeService: mapTypeService, public AllDeviceDataService: AllDevicesDataService, public historyDataService: historyDataService, public singleDeviceDataService: SingleDeviceDataService, public Toast: ToastrService) {
     this.settings = this.appSettings.settings;
   }
+  //#region OnInit
   ngOnInit() {
-    this.mapTypeService.newMap.subscribe((mapType) => this.mapType = mapType)
+    this.mapTypeService.newMap.subscribe((mapType) => mapType = mapType)
     this.AllDeviceDataService.AllDevices.subscribe((data) => this.AllDevices = JSON.parse(data))
     this.route.data.subscribe((data) => {
       data["model"].data.forEach((item: any, index: any) => {
@@ -77,27 +82,12 @@ export class PagesComponent implements OnInit {
       });
       this.TREE_DATA[1].SubMenu.sort((a: { grp_name: number; }, b: { grp_name: number; }) => (a.grp_name > b.grp_name) ? 1 : ((b.grp_name > a.grp_name) ? -1 : 0))
     });
-    // this.setTime = setInterval(() => {
-    //   this.latitude = this.latitude + 0.0001;
-    //   this.longitude = this.longitude + 0.0002;
-    //   this.markerData.push([
-    //     this.latitude,
-    //     this.longitude,
-    //   ])
-    //   L.polyline(this.markerData).addTo(this.map)
-    //   this.markerData = [];
-    // }, this.interval)
-    this.mapType = $(".mapDropdown").find(':selected').val()
+    mapType = $(".mapDropdown").find(':selected').val()
     $('.mapDropdown').on('change', ($event) => {
-      // $('.leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable').remove()
-      // $('.leaflet-marker-shadow.leaflet-zoom-animated').remove()
-      // map.removeLayer(this.marker)
       $(".vehicleCard").addClass('d-none');
       $('.vehicleCardMore').addClass('d-none')
-      $('.leafletDialog').toggleClass("d-none")
-      $('.googleMapRecord').toggleClass('d-none')
       $('.agm-map-container-inner').addClass('rounded')
-      this.mapType = $(".mapDropdown").find(':selected').val()
+      mapType = $(".mapDropdown").find(':selected').val()
       this.loadLeafLetMap();
       setTimeout(() => {
         this.setLeafLetMarkers();
@@ -116,10 +106,8 @@ export class PagesComponent implements OnInit {
       this.setLeafLetMarkers();
     }, 1000);
   }
-  Logout() {
-    localStorage.removeItem("token");
-    this.router.navigate(['/login']);
-  }
+  //#endregion
+  //#region AfterViewInit Hook
   ngAfterViewInit() {
     this.loadLeafLetMap();
     setTimeout(() => { this.settings.loadingSpinner = false }, 300);
@@ -137,6 +125,14 @@ export class PagesComponent implements OnInit {
     if (this.settings.menu == "vertical")
       this.menuService.expandActiveSubMenu(this.menuService.getVerticalMenuItems());
   }
+  //#endregion
+  //#region Logout
+  Logout() {
+    localStorage.removeItem("token");
+    this.router.navigate(['/login']);
+  }
+  //#endregion
+  //#region Menu Events
   public chooseMenu() {
     this.settings.menu = this.menuOption;
     this.defaultMenu = this.menuOption;
@@ -212,6 +208,7 @@ export class PagesComponent implements OnInit {
       }
     }
   }
+  //#endregion
   //#region Load Leaflet Maps
   loadLeafLetMap() {
     setTimeout(() => {
@@ -222,7 +219,6 @@ export class PagesComponent implements OnInit {
     });
   }
   stop() {
-    console.log("Stopped");
     $('.leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable').remove()
     $('.leaflet-marker-shadow.leaflet-zoom-animated').remove()
     this.currentState = 0;
@@ -234,10 +230,8 @@ export class PagesComponent implements OnInit {
     this.markersData.forEach((el) => {
       this.markerData.push([el.Latitude, el.Longitude])
     })
-    // L.polyline(this.markerData).addTo(map)
   }
   play() {
-    console.log("played");
     this.drawLine()
     $('.pauseBtn').removeClass('d-none');
     $('.playBtn').addClass('d-none')
@@ -246,9 +240,7 @@ export class PagesComponent implements OnInit {
         this.latitude = this.markerData[this.currentState][0];
         this.longitude = this.markerData[this.currentState][1];
         this.currentState++;
-        console.log("Marker Postion :", this.currentState, "Array Length: ", this.markerData.length - 1, "Time Interval AKA Speed: ", this.interval)
         if (this.currentState === this.markerData.length - 1) {
-          console.log("Ereased")
           this.pause();
           this.markerData = [];
         }
@@ -262,7 +254,6 @@ export class PagesComponent implements OnInit {
     }
   }
   pause() {
-    console.log("Paused");
     $('.pauseBtn').addClass('d-none');
     $('.playBtn').removeClass('d-none')
     clearInterval(this.setTime)
@@ -272,7 +263,7 @@ export class PagesComponent implements OnInit {
     this.interval = this.interval
   }
   speed() {
-    if(this.markerData.length){
+    if (this.markerData.length) {
       this.pause();
       clearInterval(this.interval)
       this.interval = null;
@@ -280,17 +271,12 @@ export class PagesComponent implements OnInit {
       this.interval = this.interval - 500
       this.play();
     }
-    else{
+    else {
       clearInterval(this.interval)
       this.interval = null;
       this.interval = 1000;
       this.interval = this.interval - 500
     }
-    // this.markerData = [];
-    // this.play();
-    // if (this.interval == 1000) {
-    //   this.interval = 100;
-    // }
   }
   toggleDisplay() {
     $(".vehicleCard").addClass('d-none');
@@ -310,11 +296,10 @@ export class PagesComponent implements OnInit {
         return false;
       }
       else {
-        new L.marker([this.markers[index][1], this.markers[index][2]])
+        new L.marker([this.markers[index][1], this.markers[index][2]]).bindPopup("<strong>Current Locataion</strong>", { maxWidth: 500 })
           .addTo(map).on('click', () => {
             this.getMarkerInfo([this.markers[index][0], this.markers[index][1], this.markers[index][2]])
           })
-        // $('.leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable').attr('id',this.markers[index][0])
         map.setView([this.lat, this.lng], 12);
         this.mapBounds.push([this.markers[index][1], this.markers[index][2]])
         map.fitBounds(this.mapBounds);
@@ -328,14 +313,19 @@ export class PagesComponent implements OnInit {
     this.AllDeviceDataService.AllDevices.subscribe((data) => this.AllDevices = JSON.parse(data))
     let singleDevice = this.AllDevices.filter((item: { device_id: any; }) => item.device_id === info[0]);
     this.singleDeviceData = singleDevice;
-    console.log(this.singleDeviceData)
+    this.singleDeviceDataService.SetDevice(JSON.stringify(this.singleDeviceData))
     map.setView([info[1], info[2]], 20);
     this.lat = info[1];
     this.lng = info[2];
-    setTimeout(() => {
+    if ($('.recordDialogOffset').is(":visible") || $(".googleMapRecord").is(":visible")) {
+      this.Toast.error("Cannot Show device detail, until History is opened", "Error Showing device Details")
+      return null;
+    }
+    else {
       $('.vehicleCard').removeClass('d-none');
       $('.vehicleCardMore').addClass('d-none');
-    }, 100)
+
+    }
   }
   // #endregion
   //#region On CheckBox
@@ -346,40 +336,37 @@ export class PagesComponent implements OnInit {
     if (e.target.checked) {
       this.newPacketParse = new PacketParser(DataTrack);
       this.data = { ...this.newPacketParse };
-      console.log(this.data)
       this.lat = parseFloat(this.data.lat);
       this.lng = parseFloat(this.data.lng);
       marker = [this.data.device_id, this.data.lat, this.data.lng];
       this.markers.push(marker);
       let markerString = JSON.stringify(this.markers)
       this.markersService.SetMarkers(markerString);
+      this.setLeafLetMarkers()
       this.AllDevices.push(this.data);
       this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices))
       this.AllDeviceDataService.AllDevices.subscribe((data) => {
-        // console.log(data);
         this.AllDevices = JSON.parse(data)
-        // console.log(this.AllDevices)
       })
-      // this.AllDeviceDataService.AllDevices.subscribe((data) => data = JSON.stringify(this.AllDevices))
-      this.setLeafLetMarkers();
     }
     else {
       this.closeDetails();
-      this.map.remove();
-      this.loadLeafLetMap();
-      setTimeout(() => {
-        this.setLeafLetMarkers();
-      }, 1000)
       let index = this.AllDevices.findIndex((item: { device_id: any; }) => item.device_id === _id)
       this.AllDevices.splice(index, 1)
-      setTimeout(() => {
-        this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices))
-        this.AllDeviceDataService.AllDevices.subscribe((data) => this.AllDevices = JSON.parse(data))
-      }, 100);
       let MarkerIndex = this.markers.findIndex((item: any[]) => item[0] === _id);
       this.markers.splice(MarkerIndex, 1)
       let markerString = JSON.stringify(this.markers)
       this.markersService.SetMarkers(markerString);
+      setTimeout(() => {
+        this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices))
+        this.AllDeviceDataService.AllDevices.subscribe((data) => this.AllDevices = JSON.parse(data))
+      }, 100);
+      if (map) {
+        map.remove();
+        this.loadLeafLetMap();
+      } setTimeout(() => {
+        this.setLeafLetMarkers();
+      }, 1000)
       if (!this.AllDevices.length) {
         $('.vehicleCard').addClass('d-none')
       }
@@ -394,22 +381,40 @@ export class PagesComponent implements OnInit {
   //#endregion
   //#region Dialog Methods 
   openHistoryDialog() {
-    // console.log(this.AllDevices)
-    // if (this.AllDevices.length > 1 || this.AllDevices.length !== 0 || this.AllDevices.length === 0) {
-    //   alert("Select only one device")
-    //   return false;
-    // }
-    // else {
-    this.dialog.open(historyDialogComponent);
-    $(".vehicleCard").addClass('d-none');
-    $('.vehicleCardMore').addClass('d-none')
-    // }
+    if (this.AllDevices.length == 1) {
+      if ($(".vehicleCardMore").is(":visible") || $('.vehicleCard').is(":visible")) {
+        this.Toast.error("Please Close Details to proceed", "Error showing Dialog");
+      }
+      else {
+
+        reg_no = this.AllDevices[0].veh_reg_no;
+        this.dialog.open(historyDialogComponent);
+        this.closeDetails();
+      }
+    }
+    else if (this.AllDevices.length > 1) {
+      this.Toast.error("Please Select only One Device", "Error showing Dialog");
+
+    }
+    else {
+      this.Toast.error("Please Select a Device", "Error Showing Dialog");
+    }
+    return null;
   }
   openAssetTripDialog() {
     this.dialog.open(AssetTripDialogComponent);
   }
   openControlDialog() {
-    this.dialog.open(ControlDialogComponent);
+    if (this.AllDevices.length == 1) {
+      this.dialog.open(ControlDialogComponent);
+    }
+    else if (this.AllDevices.length > 1) {
+      this.Toast.error("Please Select only One Device", "Error showing Dialog");
+    }
+    else {
+      this.Toast.error("Please Select a Device", "Error Showing Dialog");
+    }
+    return null;
   }
   closeHistoryDialog() {
     this.dialog.closeAll();
@@ -435,7 +440,7 @@ export class historyDialogComponent implements OnInit {
   setTime: any;
   interval: number = 500;
   public form: FormGroup
-  constructor(public dialog: MatDialog, public historyService: historyService, public historyDataService: historyDataService) { }
+  constructor(public dialog: MatDialog, public historyService: historyService, public historyDataService: historyDataService, public Toast: ToastrService) { }
   ngOnInit() {
   }
   onCheck(e) {
@@ -446,42 +451,44 @@ export class historyDialogComponent implements OnInit {
     let dateStart = $('#de_start').val().toLocaleString().replace("T", " ");
     let dateEnd = $('#de_end').val().toLocaleString().replace("T", " ");
     let speed = this.speed;
+    let veh_reg_no = reg_no;
     var data = {
       veh_reg_no: "G797W",
-      History_type: "Replay",
-      de_start: "2021-07-21 19:00",
-      de_end: "2021-07-21 21:00",
-      speed: true,
+      History_type: History_type,
+      de_start: dateStart,
+      de_end: dateEnd,
+      speed: speed,
     }
     this.historyService.DeviceHistory(data).subscribe((data) => {
       this.historyDataService.setNewMarkers(JSON.stringify(data.data.History))
-      data.data.History.forEach((el, i) => {
-        this.markerData.push([parseFloat(el.Latitude), parseFloat(el.Longitude)])
-        this.lat = parseFloat(el.Latitude);
-        this.lng = parseFloat(el.Longitude)
-      })
-      map.setView([this.lat, this.lng], 10)
-      L.polyline(this.markerData).addTo(map)
-      this.dialog.closeAll();
-      $(".recordDialogOffset").removeClass("d-none")
-      $('.googleMapRecord').toggleClass("d-none")
-      $(".vehicleCard").addClass('d-none');
-      $('.vehicleCardMore').addClass('d-none')
-    })
-  }
-  play() {
-    // new L.marker([this.markers[index][1], this.markers[index][2]])
-    if (this.currentState !== this.markerData.length - 1) {
-      this.setTime = setInterval(() => {
-        this.lat = this.markerData[this.currentState][0];
-        this.lng = this.markerData[this.currentState][1];
-        this.currentState++;
-        if (this.currentState === this.markerData.length - 1) {
-          clearInterval(this.setTime)
-          this.interval = null;
+      if (data.status) {
+        if (data.data.History.length) {
+          data.data.History.forEach((el, i) => {
+            this.markerData.push([parseFloat(el.Latitude), parseFloat(el.Longitude)])
+            this.lat = parseFloat(el.Latitude);
+            this.lng = parseFloat(el.Longitude)
+          })
+          this.Toast.success(data.data.ErrorMessage, data.message)
+          map.setView([this.lat, this.lng], 10)
+          L.polyline(this.markerData).addTo(map)
+          this.dialog.closeAll();
+          if (mapType == "Google Maps") {
+            $('.googleMapRecord').removeClass("d-none")
+          }
+          else {
+            $(".recordDialogOffset").removeClass("d-none")
+          }
+          $(".vehicleCard").addClass('d-none');
+          $('.vehicleCardMore').addClass('d-none')
         }
-      }, this.interval);
-    }
+        else {
+          this.Toast.error(data.data.ErrorMessage, data.message)
+        }
+      }
+      else {
+        this.Toast.error("We cannot proceed to your request now please check your network connection", "Error Drawing Route")
+      }
+    })
   }
 };
 // @Component({
@@ -521,6 +528,10 @@ export class ControlDialogComponent {
     this.dialog.closeAll();
     this.dialog.open(ResetOdometerDialogComponent);
   }
+  takePicture() {
+    this.dialog.closeAll();
+    this.dialog.open(SendTakePictureDialogComponent);
+  }
 };
 @Component({
   selector: 'app-reset-odometer-dialog',
@@ -532,12 +543,12 @@ export class ResetOdometerDialogComponent {
   onOdometerReset() {
     this.dialog.closeAll();
     this.dialog.open(OdometerResetSuccessDialogComponent)
-
   }
   closeResetOdometer() {
     this.dialog.closeAll();
     this.dialog.open(ControlDialogComponent)
   }
+
 };
 @Component({
   selector: 'app-reset-odometer-success-dialog',
@@ -551,5 +562,20 @@ export class OdometerResetSuccessDialogComponent {
     this.dialog.closeAll();
     this.dialog.open(ControlDialogComponent)
   }
+};
+@Component({
+  selector: 'app-take=picture-dialog',
+  templateUrl: './Dialogs/SendTakePictureDialog.html',
+  styleUrls: ["../pages/pages.component.scss", "../pages/Dialogs/TakePictureDialog.scss"]
+})
+export class SendTakePictureDialogComponent {
+  constructor(public dialog: MatDialog) { }
+  sendTakePicture() {
+    console.log("Take Picture")
+  }
+  closeTakePicture() {
+    console.log("Close Take Picture")
+  }
+
 };
 //#endregion

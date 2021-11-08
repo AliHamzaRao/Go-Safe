@@ -6,7 +6,7 @@ import { historyService } from '../_core/_AppServices/historyService';
 import { Response } from '../_interfaces/DBresponse.model';
 
 @Injectable()
-export class VehicleListResolver implements Resolve<Response>{
+export class ResponseResolver implements Resolve<Response>{
 
   constructor(private historyService: historyService, private router: Router) { }
 
