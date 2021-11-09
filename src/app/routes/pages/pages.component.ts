@@ -18,6 +18,7 @@ import { historyDataService } from 'src/app/_core/_AppServices/HistoryDataServic
 import { DashboardComponent } from '../dashboard/dashboard.component';
 import { ToastrService } from "ngx-toastr"
 import { SingleDeviceDataService } from 'src/app/_core/_AppServices/SingleDeviceDataService';
+import { GeoFenceService } from 'src/app/_core/_AppServices/GeoFenceService';
 declare var L;
 var map;
 var el;
@@ -55,7 +56,7 @@ export class PagesComponent implements OnInit {
   currentState: number = 0;
   setTime: any;
   marker: any;
-
+  geoFences: any;
   @ViewChild(DashboardComponent, { static: true }) child: DashboardComponent;
   @ViewChild('sidenav') sidenav: any;
   @ViewChild('backToTop') backToTop: any;
@@ -69,13 +70,17 @@ export class PagesComponent implements OnInit {
   public toggleSearchBar: boolean = false;
   private defaultMenu: string;
 
-  constructor(public appSettings: AppSettings, public router: Router, private menuService: MenuService, public dialog: MatDialog, public route: ActivatedRoute, public markersService: markerService, public mapTypeService: mapTypeService, public AllDeviceDataService: AllDevicesDataService, public historyDataService: historyDataService, public singleDeviceDataService: SingleDeviceDataService, public Toast: ToastrService) {
+  constructor(public appSettings: AppSettings, public router: Router, private menuService: MenuService, public dialog: MatDialog, public route: ActivatedRoute, public markersService: markerService, public mapTypeService: mapTypeService, public AllDeviceDataService: AllDevicesDataService, public GeoFence: GeoFenceService, public historyDataService: historyDataService, public singleDeviceDataService: SingleDeviceDataService, public Toast: ToastrService) {
     this.settings = this.appSettings.settings;
   }
   //#region OnInit
   ngOnInit() {
     this.mapTypeService.newMap.subscribe((mapType) => mapType = mapType)
     this.AllDeviceDataService.AllDevices.subscribe((data) => this.AllDevices = JSON.parse(data))
+    this.GeoFence.geoFence().subscribe((data) => {
+      console.log(data.data)
+      this.geoFences = data.data
+    })
     this.route.data.subscribe((data) => {
       data["model"].data.forEach((item: any, index: any) => {
         this.TREE_DATA.push(item);
@@ -317,9 +322,9 @@ export class PagesComponent implements OnInit {
     let singleDevice = this.AllDevices.filter((item: { device_id: any; }) => item.device_id === info[0]);
     this.singleDeviceData = singleDevice;
     this.singleDeviceDataService.SetDevice(JSON.stringify(this.singleDeviceData))
-    map.setView([info[1], info[2]], 20);
     this.lat = info[1];
     this.lng = info[2];
+    map.setView([this.lat, this.lng], 20);
     if ($('.recordDialogOffset').is(":visible") || $(".googleMapRecord").is(":visible")) {
       this.Toast.error("Cannot Show device detail, until History is opened", "Error Showing device Details")
       return null;
@@ -327,8 +332,13 @@ export class PagesComponent implements OnInit {
     else {
       $('.vehicleCard').removeClass('d-none');
       $('.vehicleCardMore').addClass('d-none');
-
+      if ($('.vehicleCard').is(":visible") || $('.vehicleCardMore').is(":visible")) {
+        setTimeout(() => {
+          this.closeDetails()
+        }, 10000)
+      }
     }
+    L.circle(new L.LatLng(this.lat, this.lng), { radius: 20 }, { color: "red" }).addTo(map)
   }
   // #endregion
   //#region On CheckBox
@@ -339,6 +349,7 @@ export class PagesComponent implements OnInit {
     if (e.target.checked) {
       this.newPacketParse = new PacketParser(DataTrack);
       this.data = { ...this.newPacketParse };
+      console.log(this.data)
       this.lat = parseFloat(this.data.lat);
       this.lng = parseFloat(this.data.lng);
       marker = [this.data.device_id, this.data.lat, this.data.lng];
@@ -424,6 +435,46 @@ export class PagesComponent implements OnInit {
     $(".vehicleCard").addClass('d-none');
     $('.vehicleCardMore').addClass('d-none')
   }
+
+  Draw(data: any) {
+    let nest = [];
+    data.FenceParam.split("|").forEach(element => {
+      let str;
+      var tempArr = [];
+      if (element.includes("@")) {
+        str = element.split("@");
+        tempArr.push(parseFloat(str[0]))
+        tempArr.push(parseFloat(str[1]))
+      }
+      if (element.includes(",")) {
+        str = element.split(",")
+        tempArr.push(parseFloat(str[0]))
+        tempArr.push(parseFloat(str[1]))
+      }
+      nest.push(tempArr)
+    });
+    if (data.gf_type == "Polygon") {
+      console.log(nest)
+      map.setView(nest[nest.length - 1], 10)
+      for (var i = 0; i < nest.length; i++) {
+        new L.marker(nest[i]).addTo(map);
+      }
+      L.polygon(nest, { color: "red" }).addTo(map)
+      nest = [];
+    }
+    if (data.gf_type == "Rectangle") {
+      map.setView(nest[0], 10)
+      L.rectangle(nest, { color: 'yellow' }).addTo(map);
+      nest = [];
+    }
+    if (data.gf_type == "Circle") {
+      console.log(nest)
+      map.setView(nest[0], 14)
+      new L.marker(...nest).addTo(map)
+      L.circle(...nest, 700, { color: 'yellow' }).addTo(map);
+      nest = [];
+    }
+  }
   //#endregion
 }
 //#region Dialogs Component Declarations
@@ -456,12 +507,13 @@ export class historyDialogComponent implements OnInit {
     let speed = this.speed;
     let veh_reg_no = reg_no;
     var data = {
-      veh_reg_no: "G797W",
+      veh_reg_no: 'G797W',
       History_type: History_type,
       de_start: dateStart,
       de_end: dateEnd,
       speed: speed,
     }
+    console.log(data)
     this.historyService.DeviceHistory(data).subscribe((data) => {
       this.historyDataService.setNewMarkers(JSON.stringify(data.data.History))
       if (data.status) {
@@ -474,6 +526,8 @@ export class historyDialogComponent implements OnInit {
           this.Toast.success(data.data.ErrorMessage, data.message)
           map.setView([this.lat, this.lng], 10)
           L.polyline(this.markerData).addTo(map)
+          L.polygon(this.markerData, { color: 'red' }).addTo(map);
+          L.rectangle(this.markerData, { color: 'yellow' }).addTo(map);
           this.dialog.closeAll();
           if (mapType == "Google Maps") {
             $('.googleMapRecord').removeClass("d-none")
@@ -567,11 +621,26 @@ export class OdometerResetSuccessDialogComponent {
   }
 };
 @Component({
-  selector: 'app-take=picture-dialog',
+  selector: 'app-take-picture-dialog',
   templateUrl: './Dialogs/SendTakePictureDialog.html',
   styleUrls: ["../pages/pages.component.scss", "../pages/Dialogs/TakePictureDialog.scss"]
 })
 export class SendTakePictureDialogComponent {
+  constructor(public dialog: MatDialog) { }
+  sendTakePicture() {
+    this.dialog.closeAll();
+    this.dialog.open(PictureChannelDialogComponent)
+  }
+  closeTakePicture() {
+    console.log("Close Take Picture")
+  }
+};
+@Component({
+  selector: 'app-picture-channel-dialog',
+  templateUrl: './Dialogs/PictureChannelDialog.html',
+  styleUrls: ["../pages/pages.component.scss", "../pages/Dialogs/TakePictureDialog.scss"]
+})
+export class PictureChannelDialogComponent {
   constructor(public dialog: MatDialog) { }
   sendTakePicture() {
     console.log("Take Picture")
@@ -579,6 +648,5 @@ export class SendTakePictureDialogComponent {
   closeTakePicture() {
     console.log("Close Take Picture")
   }
-
 };
 //#endregion

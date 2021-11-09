@@ -22,7 +22,8 @@
     <div fxLayout="row" style="align-items: center">
       <button mat-button class="mat-hover">Live Tacking</button>
       <button mat-button class="mat-hover">Vehicles</button>
-      <button mat-button class="mat-hover">Geofence</button>
+      <button mat-button [matMenuTriggerFor]="GeoFenceMenu" class="mat-hover">Geofence <mat-icon>keyboard_arrow_down
+        </mat-icon></button>
       <button mat-button class="mat-hover" [matMenuTriggerFor]="routeMenu">
         Route <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
@@ -128,6 +129,14 @@
         </button>
         <button mat-menu-item class="mat-child border-bottom">
           Alarm Audit Report
+        </button>
+      </mat-menu>
+      <mat-menu #GeoFenceMenu="matMenu">
+        <button mat-menu-item class="mat-child border-bottom">
+          Show Fence
+        </button>
+        <button mat-menu-item class="mat-child border-bottom">
+          Create Fence
         </button>
       </mat-menu>
     </div>
@@ -288,6 +297,32 @@
       <div class="col-md-10 p-1" style="position: relative">
         <!-- <button (click)="play()">Play</button>
         <button (click)="pause()">Pause</button> -->
+
+        <!-- Fence List -->
+        <mat-selection-list [multiple]="false" class="shadow rounded selectionList" style="
+        position: absolute;
+        z-index: 1001;
+        background: white;
+        width: 20%;
+        height: 88vh;
+        margin: 4px;
+        overflow-y: scroll;">
+          <mat-list-option *ngFor="let geoFence of geoFences" [value]="geoFence.gf_name" class="matListOption"
+            (click)="Draw({FenceParam : geoFence.FenceParam, gf_id:geoFence.gf_id,gf_diff: geoFence.gf_diff,gf_name:geoFence.gf_name, gf_type:geoFence.gf_type})">
+            <span *ngIf="geoFence.gf_type === 'Circle'">
+              <img style="margin-right: 10px;" src='../../../assets/icons/Circle.jpg' alt="cir">
+            </span>
+            <span *ngIf="geoFence.gf_type === 'Rectangle'">
+              <img style="margin-right: 10px;" src='../../../assets/icons/square.jpg' alt="sq">
+            </span>
+            <span *ngIf="geoFence.gf_type === 'Polygon'">
+              <img style="margin-right: 10px;" src='../../../assets/icons/polygone.png' alt="poly">
+            </span>
+            {{geoFence.gf_name}}
+            <mat-divider></mat-divider>
+          </mat-list-option>
+        </mat-selection-list>
+        <!-- Fence List -->
         <router-outlet></router-outlet>
         <!-- <app-dashboard></app-dashboard> -->
       </div>

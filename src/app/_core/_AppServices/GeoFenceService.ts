@@ -5,14 +5,12 @@ import { Response } from 'src/app/_interfaces/DBresponse.model';
 @Injectable({
     providedIn: 'root',
 })
-export class historyService {
+export class GeoFenceService {
     response: any;
     constructor(public http: HttpClient) { }
 
-    // private currentMap = new BehaviorSubject('Open Street Maps');
-    // newMap = this.currentMap.asObservable();
-    DeviceHistory(value: any): Observable<Response> {
-        return this.http.post<Response>(this.getApiUrl() + '/api/HistoryReplay/view', value);
+    geoFence(): Observable<Response> {
+        return this.http.get<Response>(this.getApiUrl() + '/api/GEOFENCES/list');
     }
     getApiUrl() {
         var apiInfo = JSON.parse(localStorage.getItem('apiinfo'));

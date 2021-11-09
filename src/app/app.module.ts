@@ -22,7 +22,7 @@ import { PipesModule } from './theme/pipes/pipes.module';
 import { AppRoutingModule } from './app.routing';
 
 import { AppComponent } from './app.component';
-import { AssetTripDialogComponent, ControlDialogComponent, historyDialogComponent, OdometerResetSuccessDialogComponent, PagesComponent, ResetOdometerDialogComponent, SendTakePictureDialogComponent } from 'src/app/routes/pages/pages.component';
+import { AssetTripDialogComponent, ControlDialogComponent, historyDialogComponent, OdometerResetSuccessDialogComponent, PagesComponent, PictureChannelDialogComponent, ResetOdometerDialogComponent, SendTakePictureDialogComponent } from 'src/app/routes/pages/pages.component';
 import { NotFoundComponent } from './routes/pages/errors/not-found/not-found.component';
 import { ErrorComponent } from './routes/pages/errors/error/error.component';
 import { AppSettings } from './_core/settings/app.settings';
@@ -95,7 +95,8 @@ import { Vehicles } from './_interfaces/vehicle.model';
     ControlDialogComponent,
     ResetOdometerDialogComponent,
     OdometerResetSuccessDialogComponent,
-    SendTakePictureDialogComponent
+    SendTakePictureDialogComponent,
+    PictureChannelDialogComponent
   ],
 
   providers: [

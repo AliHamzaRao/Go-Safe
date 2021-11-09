@@ -19,9 +19,18 @@ export class History {
   public RECDateTime: string;
   public Index: number;
 }
+export class GeoFence {
+  public gf_id: number;
+  public gf_name: string;
+  public gf_type: string;
+  public cnt_id: number;
+  public cty_id: number;
+  public FenceParam: string;
+  public gf_diff: number;
+}
 export class Data {
   public History: History[];
-  public geofence: object[];
+  public GeoFence: GeoFence[];
   public History_Period: string;
   public ErrorMessage: string;
   public Count: number;
