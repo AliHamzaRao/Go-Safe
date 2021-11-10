@@ -297,6 +297,35 @@
           </agm-marker>
         </span>
       </agm-polyline>
+
+      <span *ngIf="geoFenceData.gf_type == 'Polygon'">
+        <agm-marker [latitude]="geoFenceData.fenceParam[0].lat" [longitude]="geoFenceData.fenceParam[0].lng"
+          [agmFitBounds]="true">
+        </agm-marker>
+        <agm-polygon fillColor="#FF0000" [fillOpacity]="0.5" [paths]="geoFenceData.fenceParam" [strokeColor]="blue"
+          [strokeOpacity]="0.6" [strokeWeight]="2" [visible]="true" [zIndex]="1"></agm-polygon>
+      </span>
+
+      <span *ngIf="geoFenceData.gf_type == 'Rectangle'">
+        <agm-marker [latitude]="geoFenceData.fenceParam[0].lat" [longitude]="geoFenceData.fenceParam[0].lng"
+          [agmFitBounds]="true">
+        </agm-marker>
+        <agm-rectangle fillColor="#2876FC" [fillOpacity]="0.5" [north]="geoFenceData.fenceParam[1].lat"
+          [south]="geoFenceData.fenceParam[0].lat" [east]="geoFenceData.fenceParam[1].lng"
+          [west]="geoFenceData.fenceParam[0].lng" strokeColor="#2876FC" [strokeOpacity]="0.6" [strokeWeight]="2"
+          [visible]="true" [zIndex]="1"></agm-rectangle>
+      </span>
+      <span *ngIf="geoFenceData.gf_type == 'Circle'">
+        <agm-marker [latitude]="geoFenceData.fenceParam[0].lat" [longitude]="geoFenceData.fenceParam[0].lng"
+          [agmFitBounds]="true">
+        </agm-marker>
+        <agm-circle [latitude]="geoFenceData.fenceParam[0].lat" [longitude]="geoFenceData.fenceParam[0].lng"
+          fillColor="#03C291" [fillOpacity]="0.5" strokeColor="#03C291" [strokeOpacity]="0.6" [strokeWeight]="2"
+          [visible]="true" [zIndex]="1" [radius]="10"></agm-circle>
+      </span>
+      <span ngElse>
+        {{null}}
+      </span>
       <span *ngFor="let data of markers; let i = index">
         <span *ngIf="data[1] != 0 && data[2] != 0">
           <agm-marker [latitude]="data[1]" [longitude]="data[2]" [zoom]="zoom" [markerClickable]="true"

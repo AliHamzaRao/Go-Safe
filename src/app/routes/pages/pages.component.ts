@@ -19,11 +19,16 @@ import { DashboardComponent } from '../dashboard/dashboard.component';
 import { ToastrService } from "ngx-toastr"
 import { SingleDeviceDataService } from 'src/app/_core/_AppServices/SingleDeviceDataService';
 import { GeoFenceService } from 'src/app/_core/_AppServices/GeoFenceService';
+import { GeoFencingService } from 'src/app/_core/_AppServices/GeoFencingService';
 declare var L;
 var map;
 var el;
 var reg_no;
 var mapType;
+var rect;
+var circle;
+var plgn;
+var marker;
 @Component({
   selector: 'app-pages',
   templateUrl: './pages.component.html',
@@ -70,17 +75,13 @@ export class PagesComponent implements OnInit {
   public toggleSearchBar: boolean = false;
   private defaultMenu: string;
 
-  constructor(public appSettings: AppSettings, public router: Router, private menuService: MenuService, public dialog: MatDialog, public route: ActivatedRoute, public markersService: markerService, public mapTypeService: mapTypeService, public AllDeviceDataService: AllDevicesDataService, public GeoFence: GeoFenceService, public historyDataService: historyDataService, public singleDeviceDataService: SingleDeviceDataService, public Toast: ToastrService) {
+  constructor(public appSettings: AppSettings, public router: Router, private menuService: MenuService, public dialog: MatDialog, public route: ActivatedRoute, public markersService: markerService, public mapTypeService: mapTypeService, public AllDeviceDataService: AllDevicesDataService, public GeoFence: GeoFenceService, public historyDataService: historyDataService, public singleDeviceDataService: SingleDeviceDataService, public GeoFencingService: GeoFencingService, public Toast: ToastrService) {
     this.settings = this.appSettings.settings;
   }
   //#region OnInit
   ngOnInit() {
     this.mapTypeService.newMap.subscribe((mapType) => mapType = mapType)
     this.AllDeviceDataService.AllDevices.subscribe((data) => this.AllDevices = JSON.parse(data))
-    this.GeoFence.geoFence().subscribe((data) => {
-      console.log(data.data)
-      this.geoFences = data.data
-    })
     this.route.data.subscribe((data) => {
       data["model"].data.forEach((item: any, index: any) => {
         this.TREE_DATA.push(item);
@@ -89,14 +90,25 @@ export class PagesComponent implements OnInit {
     });
     mapType = $(".mapDropdown").find(':selected').val()
     $('.mapDropdown').on('change', ($event) => {
+      this.closeFencing();
       $(".vehicleCard").addClass('d-none');
       $('.vehicleCardMore').addClass('d-none')
       $('.agm-map-container-inner').addClass('rounded')
       mapType = $(".mapDropdown").find(':selected').val()
+      if (mapType === "Google Maps" && $('.recordDialogOffset').is(':visible')) {
+        $('.recordDialogOffset').toggleClass('d-none')
+        $('.googleMapRecord').toggleClass('d-none')
+      }
+      if (mapType === "Open Street Maps" && $('.googleMapRecord').is(':visible')) {
+        $('.recordDialogOffset').toggleClass('d-none')
+        $('.googleMapRecord').toggleClass('d-none')
+      }
+
       this.loadLeafLetMap();
       setTimeout(() => {
         this.setLeafLetMarkers();
       }, 1000);
+
     })
     if (window.innerWidth <= 768) {
       this.settings.menu = 'vertical';
@@ -235,6 +247,7 @@ export class PagesComponent implements OnInit {
     this.markersData.forEach((el) => {
       this.markerData.push([el.Latitude, el.Longitude])
     })
+    L.polyline(this.markerData).addTo(map)
   }
   play() {
     this.drawLine()
@@ -349,7 +362,6 @@ export class PagesComponent implements OnInit {
     if (e.target.checked) {
       this.newPacketParse = new PacketParser(DataTrack);
       this.data = { ...this.newPacketParse };
-      console.log(this.data)
       this.lat = parseFloat(this.data.lat);
       this.lng = parseFloat(this.data.lng);
       marker = [this.data.device_id, this.data.lat, this.data.lng];
@@ -400,7 +412,6 @@ export class PagesComponent implements OnInit {
         this.Toast.error("Please Close Details to proceed", "Error showing Dialog");
       }
       else {
-
         reg_no = this.AllDevices[0].veh_reg_no;
         this.dialog.open(historyDialogComponent);
         this.closeDetails();
@@ -438,6 +449,7 @@ export class PagesComponent implements OnInit {
 
   Draw(data: any) {
     let nest = [];
+    let nestArray = []
     data.FenceParam.split("|").forEach(element => {
       let str;
       var tempArr = [];
@@ -445,35 +457,96 @@ export class PagesComponent implements OnInit {
         str = element.split("@");
         tempArr.push(parseFloat(str[0]))
         tempArr.push(parseFloat(str[1]))
+        nestArray.push({ lat: parseFloat(str[0]), lng: parseFloat(str[1]) })
       }
       if (element.includes(",")) {
         str = element.split(",")
         tempArr.push(parseFloat(str[0]))
         tempArr.push(parseFloat(str[1]))
+        nestArray.push({ lat: parseFloat(str[0]), lng: parseFloat(str[1]) })
       }
       nest.push(tempArr)
     });
     if (data.gf_type == "Polygon") {
-      console.log(nest)
-      map.setView(nest[nest.length - 1], 10)
-      for (var i = 0; i < nest.length; i++) {
-        new L.marker(nest[i]).addTo(map);
+      map.setView(nest[nest.length - 1], 14)
+      // for (var i = 0; i < nest.length; i++) {
+      //   new L.marker(nest[i]).addTo(map);
+      // }
+      if (plgn) {
+        map.removeLayer(plgn)
+        if (circle) {
+          map.removeLayer(circle)
+        }
+        if (rect) {
+          map.removeLayer(rect)
+        }
+        if (marker) {
+          map.removeLayer(marker)
+        }
       }
-      L.polygon(nest, { color: "red" }).addTo(map)
+      plgn = L.polygon(nest, { color: "#FF1111" })
+      plgn.addTo(map)
+      this.GeoFencingService.newFence(JSON.stringify({ gf_type: data.gf_type, fenceParam: nestArray }))
+      map.fitBounds(nest)
       nest = [];
     }
     if (data.gf_type == "Rectangle") {
-      map.setView(nest[0], 10)
-      L.rectangle(nest, { color: 'yellow' }).addTo(map);
+      map.setView(nest[0], 14);
+      // for (var i = 0; i < nest.length; i++) {
+      //   new L.marker(nest[i]).addTo(map);
+      // }
+      if (rect) {
+        map.removeLayer(rect)
+        if (circle) {
+          map.removeLayer(circle)
+        }
+        if (plgn) {
+          map.removeLayer(plgn)
+        }
+        if (marker) {
+          map.removeLayer(marker)
+        }
+      }
+      rect = L.rectangle(nest, { color: '#2876FC' });
+      rect.addTo(map)
+      this.GeoFencingService.newFence(JSON.stringify({ 'gf_type': data.gf_type, 'fenceParam': nestArray }))
+      map.fitBounds(nest)
       nest = [];
     }
     if (data.gf_type == "Circle") {
-      console.log(nest)
       map.setView(nest[0], 14)
-      new L.marker(...nest).addTo(map)
-      L.circle(...nest, 700, { color: 'yellow' }).addTo(map);
+      if (circle) {
+        map.removeLayer(circle)
+        if (rect) {
+          map.removeLayer(rect)
+        }
+        if (plgn) {
+          map.removeLayer(plgn)
+        }
+        if (marker) {
+          map.removeLayer(marker)
+          $('.leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable').remove()
+          $('.leaflet-marker-shadow.leaflet-zoom-animated').remove()
+        }
+      }
+      marker = L.marker(...nest)
+      marker.addTo(map)
+      circle = L.circle(...nest, data.gf_diff, { color: '#00C190' })
+      circle.addTo(map);
+      this.GeoFencingService.newFence(JSON.stringify({ gf_type: data.gf_type, fenceParam: nestArray }))
       nest = [];
     }
+    this.closeFencing();
+
+  }
+  GeoFencing() {
+    this.GeoFence.geoFence().subscribe((data) => {
+      this.geoFences = data.data
+    })
+    $(".selectionList").removeClass('d-none')
+  }
+  closeFencing() {
+    $(".selectionList").addClass('d-none')
   }
   //#endregion
 }
@@ -513,7 +586,6 @@ export class historyDialogComponent implements OnInit {
       de_end: dateEnd,
       speed: speed,
     }
-    console.log(data)
     this.historyService.DeviceHistory(data).subscribe((data) => {
       this.historyDataService.setNewMarkers(JSON.stringify(data.data.History))
       if (data.status) {
@@ -526,8 +598,6 @@ export class historyDialogComponent implements OnInit {
           this.Toast.success(data.data.ErrorMessage, data.message)
           map.setView([this.lat, this.lng], 10)
           L.polyline(this.markerData).addTo(map)
-          L.polygon(this.markerData, { color: 'red' }).addTo(map);
-          L.rectangle(this.markerData, { color: 'yellow' }).addTo(map);
           this.dialog.closeAll();
           if (mapType == "Google Maps") {
             $('.googleMapRecord').removeClass("d-none")

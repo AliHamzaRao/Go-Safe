@@ -132,7 +132,7 @@
         </button>
       </mat-menu>
       <mat-menu #GeoFenceMenu="matMenu">
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child border-bottom" (click)="GeoFencing()">
           Show Fence
         </button>
         <button mat-menu-item class="mat-child border-bottom">
@@ -299,7 +299,7 @@
         <button (click)="pause()">Pause</button> -->
 
         <!-- Fence List -->
-        <mat-selection-list [multiple]="false" class="shadow rounded selectionList" style="
+        <mat-selection-list [multiple]="false" class="shadow rounded selectionList d-none" style="
         position: absolute;
         z-index: 1001;
         background: white;
@@ -307,8 +307,13 @@
         height: 88vh;
         margin: 4px;
         overflow-y: scroll;">
+          <mat-list-option value="Close" class="matListOption" (click)="closeFencing()"
+            style="font-size: 2rem !important; background-color: red;">
+            Close
+            <mat-divider></mat-divider>
+          </mat-list-option>
           <mat-list-option *ngFor="let geoFence of geoFences" [value]="geoFence.gf_name" class="matListOption"
-            (click)="Draw({FenceParam : geoFence.FenceParam, gf_id:geoFence.gf_id,gf_diff: geoFence.gf_diff,gf_name:geoFence.gf_name, gf_type:geoFence.gf_type})">
+            (click)="Draw({FenceParam : geoFence.FenceParam, gf_id:geoFence.gf_id,gf_diff: geoFence.gf_diff,gf_name:geoFence.gf_name, gf_type:geoFence.gf_type, gf_diff:geoFence.gf_diff})">
             <span *ngIf="geoFence.gf_type === 'Circle'">
               <img style="margin-right: 10px;" src='../../../assets/icons/Circle.jpg' alt="cir">
             </span>

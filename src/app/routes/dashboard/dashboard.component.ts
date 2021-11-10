@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from "@angular/core";
+import { Component, OnInit, Input, ComponentFactoryResolver } from "@angular/core";
 import { AppSettings } from "../../_core/settings/app.settings";
 import { Settings } from "../../_core/settings/app.settings.model";
 import { dashboardService } from "../../_core/_AppServices/dashboard.service";
@@ -12,6 +12,8 @@ import { AllDevicesDataService } from "src/app/_core/_AppServices/AllDevicesData
 import { historyDataService } from "src/app/_core/_AppServices/HistoryDataService";
 import { SingleDeviceDataService } from "src/app/_core/_AppServices/SingleDeviceDataService";
 import { ToastrService } from "ngx-toastr";
+import { GeoFencingService } from "src/app/_core/_AppServices/GeoFencingService";
+import { fenceTypo } from "src/app/_interfaces/fenceTypo.model";
 // declare var L;
 @Component({
   selector: "app-dashboard",
@@ -42,6 +44,8 @@ export class DashboardComponent implements OnInit {
   setTime: any;
   gpsTime: any;
   currentState: number = 0;
+  geoFence: any;
+  geoFenceData
   //#region Constructor
   constructor(
     private dashboardSer: dashboardService,
@@ -54,7 +58,8 @@ export class DashboardComponent implements OnInit {
     public AllDeviceDataService: AllDevicesDataService,
     public historyDataService: historyDataService,
     public singleDeviceDataService: SingleDeviceDataService,
-    public Toast: ToastrService
+    public Toast: ToastrService,
+    public GeoFencingService: GeoFencingService,
   ) {
     this.settings = this.appSettings.settings;
   }
@@ -70,12 +75,14 @@ export class DashboardComponent implements OnInit {
     this.AllDeviceDataService.AllDevices.subscribe(
       (data) => (this.AllDevices = JSON.parse(data))
     );
-
+    this.GeoFencingService.currentFence.subscribe(data => {
+      this.geoFence = new fenceTypo(JSON.parse(data));
+      this.geoFenceData = { ...this.geoFence };
+      console.log(this.geoFenceData)
+    })
     $(".mapDropdown").on("change", ($event) => {
-
       this.mapType = $(".mapDropdown").find(":selected").val();
       this.mapTypeService.SetMap(this.mapType);
-
     });
   }
   //#endregion
