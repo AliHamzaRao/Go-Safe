@@ -4,6 +4,12 @@ export class Response {
   message: string;
   data: Data;
 }
+export class AlarmsResponse {
+  code: number;
+  status: boolean;
+  message: string;
+  data: any[];
+}
 export class History {
   public GPSDateTime: string;
   public Speed: string

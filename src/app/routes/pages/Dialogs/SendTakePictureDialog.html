@@ -1,5 +1,5 @@
 <h2 mat-dialog-title class="dialogTitle">
-    <button mat-button class="backBtnModal">
+    <button mat-button class="backBtnModal" (click)="back()">
         <mat-icon>keyboard_backspace</mat-icon> Back
     </button>Send
     Take Picture?
@@ -42,7 +42,7 @@
       align-items: center;
     ">
         <button mat-button style="
-        background-color: rgb(29, 184, 140);
+        background-color: rgb(233, 156, 14);
         color: white;
         border-radius: 50px;
         font-size: 1.6em;
@@ -51,7 +51,7 @@
         padding: 10px 38px;
         font-weight: 400;
       " (click)="sendTakePicture()">
-            Send
+            Next
         </button>
         <button mat-button style="
         background-color: rgb(240, 77, 80);

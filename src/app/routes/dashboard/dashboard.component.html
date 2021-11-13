@@ -286,39 +286,43 @@
     <div id="leaflet-map" style="height: 89vh !important" class="rounded"></div>
   </div>
   <div *ngIf="mapType === 'Google Maps'">
-    <agm-map style="height: 89vh !important" class="rounded" [latitude]="latitude" [longitude]="longitude"
-      [mapTypeId]="googleMapType" [fullscreenControl]="true" [mapTypeControl]="true" [fitBounds]="true">
+    <agm-map style="height: 89vh !important" class="rounded googleMap" [latitude]="latitude" [longitude]="longitude"
+      [mapTypeId]="googleMapType" [fullscreenControl]="true" [mapTypeControl]="true" [fitBounds]="true"
+      [agmDrawingManager]="drawing">
+
       <agm-polyline>
         <agm-polyline-point *ngFor="let data of markerData; let i = index" [latitude]="data.latitude"
           [longitude]="data.longitude">
         </agm-polyline-point>
         <span *ngIf='latitude !=0'>
-          <agm-marker [latitude]="latitude" [longitude]="longitude">
+          <agm-marker [latitude]="latitude" [longitude]="longitude" [drawingMode]="'circle'"
+            [circleOptions]="{fillColor:'red', radius: 150}">
           </agm-marker>
         </span>
       </agm-polyline>
 
+      <agm-drawing-manager class="border"></agm-drawing-manager>
+      <!-- Drawing Ends -->
       <span *ngIf="geoFenceData.gf_type == 'Polygon'">
-        <agm-marker [latitude]="geoFenceData.fenceParam[0].lat" [longitude]="geoFenceData.fenceParam[0].lng"
-          [agmFitBounds]="true">
-        </agm-marker>
+        <!-- <agm-marker *ngFor="let data of geoFenceData.fenceParam; let i = index;" [latitude]="data.lat"
+          [longitude]="data.lng" [agmFitBounds]="true">
+        </agm-marker> -->
         <agm-polygon fillColor="#FF0000" [fillOpacity]="0.5" [paths]="geoFenceData.fenceParam" [strokeColor]="blue"
           [strokeOpacity]="0.6" [strokeWeight]="2" [visible]="true" [zIndex]="1"></agm-polygon>
       </span>
-
       <span *ngIf="geoFenceData.gf_type == 'Rectangle'">
-        <agm-marker [latitude]="geoFenceData.fenceParam[0].lat" [longitude]="geoFenceData.fenceParam[0].lng"
-          [agmFitBounds]="true">
-        </agm-marker>
+        <!-- <agm-marker *ngFor="let data of geoFenceData.fenceParam; let i = index;" [latitude]="data.lat"
+          [longitude]="data.lng" [agmFitBounds]="true">
+        </agm-marker> -->
         <agm-rectangle fillColor="#2876FC" [fillOpacity]="0.5" [north]="geoFenceData.fenceParam[1].lat"
           [south]="geoFenceData.fenceParam[0].lat" [east]="geoFenceData.fenceParam[1].lng"
           [west]="geoFenceData.fenceParam[0].lng" strokeColor="#2876FC" [strokeOpacity]="0.6" [strokeWeight]="2"
           [visible]="true" [zIndex]="1"></agm-rectangle>
       </span>
       <span *ngIf="geoFenceData.gf_type == 'Circle'">
-        <agm-marker [latitude]="geoFenceData.fenceParam[0].lat" [longitude]="geoFenceData.fenceParam[0].lng"
+        <!-- <agm-marker [latitude]="geoFenceData.fenceParam[0].lat" [longitude]="geoFenceData.fenceParam[0].lng"
           [agmFitBounds]="true">
-        </agm-marker>
+        </agm-marker> -->
         <agm-circle [latitude]="geoFenceData.fenceParam[0].lat" [longitude]="geoFenceData.fenceParam[0].lng"
           fillColor="#03C291" [fillOpacity]="0.5" strokeColor="#03C291" [strokeOpacity]="0.6" [strokeWeight]="2"
           [visible]="true" [zIndex]="1" [radius]="10"></agm-circle>
@@ -326,6 +330,8 @@
       <span ngElse>
         {{null}}
       </span>
+
+      <!-- Drawing Ends -->
       <span *ngFor="let data of markers; let i = index">
         <span *ngIf="data[1] != 0 && data[2] != 0">
           <agm-marker [latitude]="data[1]" [longitude]="data[2]" [zoom]="zoom" [markerClickable]="true"
@@ -334,6 +340,8 @@
         </span>
       </span>
     </agm-map>
+
+
   </div>
 </div>
 

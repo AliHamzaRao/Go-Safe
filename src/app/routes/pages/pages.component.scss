@@ -421,3 +421,20 @@
 .shapeSelect button img {
   height: 100% !important;
 }
+.notificationPanel {
+  right: 14%;
+  position: absolute;
+  background-color: white;
+  width: 20vw;
+  height: 30vh;
+  overflow-y: scroll;
+}
+.notificationPanel::-webkit-scrollbar {
+  display: none;
+}
+.notificationPanel::-webkit-scrollbar-thumb {
+  display: none;
+}
+.notification {
+  margin: 5px;
+}

@@ -10,12 +10,6 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { VehicleListResolver } from 'src/app/_resolvers/Vehicle_Post_Resolver';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatDividerModule } from "@angular/material/divider"
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatInputModule } from '@angular/material/input'
 
 export const routes = [
   { path: '', component: DashboardComponent, pathMatch: 'full' }
@@ -32,17 +26,12 @@ export const routes = [
     MatTreeModule,
     MatIconModule,
     MatButtonModule,
-    // MatTabsModule,
-    // MatExpansionModule,
-    // MatDividerModule,
-    // MatDialogModule,
-    // MatDatepickerModule,
-    // MatInputModule,
     AgmCoreModule.forRoot({
       // please get your own API key here:
       // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en
       // apiKey: 'AIzaSyAvcDy5ZYc2ujCS6TTtI3RYX5QmuoV8Ffw'
-      apiKey: 'AIzaSyAO7Mg2Cs1qzo_3jkKkZAKY6jtwIlm41-I'
+      apiKey: 'AIzaSyAO7Mg2Cs1qzo_3jkKkZAKY6jtwIlm41-I',
+      libraries: ['drawing']
     })
   ],
   declarations: [

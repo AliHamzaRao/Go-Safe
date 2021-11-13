@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { CustomOverlayContainer } from './theme/utils/custom-overlay-container';
-
+import { MatBadgeModule } from "@angular/material/badge"
 import { AgmCoreModule } from '@agm/core';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
@@ -46,6 +46,7 @@ import * as moment from 'moment';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { VehicleListResolver } from './_resolvers/Vehicle_Post_Resolver';
 import { Vehicles } from './_interfaces/vehicle.model';
+import { AgmDrawingModule } from "@agm/drawing"
 @NgModule({
   imports: [
     BrowserModule,
@@ -54,8 +55,11 @@ import { Vehicles } from './_interfaces/vehicle.model';
     ReactiveFormsModule,
     HttpClientModule,
     NgSelectModule,
+    MatBadgeModule,
+    AgmDrawingModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyAO7Mg2Cs1qzo_3jkKkZAKY6jtwIlm41-I'
+      apiKey: 'AIzaSyAO7Mg2Cs1qzo_3jkKkZAKY6jtwIlm41-I',
+      libraries: ['drawing']
     }),
     PerfectScrollbarModule,
     CalendarModule.forRoot({
@@ -96,7 +100,7 @@ import { Vehicles } from './_interfaces/vehicle.model';
     ResetOdometerDialogComponent,
     OdometerResetSuccessDialogComponent,
     SendTakePictureDialogComponent,
-    PictureChannelDialogComponent
+    PictureChannelDialogComponent,
   ],
 
   providers: [
