@@ -120,6 +120,8 @@ export class PagesComponent implements OnInit {
       this.closeFencing();
       $(".vehicleCard").addClass("d-none");
       $(".vehicleCardMore").addClass("d-none");
+      $(".vehicleCardLeaflet").addClass("d-none");
+      $(".vehicleCardLeafletMore").addClass("d-none");
       $(".agm-map-container-inner").addClass("rounded");
       mapType = $(".mapDropdown").find(":selected").val();
       if (
@@ -353,8 +355,8 @@ export class PagesComponent implements OnInit {
     }
   }
   toggleDisplay() {
-    $(".vehicleCard").addClass("d-none");
-    $(".vehicleCardMore").addClass("d-none");
+    $(".vehicleCardLeaflet").addClass("d-none");
+    $(".vehicleCardLeafletMore").addClass("d-none");
   }
   export() {
     $(".export").toggleClass("d-none");
@@ -414,24 +416,24 @@ export class PagesComponent implements OnInit {
       );
       return null;
     } else {
-      $(".vehicleCard").removeClass("d-none");
-      $(".vehicleCardMore").addClass("d-none");
-      if (
-        $(".vehicleCard").is(":visible") ||
-        $(".vehicleCardMore").is(":visible")
-      ) {
-        setTimeout(() => {
-          this.closeDetails();
-        }, 10000);
-      }
+      $(".vehicleCardLeaflet").removeClass("d-none");
+      $(".vehicleCardLeafletMore").addClass("d-none");
+      // if (
+      //   $(".vehicleCardLeaflet").is(":visible") ||
+      //   $(".vehicleCardLeafletMore").is(":visible")
+      // ) {
+      //   setTimeout(() => {
+      //     this.closeDetails();
+      //   }, 10000);
+      // }
     }
     // L.circle([this.lat, this.lng], 20, { color: "red" }).addTo(map)
   }
   // #endregion
   //#region On CheckBox
   onCheck(e, DataTrack: string, _id: any) {
-    $(".vehicleCard").addClass("d-none");
-    $(".vehicleCardMore").addClass("d-none");
+    $(".vehicleCardLeaflet").addClass("d-none");
+    $(".vehicleCardLeafletMore").addClass("d-none");
     let marker: string[];
     if (e.target.checked) {
       this.newPacketParse = new PacketParser(DataTrack);
@@ -481,8 +483,12 @@ export class PagesComponent implements OnInit {
   //#endregion
   //#region Close Car Details Card
   closeDetails() {
-    $(".vehicleCard").addClass("d-none");
-    $(".vehicleCardMore").addClass("d-none");
+    $(".vehicleCardLeaflet").addClass("d-none");
+    $(".vehicleCardLeafletMore").addClass("d-none");
+  }
+  toggleInfo() {
+    $(".vehicleCardLeaflet").toggleClass("d-none");
+    $(".vehicleCardLeafletMore").toggleClass("d-none");
   }
   //#endregion
   //#region Dialog Methods
@@ -490,7 +496,7 @@ export class PagesComponent implements OnInit {
     if (this.AllDevices.length == 1) {
       if (
         $(".vehicleCardMore").is(":visible") ||
-        $(".vehicleCard").is(":visible")
+        $(".vehicleCard").is(":visible") || $(".vehicleCardLeafletMore").is(":visible") || $(".vehicleCardLeaflet").is(":visible")
       ) {
         this.Toast.error(
           "Please Close Details to proceed",
@@ -525,6 +531,8 @@ export class PagesComponent implements OnInit {
     this.dialog.closeAll();
     $(".vehicleCard").addClass("d-none");
     $(".vehicleCardMore").addClass("d-none");
+    $(".vehicleCardLeaflet").addClass("d-none");
+    $(".vehicleCardLeafletMore").addClass("d-none");
   }
 
   Draw(data: any) {
@@ -646,11 +654,9 @@ export class PagesComponent implements OnInit {
         this.Toast.error(res.message, "Error Showing Notifications")
       }
       else {
-        this.Toast.success(res.message, "Data Loaded Successfully");
+        // this.Toast.success(res.message, "Data Loaded Successfully");
         this.notifications = res.data;
-        $('.notificationPanel').toggleClass('d-none')
-        $('.notificationsUnread').toggleClass('d-none');
-        $('.notificationsRead').toggleClass('d-none');
+        this.toggleNotifications();
       }
     })
   }
@@ -724,6 +730,8 @@ export class historyDialogComponent implements OnInit {
           }
           $(".vehicleCard").addClass("d-none");
           $(".vehicleCardMore").addClass("d-none");
+          $(".vehicleCardLeaflet").addClass("d-none");
+          $(".vehicleCardLeafletMore").addClass("d-none");
         } else {
           this.Toast.error(data.data.ErrorMessage, data.message);
         }

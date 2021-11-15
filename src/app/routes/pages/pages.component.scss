@@ -438,3 +438,100 @@
 .notification {
   margin: 5px;
 }
+
+//
+
+.vehicleCardLeaflet {
+  position: absolute;
+  width: 40%;
+  height: fit-content;
+  z-index: 1111111;
+  bottom: 4%;
+  left: 39%;
+  background-color: rgb(255, 255, 255);
+  padding: 3px 2px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 10px;
+}
+
+.carName {
+  font-size: 20px;
+  color: #18497d;
+  border-bottom: 2px solid #bca0dc;
+}
+
+.showMoreButton {
+  background-color: #ffc922;
+  color: #18497d;
+  // width: 200px !important;
+  // margin: 10px 0px 10px 90px;
+}
+
+.vehicleCardLeafletMore {
+  position: absolute;
+  width: 65%;
+  z-index: 1111111;
+  bottom: 4%;
+  right: 9%;
+  background-color: rgb(255, 255, 255);
+  padding: 7px 2px;
+  padding-bottom: 0px !important;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.vehicleCardMore i {
+  color: #00c190 !important;
+}
+
+.locationIcon {
+  margin-top: 10px;
+  padding-top: 40px;
+  padding-bottom: 70px;
+  margin-bottom: 10px;
+
+  border-right: 2px solid #bca0dc;
+}
+
+.headingStatus {
+  padding-left: 20%;
+  font-size: 18px;
+  color: #18497d;
+}
+
+.deviceStatus {
+  padding: 0;
+  margin-top: 4px;
+}
+
+.showLessButton {
+  background-color: #ffc922;
+  color: #18497d;
+  margin-top: 2px;
+  // width: 200px !important;
+  // margin: 10px 0px 10px 90px;
+}
+
+.Icon {
+  margin-top: 10px;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  margin-bottom: 10px;
+}
+
+.iconImg {
+  margin-top: -10px;
+}
+
+.vehicleSpeedDescription3 {
+  color: grey;
+  font-size: 12px;
+}
+
+.shortdes {
+  font-size: 10px;
+}
+
+.secondContainer {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-left: 2px solid #bca0dc;
+}
