@@ -72,9 +72,9 @@ export class DashboardComponent implements OnInit {
       (markers) => (this.markers = JSON.parse(markers))
     );
     // this.singleDeviceDataService.singleDevice.subscribe((data) => this.singleDeviceData = JSON.parse(data))
-    this.AllDeviceDataService.AllDevices.subscribe(
-      (data) => (this.AllDevices = JSON.parse(data))
-    );
+    // this.AllDeviceDataService.AllDevices.subscribe(
+    //   (data) => (this.AllDevices = JSON.parse(data))
+    // );
     this.GeoFencingService.currentFence.subscribe(data => {
       this.geoFence = new fenceTypo(JSON.parse(data));
       this.geoFenceData = { ...this.geoFence };
@@ -182,9 +182,12 @@ export class DashboardComponent implements OnInit {
     }
   }
   //#region Selected Marker Info
-  getMarkerInfo(data: any[]) {
-    let singleDevice: any[] = this.AllDevices.filter(
-      (item: { device_id: any }) => item.device_id === data[0]
+  getMarkerInfo(info: any[]) {
+    this.AllDeviceDataService.AllDevices.subscribe(
+      (data) => (this.AllDevices = JSON.parse(data))
+    );
+    let singleDevice = this.AllDevices.filter(
+      (item: { device_id: any }) => item.device_id === info[0]
     );
 
     if (singleDevice.length) {
@@ -194,6 +197,7 @@ export class DashboardComponent implements OnInit {
         return null;
       }
       else {
+        console.log(this.singleDeviceData)
         $(".vehicleCard").removeClass("d-none");
         $(".vehicleCardMore").addClass("d-none");
       }
