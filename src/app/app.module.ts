@@ -47,6 +47,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { VehicleListResolver } from './_resolvers/Vehicle_Post_Resolver';
 import { Vehicles } from './_interfaces/vehicle.model';
 import { AgmDrawingModule } from "@agm/drawing"
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   imports: [
     BrowserModule,
@@ -57,6 +58,7 @@ import { AgmDrawingModule } from "@agm/drawing"
     NgSelectModule,
     MatBadgeModule,
     AgmDrawingModule,
+    MatIconModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAO7Mg2Cs1qzo_3jkKkZAKY6jtwIlm41-I',
       libraries: ['drawing']
