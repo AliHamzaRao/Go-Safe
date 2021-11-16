@@ -375,7 +375,8 @@ export class PagesComponent implements OnInit {
         return false;
       } else {
         new L.marker([this.markers[index][1], this.markers[index][2]])
-          .bindPopup(`<strong>${this.markers[index][0]}</strong>`, { maxWidth: 500 })
+          // .bindPopup(`<strong>${this.markers[index][0]}</strong>`, { maxWidth: 500 }
+          // )
           .addTo(map)
           .on("click", () => {
             this.getMarkerInfo([
@@ -831,23 +832,40 @@ export class SendTakePictureDialogComponent {
 @Component({
   selector: "app-picture-channel-dialog",
   templateUrl: "./Dialogs/PictureChannelDialog.html",
+  styleUrls: ["../pages/pages.component.scss", "../pages/Dialogs/TakePictureDialog.scss"],
+})
+export class PictureChannelDialogComponent {
+  constructor(public dialog: MatDialog) { }
+  back() {
+    this.dialog.closeAll();
+    this.dialog.open(ControlDialogComponent)
+  }
+  sendTakePicture() {
+    this.dialog.closeAll();
+    this.dialog.open(PictureTakenDialogComponent)
+  }
+  closeTakePicture() {
+    this.dialog.closeAll();
+    this.dialog.open(ControlDialogComponent)
+  }
+}
+
+@Component({
+  selector: "app-picture-taken-dialog",
+  templateUrl: "./Dialogs/PictureTakeSuccessDialog.html",
   styleUrls: [
     "../pages/pages.component.scss",
     "../pages/Dialogs/TakePictureDialog.scss",
   ],
 })
-export class PictureChannelDialogComponent {
+export class PictureTakenDialogComponent {
   constructor(public dialog: MatDialog) { }
   back() {
-
     this.dialog.closeAll();
     this.dialog.open(ControlDialogComponent)
   }
-  sendTakePicture() {
-    console.log("Take Picture");
-  }
   closeTakePicture() {
-    console.log("Close Take Picture");
+    this.dialog.closeAll();
   }
 }
 //#endregion
