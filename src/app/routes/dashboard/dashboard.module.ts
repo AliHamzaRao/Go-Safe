@@ -10,7 +10,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { VehicleListResolver } from 'src/app/_resolvers/Vehicle_Post_Resolver';
-
+import { AgmDrawingModule } from "@agm/drawing"
 export const routes = [
   { path: '', component: DashboardComponent, pathMatch: 'full' }
 ];
@@ -26,6 +26,7 @@ export const routes = [
     MatTreeModule,
     MatIconModule,
     MatButtonModule,
+    AgmDrawingModule,
     AgmCoreModule.forRoot({
       // please get your own API key here:
       // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en

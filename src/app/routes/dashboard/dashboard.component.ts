@@ -1,11 +1,7 @@
-import { Component, OnInit, Input, ComponentFactoryResolver } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { AppSettings } from "../../_core/settings/app.settings";
 import { Settings } from "../../_core/settings/app.settings.model";
-import { dashboardService } from "../../_core/_AppServices/dashboard.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { PacketParser } from "./PacketParser";
 import { MatDialog } from "@angular/material/dialog";
-// import "leaflet-map";
 import { markerService } from "src/app/_core/_AppServices/MarkerService";
 import { mapTypeService } from "src/app/_core/_AppServices/MapTypeService";
 import { AllDevicesDataService } from "src/app/_core/_AppServices/AllDevicesDataService";
@@ -44,13 +40,10 @@ export class DashboardComponent implements OnInit {
   gpsTime: any;
   currentState: number = 0;
   geoFence: any;
-  geoFenceData: any;
+  geoFenceData: [];
   iconUrl: string = "../../../assets/img/vendor/leaflet/new-icon/marker-icon.png";
   //#region Constructor
   constructor(
-    private dashboardSer: dashboardService,
-    private router: Router,
-    public route: ActivatedRoute,
     public appSettings: AppSettings,
     public dialog: MatDialog,
     public markerService: markerService,
@@ -72,12 +65,15 @@ export class DashboardComponent implements OnInit {
       (markers) => (this.markers = JSON.parse(markers))
     );
     // this.singleDeviceDataService.singleDevice.subscribe((data) => this.singleDeviceData = JSON.parse(data))
-    // this.AllDeviceDataService.AllDevices.subscribe(
-    //   (data) => (this.AllDevices = JSON.parse(data))
-    // );
+    this.AllDeviceDataService.AllDevices.subscribe(
+      (data) => this.AllDevices = JSON.parse(data));
     this.GeoFencingService.currentFence.subscribe(data => {
       this.geoFence = new fenceTypo(JSON.parse(data));
       this.geoFenceData = { ...this.geoFence };
+      if (this.geoFence.fenceParam.length) {
+        this.latitude = this.geoFence.fenceParam.lat
+        this.longitude = this.geoFence.fenceParam.lng
+      }
     })
     $(".mapDropdown").on("change", ($event) => {
       this.mapType = $(".mapDropdown").find(":selected").val();
@@ -183,13 +179,9 @@ export class DashboardComponent implements OnInit {
   }
   //#region Selected Marker Info
   getMarkerInfo(info: any[]) {
-    this.AllDeviceDataService.AllDevices.subscribe(
-      (data) => (this.AllDevices = JSON.parse(data))
-    );
     let singleDevice = this.AllDevices.filter(
       (item: { device_id: any }) => item.device_id === info[0]
     );
-
     if (singleDevice.length) {
       this.singleDeviceData = [...singleDevice];
       if ($('.recordDialogOffset').is(":visible") || $(".googleMapRecord").is(":visible")) {
@@ -197,9 +189,16 @@ export class DashboardComponent implements OnInit {
         return null;
       }
       else {
-        console.log(this.singleDeviceData)
         $(".vehicleCard").removeClass("d-none");
         $(".vehicleCardMore").addClass("d-none");
+        if (
+          $(".vehicleCard").is(":visible") ||
+          $(".vehicleCardMore").is(":visible")
+        ) {
+          setTimeout(() => {
+            this.closeDetails();
+          }, 10000);
+        }
       }
     }
     else {
@@ -212,6 +211,10 @@ export class DashboardComponent implements OnInit {
   toggleInfo() {
     $(".vehicleCard").toggleClass("d-none");
     $(".vehicleCardMore").toggleClass("d-none");
+  }
+  closeDetails() {
+    $(".vehicleCard").addClass("d-none");
+    $(".vehicleCardMore").addClass("d-none");
   }
   //#endregion
 

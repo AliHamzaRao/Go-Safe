@@ -5,7 +5,6 @@ import {
   HostListener,
   ViewChildren,
   QueryList,
-  ɵɵtrustConstantResourceUrl,
 } from "@angular/core";
 import { ActivatedRoute, Router, NavigationEnd } from "@angular/router";
 import { PerfectScrollbarDirective } from "ngx-perfect-scrollbar";
@@ -27,6 +26,7 @@ import { GeoFenceService } from "src/app/_core/_AppServices/GeoFenceService";
 import { GeoFencingService } from "src/app/_core/_AppServices/GeoFencingService";
 import "leaflet";
 import { AlarmsService } from "src/app/_core/_AppServices/AlarmsService";
+import { isEmpty } from "rxjs/operators";
 declare var L;
 var map;
 var el;
@@ -36,6 +36,7 @@ var rect;
 var circle;
 var plgn;
 var marker;
+var polyline;
 @Component({
   selector: "app-pages",
   templateUrl: "./pages.component.html",
@@ -68,6 +69,11 @@ export class PagesComponent implements OnInit {
   marker: any;
   notifications: any = [];
   geoFences: any;
+  fenceType: any;
+  rectMarkers: any[] = [];
+  polyMarkers: any[] = [];
+  rectangle: any;
+  polygon: any;
   @ViewChild(DashboardComponent, { static: true }) child: DashboardComponent;
   @ViewChild("sidenav") sidenav: any;
   @ViewChild("backToTop") backToTop: any;
@@ -137,6 +143,10 @@ export class PagesComponent implements OnInit {
       ) {
         $(".recordDialogOffset").toggleClass("d-none");
         $(".googleMapRecord").toggleClass("d-none");
+        this.loadLeafLetMap();
+        setTimeout(() => {
+          this.setLeafLetMarkers();
+        }, 1000);
       }
 
       this.loadLeafLetMap();
@@ -267,26 +277,107 @@ export class PagesComponent implements OnInit {
       }
     }
   }
+  onInputChange = (e) => {
+    this.fenceType = e.target.value;
+    switch (this.fenceType) {
+      case "Circle":
+        let thismarker: any;
+        let markers = [];
+        map.on('click', (e) => {
+          if (markers.length <= 0) {
+            let radius = $('.radius').val()
+            let data: any[] = e.latlng;
+            let newData = { ...data };
+            markers.push([parseFloat(newData['lat']), parseFloat(newData['lng'])])
+            let cl;
+            thismarker = L.marker(e.latlng)
+              .bindPopup(`<strong>Double click to remove marker</strong>`, { maxWidth: 500 }
+              ).on('dblclick', () => {
+                map.removeLayer(cl)
+                map.removeLayer(thismarker)
+                markers = []
+              })
+            thismarker.addTo(map)
+            map.setView(e.latlng, 13)
+            cl = L.circle(...markers, radius)
+            cl.addTo(map)
+          }
+          else {
+            return null;
+          }
+        })
+        break;
+      case "Rectangle":
+        map.on('click', (e) => {
+          let thismarker;
+          if (this.rectMarkers.length == 2) {
+            this.Toast.error('Cannot add more than two point for a rectangle. Remove one of the markers First', "Error Drawing Rectangle ")
+          }
+          else {
+            let data: any[] = e.latlng;
+            let newData = { ...data };
+            this.rectMarkers.push([parseFloat(newData['lat']), parseFloat(newData['lng'])])
+            thismarker = L.marker(e.latlng)
+              .bindPopup(`<strong>Double click to remove marker</strong>`, { maxWidth: 500 }
+              ).on('dblclick', (e) => {
+                map.removeLayer(thismarker)
+                let data: any[] = e.latlng;
+                let newData = { ...data };
+                let tempArr = [parseFloat(newData['lat']), parseFloat(newData['lng'])];
+                let index = this.rectMarkers.findIndex((item: any[]) => item === tempArr);
+                this.rectMarkers.splice(index, 1);
+                map.removeLayer(this.rectangle)
+              })
+            thismarker.addTo(map)
+            map.setView(e.latlng, 10)
+          }
+        })
+        break;
+      case "Polygon":
+        map.on('click', (e) => {
+          let thismarker;
+          let data: any[] = e.latlng;
+          let newData = { ...data };
+          this.polyMarkers.push([parseFloat(newData['lat']), parseFloat(newData['lng'])])
+          thismarker = L.marker(e.latlng)
+            .bindPopup(`<strong>Double click to remove marker</strong>`, { maxWidth: 500 }
+            ).on('dblclick', (e) => {
+              map.removeLayer(thismarker)
+              let data: any[] = e.latlng;
+              let newData = { ...data };
+              let tempArr = [parseFloat(newData['lat']), parseFloat(newData['lng'])];
+              console.log(tempArr, "Data")
+              console.log(this.polyMarkers)
+            })
+          thismarker.addTo(map)
+          map.setView(e.latlng, 10)
+
+        })
+      default:
+        break;
+    }
+  }
+  drawRectangle() {
+    this.rectangle = L.rectangle(this.rectMarkers, { color: "#2876FC" })
+    this.rectangle.addTo(map)
+  }
+  drawPolygon() {
+    this.polygon = L.polygon(this.polyMarkers, { color: "#FF1111" })
+    this.polygon.addTo(map)
+  }
   //#endregion
   //#region Load Leaflet Maps
   loadLeafLetMap() {
     setTimeout(() => {
       el = document.getElementById("leaflet-map");
       L.Icon.Default.imagePath = "assets/img/vendor/leaflet/";
-      map = L.map(el).setView([this.lat, this.lng], 10);
+      map = L.map(el).setView([this.lat, this.lng], 10)
+
       L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
         attribution: '&copy; <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a> contributors'
       }).addTo(map);
     });
-    // FeatureGroup is to store editable layers
-    // var drawnItems = new L.FeatureGroup();
-    // map.addLayer(drawnItems);
-    // var drawControl = new L.Control.Draw({
-    //   edit: {
-    //     featureGroup: drawnItems
-    //   }
-    // });
-    // map.addControl(drawControl);
+
   }
   stop() {
     $(".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable").remove();
@@ -302,9 +393,6 @@ export class PagesComponent implements OnInit {
     this.markersData.forEach((el) => {
       this.markerData.push([el.Latitude, el.Longitude]);
     });
-    // console.log(this.markerData)
-    // debugger;
-    // L.polyline(this.markerData).addTo(map);
   }
   play() {
     this.drawLine();
@@ -362,7 +450,8 @@ export class PagesComponent implements OnInit {
     $(".export").toggleClass("d-none");
   }
   draw() {
-    $(".shapeSelect").toggleClass("d-none");
+    polyline = L.polyline([this.markerData[0], this.markerData[this.markerData.length - 1]]).addTo(map);
+    map.setView([this.markerData[0]], 10)
   }
   toggleInfoCard() {
     $(".infoCard").toggleClass("d-none");
@@ -386,8 +475,6 @@ export class PagesComponent implements OnInit {
             ]);
           });
         map.setView([this.lat, this.lng], 12);
-        // this.mapBounds.push([this.markers[index][1], this.markers[index][2]])
-        // map.fitBounds(this.mapBounds);
       }
     });
   }
@@ -401,9 +488,6 @@ export class PagesComponent implements OnInit {
       (item: { device_id: any }) => item.device_id === info[0]
     );
     this.singleDeviceData = singleDevice;
-    this.singleDeviceDataService.SetDevice(
-      JSON.stringify(this.singleDeviceData)
-    );
     this.lat = info[1];
     this.lng = info[2];
     map.setView([this.lat, this.lng], 20);
@@ -419,16 +503,15 @@ export class PagesComponent implements OnInit {
     } else {
       $(".vehicleCardLeaflet").removeClass("d-none");
       $(".vehicleCardLeafletMore").addClass("d-none");
-      // if (
-      //   $(".vehicleCardLeaflet").is(":visible") ||
-      //   $(".vehicleCardLeafletMore").is(":visible")
-      // ) {
-      //   setTimeout(() => {
-      //     this.closeDetails();
-      //   }, 10000);
-      // }
+      if (
+        $(".vehicleCardLeaflet").is(":visible") ||
+        $(".vehicleCardLeafletMore").is(":visible")
+      ) {
+        setTimeout(() => {
+          this.closeDetails();
+        }, 10000);
+      }
     }
-    // L.circle([this.lat, this.lng], 20, { color: "red" }).addTo(map)
   }
   // #endregion
   //#region On CheckBox
@@ -437,20 +520,37 @@ export class PagesComponent implements OnInit {
     $(".vehicleCardLeafletMore").addClass("d-none");
     let marker: string[];
     if (e.target.checked) {
-      this.newPacketParse = new PacketParser(DataTrack);
-      this.data = { ...this.newPacketParse };
-      this.lat = parseFloat(this.data.lat);
-      this.lng = parseFloat(this.data.lng);
-      marker = [this.data.device_id, this.data.lat, this.data.lng];
-      this.markers.push(marker);
-      let markerString = JSON.stringify(this.markers);
-      this.markersService.SetMarkers(markerString);
-      this.setLeafLetMarkers();
-      this.AllDevices.push(this.data);
-      this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
-      this.AllDeviceDataService.AllDevices.subscribe((data) => {
-        this.AllDevices = JSON.parse(data);
-      });
+      if (mapType === "Google Maps") {
+        this.newPacketParse = new PacketParser(DataTrack);
+        this.data = { ...this.newPacketParse };
+        this.lat = parseFloat(this.data.lat);
+        this.lng = parseFloat(this.data.lng);
+        marker = [this.data.device_id, this.data.lat, this.data.lng];
+        this.markers.push(marker);
+        let markerString = JSON.stringify(this.markers);
+        this.markersService.SetMarkers(markerString);
+        this.AllDevices.push(this.data);
+        this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
+        this.AllDeviceDataService.AllDevices.subscribe((data) => {
+          this.AllDevices = JSON.parse(data);
+        });
+      }
+      if (mapType === "Open Street Maps") {
+        this.newPacketParse = new PacketParser(DataTrack);
+        this.data = { ...this.newPacketParse };
+        this.lat = parseFloat(this.data.lat);
+        this.lng = parseFloat(this.data.lng);
+        marker = [this.data.device_id, this.data.lat, this.data.lng];
+        this.markers.push(marker);
+        let markerString = JSON.stringify(this.markers);
+        this.markersService.SetMarkers(markerString);
+        this.setLeafLetMarkers();
+        this.AllDevices.push(this.data);
+        this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
+        this.AllDeviceDataService.AllDevices.subscribe((data) => {
+          this.AllDevices = JSON.parse(data);
+        });
+      }
     } else {
       this.closeDetails();
       let index = this.AllDevices.findIndex(
@@ -558,9 +658,6 @@ export class PagesComponent implements OnInit {
     });
     if (data.gf_type == "Polygon") {
       map.setView(nest[nest.length - 1], 14);
-      // for (var i = 0; i < nest.length; i++) {
-      //   new L.marker(nest[i]).addTo(map);
-      // }
       if (plgn) {
         map.removeLayer(plgn);
         if (circle) {
@@ -583,9 +680,6 @@ export class PagesComponent implements OnInit {
     }
     if (data.gf_type == "Rectangle") {
       map.setView(nest[0], 14);
-      // for (var i = 0; i < nest.length; i++) {
-      //   new L.marker(nest[i]).addTo(map);
-      // }
       if (rect) {
         map.removeLayer(rect);
         if (circle) {
@@ -643,6 +737,12 @@ export class PagesComponent implements OnInit {
   }
   closeFencing() {
     $(".selectionList").addClass("d-none");
+  }
+  closeCreateFencing() {
+    $('.createFence').addClass('d-none')
+  }
+  CreateFencing() {
+    $('.createFence').removeClass('d-none')
   }
   fetchNotifications() {
     let data = {
@@ -702,7 +802,7 @@ export class historyDialogComponent implements OnInit {
     let speed = this.speed;
     let veh_reg_no = reg_no;
     var data = {
-      veh_reg_no: "G797W",
+      veh_reg_no: veh_reg_no,
       History_type: History_type,
       de_start: dateStart,
       de_end: dateEnd,
@@ -826,7 +926,7 @@ export class SendTakePictureDialogComponent {
     this.dialog.open(ControlDialogComponent)
   }
   closeTakePicture() {
-    console.log("Close Take Picture");
+    return null;
   }
 }
 @Component({

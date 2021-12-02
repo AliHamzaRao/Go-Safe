@@ -135,14 +135,14 @@
         <button mat-menu-item class="mat-child border-bottom" (click)="GeoFencing()">
           Show Fence
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child border-bottom" (click)="CreateFencing()">
           Create Fence
         </button>
       </mat-menu>
     </div>
 
     <div fxLayout="row" fxLayoutAlign="center center" style="width: max-content !important">
-      <span class="border-right">
+      <!-- <span class="border-right">
         <button mat-icon-button class="notificationsUnread" (click)="fetchNotifications()">
           <mat-icon [matBadge]="notifications.length" matBadgePosition="after" matBadgeColor="accent">notifications
           </mat-icon>
@@ -150,7 +150,7 @@
         <button class="d-none notificationsRead" mat-icon-button (click)="toggleNotifications()">
           <mat-icon>notifications</mat-icon>
         </button>
-      </span>
+      </span> -->
       <span style="font-size: small; margin-left: 10px">Bhoomia Sharma</span>
       <button mat-button class="mat-hover" [matMenuTriggerFor]="userAccessablilityMenu">
         <mat-icon>person_outline</mat-icon>
@@ -173,29 +173,45 @@
         <div class="shadow p-1 rounded" style="height: fit-content !important">
           <div class="panelKeysContainer rounded">
             <button mat-button class="userPanelKeys" (click)="openControlDialog()">
-              <mat-icon style="height: 0 !important">settings</mat-icon>
+              <img src="../../../assets/icons/Control-white.png" style="
+              margin-left: 3px;
+              height: 23px;
+              margin-bottom: -20px;">
               <br />
-              Control
+              <span class="13px ​!important">
+                Control</span>
             </button>
             <button mat-button class="userPanelKeys">
-              <mat-icon style="height: 0 !important">settings_applications</mat-icon>
-              <br />Settings
+              <img src="../../../assets/icons/Setting-White.png" style="
+              margin-left: 8px;
+              height: 30px;
+              margin-bottom: -20px;">
+              <br />
+              <span class="13px ​!important">Settings</span>
             </button>
             <button mat-button class="userPanelKeys" (click)="openHistoryDialog()">
-              <mat-icon style="height: 0 !important">history</mat-icon>
-              <br />History
+              <!-- <mat-icon style="height: 0 !important">history</mat-icon> -->
+              <img src="../../../assets/icons/History-White.png" style="
+              margin-left: 8px;
+              height: 30px;
+              margin-bottom: -20px;">
+              <br />
+              <span class="13px ​!important">
+                History
+              </span>
             </button>
           </div>
           <div class="vehicleList">
             <mat-tab-group [disablePagination]="true">
               <mat-tab>
                 <ng-template mat-tab-label>
-                  <mat-icon>assignment</mat-icon>
-                  <span>List ({{ TREE_DATA.length }})</span>
+                  <img src="../../../assets/icons/Online-White.png" height="28px" />
+                  <!-- <mat-icon>assignment</mat-icon> -->
+                  <span style="font-size: small !important;">Onine ({{ TREE_DATA.length }})</span>
                 </ng-template>
                 <input type="text" placeholder="Search" class="SearchInput" />
                 <mat-accordion>
-                  <mat-expansion-panel style="margin-bottom: 0.6rem" class="ParentCheckBox">
+                  <!-- <mat-expansion-panel style="margin-bottom: 0.6rem" class="ParentCheckBox">
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         <input type="checkbox" style="margin-right: 10px" />
@@ -223,7 +239,7 @@
                         </div>
                       </span>
                     </span>
-                  </mat-expansion-panel>
+                  </mat-expansion-panel> -->
                   <mat-expansion-panel>
                     <mat-expansion-panel-header>
                       <mat-panel-title>
@@ -233,48 +249,67 @@
                     </mat-expansion-panel-header>
                     <span *ngFor="let item of TREE_DATA; let i = index">
                       <span *ngIf="item.grp_name === 'Assets'">
-                        <mat-accordion>
-                          <mat-expansion-panel *ngFor="let t1 of item.SubMenu; let j = index">
-                            <mat-expansion-panel-header class="nestedPanelHeader">
-                              <mat-panel-title>
-                                <input type="checkbox" style="margin-right: 10px" />
-                                {{ t1.grp_name }} ({{ t1.SubMenu.length }})
-                              </mat-panel-title>
-                            </mat-expansion-panel-header>
-                            <span *ngIf="t1.SubMenu.length">
-                              <mat-expansion-panel *ngFor="let t2 of t1.SubMenu; let k = index">
-                                <mat-expansion-panel-header class="MorenestedPanelHeader">
+                        <span *ngIf="item.SubMenu.length">
+                          <mat-accordion>
+                            <span *ngFor="let t1 of item.SubMenu; let j = index">
+                              <mat-expansion-panel>
+                                <mat-expansion-panel-header class="nestedPanelHeader">
                                   <mat-panel-title>
                                     <input type="checkbox" style="margin-right: 10px" />
-                                    <span *ngIf="t2.vrn !== null">{{
-                                      t2.vrn
-                                      }}</span>
-                                    <span ngElse>
-                                      {{ t2.grp_name }} ({{
-                                      t2.SubMenu.length
-                                      }})
-                                    </span>
+                                    {{ t1.grp_name }} ({{ t1.SubMenu.length }})
                                   </mat-panel-title>
                                 </mat-expansion-panel-header>
-                                <span *ngIf="t2.SubMenu.length">
-                                  <mat-expansion-panel *ngFor="let t3 of t2.SubMenu; let l = index">
-                                    <mat-expansion-panel-header class="nestedPanelHeader">
-                                      <mat-panel-title>
-                                        <input type="checkbox" style="margin-right: 10px" />
-                                        <span *ngIf="t3.vrn !== null">{{
-                                          t3.vrn
-                                          }}</span>
-                                        <span ngElse>
-                                          {{ t3.grp_name }}
-                                        </span>
-                                      </mat-panel-title>
-                                    </mat-expansion-panel-header>
-                                  </mat-expansion-panel>
+                                <span *ngIf="t1.SubMenu.length">
+                                  <span *ngFor="let t2 of t1.SubMenu; let k = index">
+                                    <div class="m-0 singleDevice border-bottom" *ngIf="t2.vrn!==null">
+                                      <input type="checkbox" [attr.data-dataTrack]="t2.datatrack"
+                                        [attr.data-device_id]="t2.device_id" (change)="
+                              onCheck($event, t2.datatrack, t2.device_id)
+                            " />
+                                      <mat-icon>drive_eta</mat-icon>
+                                      <span style="
+                              max-width: 10ch;
+                              white-space: nowrap;
+                              overflow: hidden;
+                              text-overflow: ellipsis;
+                            ">{{ t2.vrn }}
+                                      </span>
+                                      <small class="text-center">Car's <br />
+                                        Speed</small>
+                                      <mat-icon>arrow_forward</mat-icon>
+                                    </div>
+                                    <mat-expansion-panel *ngIf="t2.SubMenu.length">
+                                      <mat-expansion-panel-header class="MorenestedPanelHeader">
+                                        <mat-panel-title>
+                                          <input type="checkbox" style="margin-right: 10px" />
+                                          {{ t2.grp_name }} ({{
+                                          t2.SubMenu.length
+                                          }})
+                                        </mat-panel-title>
+                                      </mat-expansion-panel-header>
+                                      <span *ngIf="t2.SubMenu.length">
+                                        <mat-expansion-panel *ngFor="let t3 of t2.SubMenu; let l = index">
+                                          <mat-expansion-panel-header class="nestedPanelHeader">
+                                            <mat-panel-title>
+                                              <input type="checkbox" style="margin-right: 10px" />
+                                              <span *ngIf="t3.vrn !== null">{{
+                                                t3.vrn
+                                                }}</span>
+                                              <span ngElse>
+                                                {{ t3.grp_name }}
+                                              </span>
+                                            </mat-panel-title>
+                                          </mat-expansion-panel-header>
+                                        </mat-expansion-panel>
+                                      </span>
+                                    </mat-expansion-panel>
+                                  </span>
                                 </span>
                               </mat-expansion-panel>
                             </span>
-                          </mat-expansion-panel>
-                        </mat-accordion>
+
+                          </mat-accordion>
+                        </span>
                       </span>
                     </span>
                   </mat-expansion-panel>
@@ -282,15 +317,15 @@
               </mat-tab>
               <mat-tab>
                 <ng-template mat-tab-label>
-                  <mat-icon>supervisor_account</mat-icon>
-                  <span> Users </span>
+                  <img src="../../../assets/icons/Offline-White.png" height="28px" />
+                  <span style="font-size: small;"> Users </span>
                 </ng-template>
                 Content 1
               </mat-tab>
               <mat-tab>
                 <ng-template mat-tab-label>
-                  <mat-icon>warning</mat-icon>
-                  <span> Users </span>
+                  <img src="../../../assets/icons/Alarms-White.png" height="28px" />
+                  <span style="font-size: small;"> Alarms </span>
                 </ng-template>
                 Content 1
               </mat-tab>
@@ -542,7 +577,7 @@
   <div class="col-md-12" style="margin: 5px 0px 0px" *ngFor="let item of singleDeviceData; let i = index">
     <div class="col-md-12 p-0" style="display: flex; justify-content: space-between">
       <span style="display: flex; align-items: center">
-        <span class="carName">Device {{ item.device_id }}
+        <span class="carName">{{ item.veh_reg_no }}
           <img src="../../../assets/icons/Truck.png" style="height: 24px !important" alt="..." /></span>
       </span>
       <button type="button" class="showMoreButton btn btn-sm" (click)="toggleInfo()">
@@ -582,7 +617,7 @@
 <div class="vehicleCardLeafletMore col-md-12 m-0 row d-none rounded">
   <div *ngFor="let item of singleDeviceData; let i = index">
     <div class="col-md-12" style="display: flex; justify-content: space-between">
-      <span class="carName">Device {{ item.device_id }}
+      <span class="carName">Device {{ item.veh_reg_no }}
         <img src="../../../assets/icons/Truck.png" style="height: 34px !important" alt="..." /></span>
       <button type="button" class="showLessButton btn btn-sm" (click)="toggleInfo()">
         Show Less
@@ -817,6 +852,52 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="createFence rounded shadow d-none">
+  <div style="display: flex; justify-content: space-between;">
+    <h3>Geo Fence Information</h3>
+    <button mat-icon-button (click)="closeCreateFencing()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="row m-0 p-0">
+    <div class="col-12 p-0 m-0 pt-2">
+      <label>Select Fence Type</label>
+      <select class="fenceType" (change)="onInputChange($event)">
+        <option value="Select Fence Type" disabled selected>Select Fence Type</option>
+        <option value="Circle">Circle</option>
+        <option value="Rectangle">Rectangle</option>
+        <option value="Polygon">Polygon</option>
+      </select>
+    </div>
+    <div class="col-12 p-0 m-0 pt-2" *ngIf="fenceType === 'Circle'">
+      <label>Circle Radius</label>
+      <input class="fenceType border radius" placeholder="Enter Circle Radius" />
+    </div>
+    <div class="col-12 p-0 m-0 pt-2">
+      <label>Fence Name</label>
+      <input class="fenceType border" placeholder="Enter Fence Name" />
+    </div>
+    <div class="col-12 p-0 m-0 pt-2">
+      <label>Country</label>
+      <input class="fenceType border" placeholder="Enter Country" />
+    </div>
+    <div class="col-12 p-0 m-0 pt-2">
+      <label>City</label>
+      <input class="fenceType border" placeholder="Enter City" />
+    </div>
+    <div class="col-12 p-0 m-0 confirmationBox">
+      <button class="fenceDrawBtn" *ngIf="fenceType === 'Rectangle'" (click)="drawRectangle()">Draw</button>
+      <button class="fenceDrawBtn" *ngIf="fenceType === 'Polygon'" (click)="drawPolygon()">Draw</button>
+      <span>
+        <button class="fenceCancelBtn">Cancel</button>
+        <button class="fenceDoneBtn">Confirm</button>
+      </span>
     </div>
   </div>
 </div>
