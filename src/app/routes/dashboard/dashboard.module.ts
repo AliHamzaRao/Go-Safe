@@ -32,7 +32,7 @@ export const routes = [
       // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en
       // apiKey: 'AIzaSyAvcDy5ZYc2ujCS6TTtI3RYX5QmuoV8Ffw'
       apiKey: 'AIzaSyAO7Mg2Cs1qzo_3jkKkZAKY6jtwIlm41-I',
-      libraries: ['drawing']
+      libraries: ['drawing', 'places', 'geometry']
     })
   ],
   declarations: [

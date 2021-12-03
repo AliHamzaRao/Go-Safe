@@ -42,6 +42,28 @@ export class DashboardComponent implements OnInit {
   geoFence: any;
   geoFenceData: [];
   iconUrl: string = "../../../assets/img/vendor/leaflet/new-icon/marker-icon.png";
+
+
+  managerOptions = {
+    drawingControl: true,
+    drawingControlOptions: {
+      drawingModes: ['polygon', 'circle', 'rectangle'],
+    },
+    polygonOptions: {
+      draggable: true,
+      editable: true,
+    },
+    rectangleOptions: {
+      draggable: true,
+      editable: true,
+    },
+    circleOptions: {
+      draggable: true,
+      editable: true,
+    },
+    drawingMode: 'polygon',
+  };
+
   //#region Constructor
   constructor(
     public appSettings: AppSettings,
@@ -89,6 +111,14 @@ export class DashboardComponent implements OnInit {
   //#region After View Init Hook
   ngAfterViewInit() {
 
+  }
+  // polygonCreated($event) {
+  //   let Data = {data: ...$event };
+  // }
+  drawIt(e) {
+    console.log(e)
+    // console.log(e.bounds) //for rectangle
+    // console.log(e.radius) //for circle
   }
   //#endregion
   stop() {

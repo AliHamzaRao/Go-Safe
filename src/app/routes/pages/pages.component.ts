@@ -5,6 +5,7 @@ import {
   HostListener,
   ViewChildren,
   QueryList,
+  ɵɵtrustConstantResourceUrl,
 } from "@angular/core";
 import { ActivatedRoute, Router, NavigationEnd } from "@angular/router";
 import { PerfectScrollbarDirective } from "ngx-perfect-scrollbar";
@@ -26,7 +27,7 @@ import { GeoFenceService } from "src/app/_core/_AppServices/GeoFenceService";
 import { GeoFencingService } from "src/app/_core/_AppServices/GeoFencingService";
 import "leaflet";
 import { AlarmsService } from "src/app/_core/_AppServices/AlarmsService";
-import { isEmpty } from "rxjs/operators";
+import { GeoFencePostService } from "src/app/_core/_AppServices/GeoFencePostingService";
 declare var L;
 var map;
 var el;
@@ -54,7 +55,7 @@ export class PagesComponent implements OnInit {
   TREE_DATA: any = [];
   AllDevices: any = [];
   singleDeviceData: any = [];
-  markers: any = [];
+  markers: any[] = [];
   mapBounds: any = [];
   newPacketParse: any;
   data: any;
@@ -74,6 +75,12 @@ export class PagesComponent implements OnInit {
   polyMarkers: any[] = [];
   rectangle: any;
   polygon: any;
+  circleRadius: any;
+  FenceParam: any;
+  cityName: any;
+  countryName: any;
+  fenceName: any;
+  circleMarkers: any[] = [];
   @ViewChild(DashboardComponent, { static: true }) child: DashboardComponent;
   @ViewChild("sidenav") sidenav: any;
   @ViewChild("backToTop") backToTop: any;
@@ -102,7 +109,8 @@ export class PagesComponent implements OnInit {
     public singleDeviceDataService: SingleDeviceDataService,
     public GeoFencingService: GeoFencingService,
     public Toast: ToastrService,
-    public Alarms: AlarmsService
+    public Alarms: AlarmsService,
+    public PostFence: GeoFencePostService
   ) {
     this.settings = this.appSettings.settings;
   }
@@ -276,94 +284,6 @@ export class PagesComponent implements OnInit {
         }
       }
     }
-  }
-  onInputChange = (e) => {
-    this.fenceType = e.target.value;
-    switch (this.fenceType) {
-      case "Circle":
-        let thismarker: any;
-        let markers = [];
-        map.on('click', (e) => {
-          if (markers.length <= 0) {
-            let radius = $('.radius').val()
-            let data: any[] = e.latlng;
-            let newData = { ...data };
-            markers.push([parseFloat(newData['lat']), parseFloat(newData['lng'])])
-            let cl;
-            thismarker = L.marker(e.latlng)
-              .bindPopup(`<strong>Double click to remove marker</strong>`, { maxWidth: 500 }
-              ).on('dblclick', () => {
-                map.removeLayer(cl)
-                map.removeLayer(thismarker)
-                markers = []
-              })
-            thismarker.addTo(map)
-            map.setView(e.latlng, 13)
-            cl = L.circle(...markers, radius)
-            cl.addTo(map)
-          }
-          else {
-            return null;
-          }
-        })
-        break;
-      case "Rectangle":
-        map.on('click', (e) => {
-          let thismarker;
-          if (this.rectMarkers.length == 2) {
-            this.Toast.error('Cannot add more than two point for a rectangle. Remove one of the markers First', "Error Drawing Rectangle ")
-          }
-          else {
-            let data: any[] = e.latlng;
-            let newData = { ...data };
-            this.rectMarkers.push([parseFloat(newData['lat']), parseFloat(newData['lng'])])
-            thismarker = L.marker(e.latlng)
-              .bindPopup(`<strong>Double click to remove marker</strong>`, { maxWidth: 500 }
-              ).on('dblclick', (e) => {
-                map.removeLayer(thismarker)
-                let data: any[] = e.latlng;
-                let newData = { ...data };
-                let tempArr = [parseFloat(newData['lat']), parseFloat(newData['lng'])];
-                let index = this.rectMarkers.findIndex((item: any[]) => item === tempArr);
-                this.rectMarkers.splice(index, 1);
-                map.removeLayer(this.rectangle)
-              })
-            thismarker.addTo(map)
-            map.setView(e.latlng, 10)
-          }
-        })
-        break;
-      case "Polygon":
-        map.on('click', (e) => {
-          let thismarker;
-          let data: any[] = e.latlng;
-          let newData = { ...data };
-          this.polyMarkers.push([parseFloat(newData['lat']), parseFloat(newData['lng'])])
-          thismarker = L.marker(e.latlng)
-            .bindPopup(`<strong>Double click to remove marker</strong>`, { maxWidth: 500 }
-            ).on('dblclick', (e) => {
-              map.removeLayer(thismarker)
-              let data: any[] = e.latlng;
-              let newData = { ...data };
-              let tempArr = [parseFloat(newData['lat']), parseFloat(newData['lng'])];
-              console.log(tempArr, "Data")
-              console.log(this.polyMarkers)
-            })
-          thismarker.addTo(map)
-          map.setView(e.latlng, 10)
-
-        })
-      default:
-        break;
-    }
-  }
-  drawRectangle() {
-    this.rectangle = L.rectangle(this.rectMarkers, { color: "#2876FC" })
-    this.rectangle.addTo(map)
-  }
-  drawPolygon() {
-    this.polygon = L.polygon(this.polyMarkers, { color: "#FF1111" })
-    this.polygon.addTo(map)
   }
   //#endregion
   //#region Load Leaflet Maps
@@ -639,6 +559,7 @@ export class PagesComponent implements OnInit {
   Draw(data: any) {
     let nest = [];
     let nestArray = [];
+    console.log(data)
     data.FenceParam.split("|").forEach((element) => {
       let str;
       var tempArr = [];
@@ -741,8 +662,239 @@ export class PagesComponent implements OnInit {
   closeCreateFencing() {
     $('.createFence').addClass('d-none')
   }
+
+  onInputChange = (e) => {
+    this.fenceType = e.target.value;
+    switch (this.fenceType) {
+      case "Circle":
+        let thismarker: any;
+        map.on('click', (e) => {
+          if (this.circleMarkers.length < 1) {
+            // if()
+            let radius = $('.radius').val()
+            let data: any[] = e.latlng;
+            let newData = { ...data };
+            this.circleMarkers.push([parseFloat(newData['lat']), parseFloat(newData['lng'])])
+            let cl;
+            thismarker = L.marker(e.latlng)
+              .bindPopup(`<strong>Double click to remove marker</strong>`, { maxWidth: 500 }
+              ).on('dblclick', () => {
+                map.removeLayer(cl)
+                map.removeLayer(thismarker)
+                this.circleMarkers = []
+              })
+            thismarker.addTo(map)
+            map.setView(e.latlng, 13)
+            cl = L.circle(...this.circleMarkers, radius)
+            // this.circleMarkers = [...this.circleMarkers[0]]
+            this.circleRadius = radius;
+            cl.addTo(map)
+          }
+          else {
+            return null;
+          }
+        })
+        break;
+      case "Rectangle":
+        map.on('click', (e) => {
+          let thismarker;
+          if (this.rectMarkers.length == 2) {
+            this.Toast.error('Cannot add more than two point for a rectangle. Remove one of the markers First', "Error Drawing Rectangle ")
+          }
+          else {
+            let data: any[] = e.latlng;
+            let newData = { ...data };
+            this.rectMarkers.push([parseFloat(newData['lat']), parseFloat(newData['lng'])])
+            thismarker = L.marker(e.latlng)
+              .bindPopup(`<strong>Double click to remove marker</strong>`, { maxWidth: 500 }
+              ).on('dblclick', (event) => {
+                let removedata: any[] = event.latlng;
+                let newDataremove = { ...removedata };
+                let tempArr = [parseFloat(newDataremove['lat']), parseFloat(newDataremove['lng'])];
+                let index = this.rectMarkers.findIndex((item: any[]) => (item[0] == tempArr[0] && item[1] == tempArr[1]));
+                this.rectMarkers.splice(index, 1);
+                // }
+                map.removeLayer(event.target)
+                if (this.rectangle) {
+                  map.removeLayer(this.rectangle)
+                }
+              })
+            thismarker.addTo(map)
+            map.setView(e.latlng, 10)
+          }
+        })
+        break;
+      case "Polygon":
+        map.on('click', (e) => {
+          let thismarker;
+          let data: any[] = e.latlng;
+          let newData = { ...data };
+          this.polyMarkers.push([parseFloat(newData['lat']), parseFloat(newData['lng'])])
+          thismarker = L.marker(e.latlng)
+            .bindPopup(`<strong>Double click to remove marker</strong>`, { maxWidth: 500 }
+            ).on('dblclick', (event) => {
+              map.removeLayer(thismarker)
+              let data: any[] = event.latlng;
+              let newData = { ...data };
+              let tempArr = [parseFloat(newData['lat']), parseFloat(newData['lng'])];
+              let index = this.polyMarkers.findIndex((item: any[]) => (item[0] == tempArr[0] && item[1] == tempArr[1]));
+
+              this.polyMarkers.splice(index, 1);
+              map.removeLayer(event.target)
+              if (this.polygon) {
+                map.removeLayer(this.polygon)
+              }
+            })
+          thismarker.addTo(map)
+          map.setView(e.latlng, 10)
+
+        })
+      default:
+        break;
+    }
+  }
+  drawRectangle() {
+    if (this.rectMarkers.length == 2) {
+      this.rectangle = L.rectangle(this.rectMarkers, { color: "#2876FC" })
+      this.rectangle.addTo(map)
+    }
+    else {
+      this.Toast.error('You should have 2 markers to draw a rectangle', 'Drawing not allowed')
+    }
+  }
+  drawPolygon() {
+    if (this.polyMarkers.length) {
+      if (this.polygon) {
+        map.removeLayer(this.polygon)
+      }
+      else {
+        this.polygon = L.polygon(this.polyMarkers, { color: "#FF1111" })
+        this.polygon.addTo(map)
+      }
+    }
+    else {
+      this.Toast.error('you should have atleast 2 markers to draw a polygon', "Error Drawing Polygon")
+    }
+  }
   CreateFencing() {
+    // if (!this.markers.length) {
+    // this.Toast.error('Please select atleast one device', "Couldn't show form")
+    // }
+    // else if (this.markers.length = 1) {
     $('.createFence').removeClass('d-none')
+    // }
+    // else if (this.markers.length > 1) {
+    // this.Toast.error('Please select one device only', "Couldn't show form")
+    // }
+  }
+  sendCircle() {
+    if (this.circleMarkers.length) {
+      this.cityName = $('.city').val();
+      this.countryName = $('.country').val();
+      this.fenceName = $('.fenceName').val();
+      let param: string;
+      this.FenceParam = this.circleMarkers.forEach((item: any[]) => {
+        param = item[0] + "," + item[1]
+      })
+
+      let circleParams = {
+        cmp_id: 0,
+        cust_id: 0,
+        gf_name: this.fenceName,
+        gf_diff: this.circleRadius,
+        gf_type: this.fenceType,
+        gf_type_name: this.fenceType,
+        CityNCountry: this.cityName + ', ' + this.countryName,
+        FenceParam: param
+      }
+      if (this.cityName.length && this.countryName.length && this.fenceName.length) {
+        this.PostFence.addGeoFence(circleParams).subscribe(data => {
+          if (data.status) {
+            this.Toast.success(data.message, 'Created Successfully')
+          }
+          else {
+            this.Toast.error(data.message)
+          }
+        })
+      }
+      else {
+        this.Toast.warning('Please Fill up all the fields', "Invalid Input")
+      }
+    }
+    else {
+      this.Toast.error('You Must Draw a Circle to proceed', "Couldn't proceed to your request")
+    }
+  }
+  sendPolygon() {
+    // var asd = '';
+    if (this.polyMarkers.length) {
+      this.cityName = $('.city').val();
+      this.countryName = $('.country').val();
+      this.fenceName = $('.fenceName').val();
+      let param: string;
+      this.FenceParam = this.polyMarkers.forEach((item: any[]) => {
+        param += item.toString() + "|"
+      })
+      param = param.slice(0, param.length - 1).replace('undefined', '').trim()
+      let polyparams = {
+        cmp_id: 0,
+        cust_id: 0,
+        gf_name: this.fenceName,
+        gf_type: this.fenceType,
+        gf_type_name: this.fenceType,
+        CityNCountry: this.cityName + ', ' + this.countryName,
+        FenceParam: param
+      }
+      if (this.cityName.length && this.countryName.length && this.fenceName.length) {
+        this.PostFence.addGeoFence(polyparams).subscribe(data => {
+          console.log(data)
+          if (data.status) {
+            this.Toast.success(data.message, "Polygon Created Successfully")
+          }
+        })
+      }
+      else {
+        this.Toast.warning('Please Fill up all the fields', "Invalid Input")
+      }
+    }
+    else {
+      this.Toast.error('Please Draw a polygon first', "Coundn't save")
+    }
+  }
+  sendRectangle() {
+    if (this.rectMarkers.length) {
+      this.cityName = $('.city').val();
+      this.countryName = $('.country').val();
+      this.fenceName = $('.fenceName').val();
+      let param: string;
+      this.FenceParam = this.rectMarkers.forEach((item: any[]) => {
+        param += item.toString() + "|"
+      })
+      param = param.slice(0, param.length - 1).replace('undefined', '').trim()
+      let rectparams = {
+        cmp_id: 0,
+        cust_id: 0,
+        gf_name: this.fenceName,
+        gf_type: this.fenceType,
+        gf_type_name: this.fenceType,
+        CityNCountry: this.cityName + ', ' + this.countryName,
+        FenceParam: param
+      }
+      if (this.cityName.length && this.countryName.length && this.fenceName.length) {
+        this.PostFence.addGeoFence(rectparams).subscribe(data => {
+          console.log(data)
+          if (data.status) {
+            this.Toast.success(data.message, "Rectangle Created Successfully")
+          }
+        })
+      }
+      else {
+        this.Toast.warning('Please Fill up all the fields', "Invalid Input")
+      }
+    }
+    else {
+      this.Toast.error('Please Draw a Rectangle first', "Coundn't save")
+    }
   }
   fetchNotifications() {
     let data = {
@@ -809,6 +961,7 @@ export class historyDialogComponent implements OnInit {
       speed: speed,
     };
     this.historyService.DeviceHistory(data).subscribe((data) => {
+      console.log(data)
       this.historyDataService.setNewMarkers(JSON.stringify(data.data.History));
       if (data.status) {
         if (data.data.History.length) {

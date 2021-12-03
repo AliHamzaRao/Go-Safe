@@ -25,6 +25,17 @@ export class History {
   public RECDateTime: string;
   public Index: number;
 }
+// export class GeoFencePost {
+// public cust_id: number;
+//   public gf_name: string;
+//   public gf_type: string;
+//   public gf_type_name: string;
+//   public cnt_id: number;
+//   public cty_id: number;
+//   public FenceParam: string;
+//   public gf_diff: number;
+//   public CityNCountry: string;
+// }
 export class GeoFence {
   public gf_id: number;
   public gf_name: string;
