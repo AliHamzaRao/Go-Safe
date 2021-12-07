@@ -417,23 +417,12 @@
       [mapTypeId]="googleMapType"
       [fullscreenControl]="true"
       [mapTypeControl]="true"
+      [streetViewControl]="true"
+      [rotateControl]="true"
       [fitBounds]="true"
       [agmDrawingManager]="drawing"
+      (mapReady)="mapLoad($event)"
     >
-      <agm-drawing-manager
-        #drawing="agmDrawingManager"
-        [drawingControlOptions]="managerOptions.drawingControlOptions"
-        [drawingControl]="managerOptions.drawingControl"
-        [drawingControlOptions]="managerOptions.drawingControlOptions"
-        [polygonOptions]="managerOptions.polygonOptions"
-         (polygonComplete)="drawIt($event)" 
-        [rectangleOptions]="managerOptions.rectangleOptions"
-        [cirlceOptions]="managerOptions.cirlceOptions"
-        [drawingMode]="managerOptions.drawingMode"
-        (circleComplete)="drawIt($event)"
-        (rectangleComplete)="drawIt($event)"
-      >
-      </agm-drawing-manager>
       <agm-polyline>
         <agm-polyline-point
           *ngFor="let data of markerData; let i = index"
@@ -451,9 +440,6 @@
           </agm-marker>
         </span>
       </agm-polyline>
-
-      <!-- <agm-drawing-manager class="border"></agm-drawing-manager> -->
-      <!-- Drawing Ends -->
       <span *ngIf="geoFenceData.gf_type == 'Polygon'">
         <!-- <agm-marker *ngFor="let data of geoFenceData.fenceParam; let i = index;" [latitude]="data.lat"
           [longitude]="data.lng" [agmFitBounds]="true">
@@ -501,13 +487,12 @@
           [strokeWeight]="2"
           [visible]="true"
           [zIndex]="1"
-          [radius]="10"
+          [radius]="geoFenceData.gf_diff"
         ></agm-circle>
       </span>
       <span ngElse>
         {{ null }}
       </span>
-
       <!-- Drawing Ends -->
       <span *ngFor="let data of markers; let i = index">
         <span *ngIf="data[1] != 0 && data[2] != 0">
@@ -522,7 +507,113 @@
           </agm-marker>
         </span>
       </span>
+      <agm-drawing-manager
+        #drawing="agmDrawingManager"
+        [drawingControlOptions]="managerOptions.drawingControlOptions"
+        [drawingControl]="managerOptions.drawingControl"
+        [drawingControlOptions]="managerOptions.drawingControlOptions"
+        [polygonOptions]="managerOptions.polygonOptions"
+        (polygonComplete)="drawPolygon($event)"
+        [rectangleOptions]="managerOptions.rectangleOptions"
+        [cirlceOptions]="managerOptions.cirlceOptions"
+        [drawingMode]="managerOptions.drawingMode"
+        (circleComplete)="drawCircle($event)"
+        (rectangleComplete)="drawRectangle($event)"
+      >
+      </agm-drawing-manager>
     </agm-map>
+  </div>
+</div>
+<button
+  *ngIf="mapType === 'Google Maps'"
+  style="position: absolute; right: 15px; top: 10px"
+  mat-flat-button
+  color="primary"
+  class="closeGeoFenceBtnGoogle d-none"
+  (click)="RemoveFencing()"
+>
+  Close Geo Fencing Google
+</button>
+
+<div class="createFenceGoogleMap rounded shadow d-none">
+  <div style="display: flex; justify-content: space-between">
+    <h3>Geo Fence Information</h3>
+    <button mat-icon-button (click)="closeCreateFencingGoogle()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="row m-0 p-0">
+    <div class="col-12 p-0 m-0 pt-2">
+      <label>Select Fence Type</label>
+      <select
+        class="GooglefenceType GooglefenceTypeSelect"
+        disabled
+        (change)="onInputChange($event)"
+      >
+        <option value="Select Fence Type" disabled selected>
+          Select Fence Type
+        </option>
+        <option value="Circle">Circle</option>
+        <option value="Rectangle">Rectangle</option>
+        <option value="Polygon">Polygon</option>
+      </select>
+    </div>
+    <div class="col-12 p-0 m-0 pt-2" *ngIf="fenceType === 'Circle'">
+      <label>Circle Radius</label>
+      <input
+        class="GooglefenceType border radius circleField"
+        disabled
+        placeholder="Enter Circle Radius"
+      />
+    </div>
+    <div class="col-12 p-0 m-0 pt-2">
+      <label>Fence Name</label>
+      <input
+        class="GooglefenceType border fenceNameGoogle"
+        placeholder="Enter Fence Name"
+      />
+    </div>
+    <div class="col-12 p-0 m-0 pt-2">
+      <label>Country</label>
+      <input
+        class="GooglefenceType border countryGoogle"
+        placeholder="Enter Country"
+      />
+    </div>
+    <div class="col-12 p-0 m-0 pt-2">
+      <label>City</label>
+      <input
+        class="GooglefenceType border cityGoogle"
+        placeholder="Enter City"
+      />
+    </div>
+    <div class="col-12 p-0 m-0 confirmationBoxGoogle">
+      <span>
+        <button class="fenceCancelBtnGoogle">Cancel</button>
+        <button
+          class="fenceDoneBtnGoogle"
+          *ngIf="fenceType === 'Circle'"
+          (click)="sendCircle()"
+        >
+          Confirm
+        </button>
+        <button
+          class="fenceDoneBtnGoogle"
+          *ngIf="fenceType === 'Rectangle'"
+          (click)="sendRectangle()"
+        >
+          Confirm
+        </button>
+        <button
+          class="fenceDoneBtnGoogle"
+          *ngIf="fenceType === 'Polygon'"
+          (click)="sendPolygon()"
+        >
+          Confirm
+        </button>
+      </span>
+    </div>
   </div>
 </div>
 

@@ -66,10 +66,10 @@
           Google Maps
         </button>
         <button
-          mat-menu-item
+        mat-menu-item
           class="mapType"
           (click)="mapType('Open Street Maps')"
-        >
+          >
           Open Street Maps
         </button>
       </mat-menu> -->
@@ -107,8 +107,8 @@
           Asset Trips
         </button>
         <!-- <button mat-menu-item class="mat-child border-bottom" routerLink='asset-trip-report'>
-          Asset Trips
-        </button> -->
+      Asset Trips
+    </button> -->
         <button mat-menu-item class="mat-child border-bottom">
           Multi Assets Kilometer
         </button>
@@ -182,14 +182,14 @@
       style="width: max-content !important"
     >
       <!-- <span class="border-right">
-        <button mat-icon-button class="notificationsUnread" (click)="fetchNotifications()">
-          <mat-icon [matBadge]="notifications.length" matBadgePosition="after" matBadgeColor="accent">notifications
-          </mat-icon>
-        </button>
-        <button class="d-none notificationsRead" mat-icon-button (click)="toggleNotifications()">
-          <mat-icon>notifications</mat-icon>
-        </button>
-      </span> -->
+  <button mat-icon-button class="notificationsUnread" (click)="fetchNotifications()">
+    <mat-icon [matBadge]="notifications.length" matBadgePosition="after" matBadgeColor="accent">notifications
+    </mat-icon>
+  </button>
+  <button class="d-none notificationsRead" mat-icon-button (click)="toggleNotifications()">
+    <mat-icon>notifications</mat-icon>
+  </button>
+</span> -->
       <span style="font-size: small; margin-left: 10px">Bhoomia Sharma</span>
       <button
         mat-button
@@ -484,7 +484,7 @@
                     src="../../../assets/icons/Offline-White.png"
                     height="28px"
                   />
-                  <span style="font-size: small"> Users </span>
+                  <span style="font-size: small"> Offline </span>
                 </ng-template>
                 Content 1
               </mat-tab>
@@ -587,6 +587,17 @@
 </div>
 <!-- </mat-sidenav-content> -->
 <!-- </mat-sidenav-container> -->
+
+<button
+  *ngIf="currentMap === 'Open Street Maps'"
+  style="position: absolute; right: 15px; top: 71px"
+  mat-flat-button
+  color="primary"
+  class="closeGeoFenceBtn d-none"
+  (click)="RemoveFencing()"
+>
+  Close Geo Fencing
+</button>
 
 <!-- History Record -->
 <div class="recordDialogOffset d-none">
@@ -1336,7 +1347,9 @@
         Draw
       </button>
       <span>
-        <button class="fenceCancelBtn">Cancel</button>
+        <button class="fenceCancelBtn" (click)="closeCreateFencing()">
+          Cancel
+        </button>
         <button
           class="fenceDoneBtn"
           *ngIf="fenceType === 'Circle'"

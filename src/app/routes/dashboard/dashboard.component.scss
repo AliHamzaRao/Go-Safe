@@ -327,3 +327,58 @@
 .shapeSelect button img {
   height: 100% !important;
 }
+
+.createFenceGoogleMap {
+  height: max-content !important;
+  width: 400px !important;
+  position: absolute !important;
+  right: 15px;
+  top: 15px;
+  padding: 10px;
+  background: white !important;
+  outline: none;
+}
+.createFenceGoogleMap h3 {
+  margin: 0px !important;
+}
+.createFenceGoogleMap .GooglefenceType {
+  width: 100%;
+  padding: 5px 20px;
+  border-radius: 10px;
+}
+.createFenceGoogleMap .GooglefenceType:focus {
+  box-shadow: none;
+  outline: none;
+}
+.createFenceGoogleMap .confirmationBoxGoogle {
+  padding: 10px !important;
+  display: flex;
+  justify-content: space-between;
+}
+.createFenceGoogleMap .confirmationBoxGoogle .fenceDrawBtnGoogle {
+  border: none;
+  outline: none;
+  background: rgb(185, 125, 11);
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  margin-right: 5px;
+}
+.createFenceGoogleMap .confirmationBoxGoogle .fenceCancelBtnGoogle {
+  border: none;
+  outline: none;
+  background: #bb2424;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  margin-right: 5px;
+}
+
+.createFenceGoogleMap .confirmationBoxGoogle .fenceDoneBtnGoogle {
+  border: none;
+  outline: none;
+  background: rgb(24, 131, 24);
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+}

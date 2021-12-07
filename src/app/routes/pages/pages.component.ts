@@ -46,12 +46,9 @@ var polyline;
 })
 export class PagesComponent implements OnInit {
   public settings: Settings;
-  el: any;
-  map: any;
   lat = 0;
   lng = 0;
   zoom = 2;
-  googleMapType = "roadmap";
   TREE_DATA: any = [];
   AllDevices: any = [];
   singleDeviceData: any = [];
@@ -81,6 +78,8 @@ export class PagesComponent implements OnInit {
   countryName: any;
   fenceName: any;
   circleMarkers: any[] = [];
+  currentMap = mapType;
+  newCircle: any;
   @ViewChild(DashboardComponent, { static: true }) child: DashboardComponent;
   @ViewChild("sidenav") sidenav: any;
   @ViewChild("backToTop") backToTop: any;
@@ -156,7 +155,23 @@ export class PagesComponent implements OnInit {
           this.setLeafLetMarkers();
         }, 1000);
       }
-
+      if (
+        mapType === "Google Maps" &&
+        $(".createFence").is(":visible")
+      ) {
+        $(".createFenceGoogleMap").addClass("d-none");
+        $(".createFence").toggleClass("d-none");
+      }
+      if (
+        mapType === "Open Street Maps" &&
+        $(".createFenceGoogleMap").is(":visible")
+      ) {
+        $(".createFence").toggleClass("d-none");
+        $(".createFenceGoogleMap").addClass("d-none");
+      }
+      // if (mapType === "Google Maps") {
+      //   $('.gmnoprint').addClass('d-none');
+      // }
       this.loadLeafLetMap();
       setTimeout(() => {
         this.setLeafLetMarkers();
@@ -556,11 +571,10 @@ export class PagesComponent implements OnInit {
     $(".vehicleCardLeafletMore").addClass("d-none");
   }
 
-  Draw(data: any) {
+  Draw(fenceData: any) {
     let nest = [];
     let nestArray = [];
-    console.log(data)
-    data.FenceParam.split("|").forEach((element) => {
+    fenceData.FenceParam.split("|").forEach((element) => {
       let str;
       var tempArr = [];
       if (element.includes("@")) {
@@ -577,78 +591,120 @@ export class PagesComponent implements OnInit {
       }
       nest.push(tempArr);
     });
-    if (data.gf_type == "Polygon") {
+    if (fenceData.gf_type == "Polygon") {
       map.setView(nest[nest.length - 1], 14);
       if (plgn) {
         map.removeLayer(plgn);
-        if (circle) {
-          map.removeLayer(circle);
-        }
-        if (rect) {
-          map.removeLayer(rect);
-        }
-        if (marker) {
-          map.removeLayer(marker);
-        }
+      }
+      if (circle) {
+        map.removeLayer(circle);
+      }
+      if (rect) {
+        map.removeLayer(rect);
+      }
+      if (marker) {
+        map.removeLayer(marker);
       }
       plgn = L.polygon(nest, { color: "#FF1111" });
       plgn.addTo(map);
-      this.GeoFencingService.newFence(
-        JSON.stringify({ gf_type: data.gf_type, fenceParam: nestArray })
-      );
+      if (mapType === "Google Maps") {
+        $('.closeGeoFenceBtnGoogle').removeClass('d-none')
+      }
+      else if (mapType === "Open Street Maps") {
+
+        $('.closeGeoFenceBtn').removeClass('d-none')
+      }
+      let postdata = JSON.stringify({ gf_type: fenceData.gf_type, fenceParam: nestArray })
+      this.GeoFencingService.newFence(postdata)
       map.fitBounds(nest);
       nest = [];
     }
-    if (data.gf_type == "Rectangle") {
+    if (fenceData.gf_type == "Rectangle") {
       map.setView(nest[0], 14);
       if (rect) {
         map.removeLayer(rect);
-        if (circle) {
-          map.removeLayer(circle);
-        }
-        if (plgn) {
-          map.removeLayer(plgn);
-        }
-        if (marker) {
-          map.removeLayer(marker);
-        }
+      }
+      if (circle) {
+        map.removeLayer(circle);
+      }
+      if (plgn) {
+        map.removeLayer(plgn);
+      }
+      if (marker) {
+        map.removeLayer(marker);
       }
       rect = L.rectangle(nest, { color: "#2876FC" });
       rect.addTo(map);
-      this.GeoFencingService.newFence(
-        JSON.stringify({ gf_type: data.gf_type, fenceParam: nestArray })
-      );
+      if (mapType === "Google Maps") {
+        $('.closeGeoFenceBtnGoogle').removeClass('d-none')
+      }
+      else if (mapType === "Open Street Maps") {
+
+        $('.closeGeoFenceBtn').removeClass('d-none')
+      }
+      let postdata = JSON.stringify({ gf_type: fenceData.gf_type, fenceParam: nestArray, })
+      this.GeoFencingService.newFence(postdata);
       map.fitBounds(nest);
       nest = [];
     }
-    if (data.gf_type == "Circle") {
+    if (fenceData.gf_type == "Circle") {
       map.setView(nest[0], 14);
       if (circle) {
         map.removeLayer(circle);
-        if (rect) {
-          map.removeLayer(rect);
-        }
-        if (plgn) {
-          map.removeLayer(plgn);
-        }
-        if (marker) {
-          map.removeLayer(marker);
-          $(
-            ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
-          ).remove();
-          $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
-        }
+      }
+      if (rect) {
+        map.removeLayer(rect);
+      }
+      if (plgn) {
+        map.removeLayer(plgn);
+      }
+      if (marker) {
+        map.removeLayer(marker);
+        $(
+          ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
+        ).remove();
+        $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
       }
       marker = L.marker(...nest);
       marker.addTo(map);
-      circle = L.circle(...nest, data.gf_diff, { color: "#00C190" });
+      circle = L.circle(...nest, fenceData.gf_diff, { color: "#00C190" });
       circle.addTo(map);
+      if (mapType === "Google Maps") {
+        $('.closeGeoFenceBtnGoogle').removeClass('d-none')
+      }
+      else if (mapType === "Open Street Maps") {
+        $('.closeGeoFenceBtn').removeClass('d-none')
+      }
       this.GeoFencingService.newFence(
-        JSON.stringify({ gf_type: data.gf_type, fenceParam: nestArray })
+        JSON.stringify({ gf_type: fenceData.gf_type, fenceParam: nestArray, gf_diff: fenceData.gf_diff })
       );
       nest = [];
     }
     this.closeFencing();
+  }
+  RemoveFencing() {
+    if (rect) {
+      map.removeLayer(rect)
+    }
+    if (circle) {
+      map.removeLayer(circle)
+    }
+    if (plgn) {
+      map.removeLayer(plgn)
+    }
+    if (marker) {
+      map.removeLayer(marker);
+      $(
+        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
+      ).remove();
+      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
+    }
+    $('.GeoFence').addClass('d-none')
+    if (!rect || !plgn || !circle || !marker) {
+      setTimeout(() => {
+        $('.closeGeoFenceBtn').addClass('d-none')
+      }, 1000)
+    }
   }
   GeoFencing() {
     this.GeoFence.geoFence().subscribe((data) => {
@@ -661,6 +717,28 @@ export class PagesComponent implements OnInit {
   }
   closeCreateFencing() {
     $('.createFence').addClass('d-none')
+    if (this.rectangle) {
+      map.removeLayer(this.rectangle)
+      $(
+        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
+      ).remove();
+      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
+
+    }
+    if (this.newCircle) {
+      map.removeLayer(this.newCircle)
+      $(
+        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
+      ).remove();
+      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
+    }
+    if (this.polygon) {
+      map.removeLayer(this.polygon)
+      $(
+        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
+      ).remove();
+      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
+    }
   }
 
   onInputChange = (e) => {
@@ -670,25 +748,22 @@ export class PagesComponent implements OnInit {
         let thismarker: any;
         map.on('click', (e) => {
           if (this.circleMarkers.length < 1) {
-            // if()
             let radius = $('.radius').val()
             let data: any[] = e.latlng;
             let newData = { ...data };
             this.circleMarkers.push([parseFloat(newData['lat']), parseFloat(newData['lng'])])
-            let cl;
             thismarker = L.marker(e.latlng)
               .bindPopup(`<strong>Double click to remove marker</strong>`, { maxWidth: 500 }
               ).on('dblclick', () => {
-                map.removeLayer(cl)
+                map.removeLayer(this.newCircle)
                 map.removeLayer(thismarker)
                 this.circleMarkers = []
               })
             thismarker.addTo(map)
             map.setView(e.latlng, 13)
-            cl = L.circle(...this.circleMarkers, radius)
-            // this.circleMarkers = [...this.circleMarkers[0]]
+            this.newCircle = L.circle(...this.circleMarkers, radius)
             this.circleRadius = radius;
-            cl.addTo(map)
+            this.newCircle.addTo(map)
           }
           else {
             return null;
@@ -777,22 +852,21 @@ export class PagesComponent implements OnInit {
     }
   }
   CreateFencing() {
-    // if (!this.markers.length) {
-    // this.Toast.error('Please select atleast one device', "Couldn't show form")
-    // }
-    // else if (this.markers.length = 1) {
-    $('.createFence').removeClass('d-none')
-    // }
-    // else if (this.markers.length > 1) {
-    // this.Toast.error('Please select one device only', "Couldn't show form")
-    // }
+    if (mapType === "Google Maps") {
+      $('.createFenceGoogleMap').removeClass('d-none')
+      $('.gmnoprint').removeClass('d-none')
+      // $('.googleMap').attr('ng-reflect-drawing-manager', "[object Object]")
+    }
+    else if (mapType === "Open Street Maps") {
+      $('.createFence').removeClass('d-none')
+    }
   }
   sendCircle() {
     if (this.circleMarkers.length) {
       this.cityName = $('.city').val();
       this.countryName = $('.country').val();
       this.fenceName = $('.fenceName').val();
-      let param: string;
+      let param: string = ""
       this.FenceParam = this.circleMarkers.forEach((item: any[]) => {
         param = item[0] + "," + item[1]
       })
@@ -813,7 +887,7 @@ export class PagesComponent implements OnInit {
             this.Toast.success(data.message, 'Created Successfully')
           }
           else {
-            this.Toast.error(data.message)
+            this.Toast.error(data.message, `Failed to execute command due to code ${data.code}`)
           }
         })
       }
@@ -831,11 +905,11 @@ export class PagesComponent implements OnInit {
       this.cityName = $('.city').val();
       this.countryName = $('.country').val();
       this.fenceName = $('.fenceName').val();
-      let param: string;
+      let param: string = "";
       this.FenceParam = this.polyMarkers.forEach((item: any[]) => {
         param += item.toString() + "|"
       })
-      param = param.slice(0, param.length - 1).replace('undefined', '').trim()
+      param = param.slice(0, param.length - 1)
       let polyparams = {
         cmp_id: 0,
         cust_id: 0,
@@ -847,9 +921,11 @@ export class PagesComponent implements OnInit {
       }
       if (this.cityName.length && this.countryName.length && this.fenceName.length) {
         this.PostFence.addGeoFence(polyparams).subscribe(data => {
-          console.log(data)
           if (data.status) {
             this.Toast.success(data.message, "Polygon Created Successfully")
+          }
+          else {
+            this.Toast.error(data.message, `Failed to execute command due to code ${data.code}`)
           }
         })
       }
@@ -866,11 +942,11 @@ export class PagesComponent implements OnInit {
       this.cityName = $('.city').val();
       this.countryName = $('.country').val();
       this.fenceName = $('.fenceName').val();
-      let param: string;
+      let param: string = "";
       this.FenceParam = this.rectMarkers.forEach((item: any[]) => {
         param += item.toString() + "|"
       })
-      param = param.slice(0, param.length - 1).replace('undefined', '').trim()
+      param = param.slice(0, param.length - 1)
       let rectparams = {
         cmp_id: 0,
         cust_id: 0,
@@ -882,9 +958,11 @@ export class PagesComponent implements OnInit {
       }
       if (this.cityName.length && this.countryName.length && this.fenceName.length) {
         this.PostFence.addGeoFence(rectparams).subscribe(data => {
-          console.log(data)
           if (data.status) {
             this.Toast.success(data.message, "Rectangle Created Successfully")
+          }
+          else {
+            this.Toast.error(data.message, `Failed to execute command due to code ${data.code}`)
           }
         })
       }
@@ -961,7 +1039,6 @@ export class historyDialogComponent implements OnInit {
       speed: speed,
     };
     this.historyService.DeviceHistory(data).subscribe((data) => {
-      console.log(data)
       this.historyDataService.setNewMarkers(JSON.stringify(data.data.History));
       if (data.status) {
         if (data.data.History.length) {

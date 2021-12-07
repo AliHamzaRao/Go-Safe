@@ -5676,7 +5676,7 @@ a.bg-dark:hover {
 }
 
 .d-none {
-    display: none!important
+    display: none !important
 }
 
 .d-inline {
@@ -8471,9 +8471,9 @@ a.text-dark:hover {
 /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
- */
-
+ */ 
 @font-face {
+    src:"";
     font-family: FontAwesome;
     font-weight: 400;
     font-style: normal
@@ -8608,6 +8608,7 @@ a.text-dark:hover {
 }
 
 .fa-rotate-90 {
+    filter:  "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
     -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
     -webkit-transform: rotate(90deg);
     -ms-transform: rotate(90deg);
@@ -8615,6 +8616,7 @@ a.text-dark:hover {
 }
 
 .fa-rotate-180 {
+    filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
     -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
     -webkit-transform: rotate(180deg);
     -ms-transform: rotate(180deg);
@@ -8622,6 +8624,7 @@ a.text-dark:hover {
 }
 
 .fa-rotate-270 {
+    filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)";
     -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)";
     -webkit-transform: rotate(270deg);
     -ms-transform: rotate(270deg);
@@ -8629,6 +8632,7 @@ a.text-dark:hover {
 }
 
 .fa-flip-horizontal {
+    filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)";
     -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)";
     -webkit-transform: scale(-1, 1);
     -ms-transform: scale(-1, 1);
@@ -8636,6 +8640,7 @@ a.text-dark:hover {
 }
 
 .fa-flip-vertical {
+    filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";
     -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";
     -webkit-transform: scale(1, -1);
     -ms-transform: scale(1, -1);
@@ -11512,6 +11517,7 @@ a.text-dark:hover {
 }
 
 @font-face {
+    src:'';
     font-family: themify;
     font-weight: 400;
     font-style: normal
@@ -11520,7 +11526,8 @@ a.text-dark:hover {
 [class*=" ti-"],
 [class^=ti-] {
     font-family: themify;
-    speak: none;
+    speak-as: none;
+    /* speak: none; */
     font-style: normal;
     font-weight: 400;
     font-variant: normal;
@@ -16042,7 +16049,8 @@ img {
 [class*="img-hov-"] img {
     -webkit-transition: .45s;
     transition: .45s;
-    -webkit-backface-visibility: hidden
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
 
 .img-hov-fadein {
@@ -16340,6 +16348,7 @@ img {
     opacity: 0;
     -webkit-transition: opacity 0.35s;
     transition: opacity 0.35s;
+    backface-visibility: hidden;
     -webkit-backface-visibility: hidden
 }
 
@@ -17816,7 +17825,7 @@ img {
 }
 
 .table-actions .table-action:last-child {
-    padding-rightt: 0
+    padding-right: 0
 }
 
 .table-actions .dropdown {
@@ -36517,15 +36526,26 @@ a.text-danger:focus {
 .text-hue-rotate {
     color: #f35626;
     background-image: -webkit-linear-gradient(92deg, #f35626, #feab3a);
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    -webkit-animation: hue-rotate 60s infinite linear
+    animation: hue-rotate 60s infinite linear;
+    -webkit-animation: hue-rotate 60s infinite linear;
 }
 
 .bg-hue-rotate {
-    -webkit-animation: hue-rotate 30s linear infinite
+    animation: hue-rotate 30s linear infinite;
+    -webkit-animation: hue-rotate 30s linear infinite;
 }
 
+@keyframes hue {
+    from {
+        -webkit-filter: hue-rotate(0deg)
+    }
+    to {
+        -webkit-filter: hue-rotate(-360deg)
+    }
+}
 @-webkit-keyframes hue {
     from {
         -webkit-filter: hue-rotate(0deg)
@@ -36548,7 +36568,7 @@ a.text-danger:focus {
 }
 
 .no-shadow {
-    shadow: none
+    box-shadow: none
 }
 
 .no-text-shadow {
