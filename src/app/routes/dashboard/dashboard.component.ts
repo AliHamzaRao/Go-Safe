@@ -50,6 +50,9 @@ export class DashboardComponent implements OnInit {
   countryName: any;
   cityName: any;
   gf_diff: any;
+  nullplgn: any;
+  nullcircle: any;
+  nullrect: any;
   managerOptions = {
     drawingControl: true,
     drawingControlOptions: {
@@ -156,12 +159,10 @@ export class DashboardComponent implements OnInit {
     }
   }
   drawRectangle(e) {
-    console.log(e)
     this.rectangle = e;
-    this.rectangle.visible = false;
     console.log(this.rectangle)
     const len = e.getBounds()
-    const rectArray = [[len.Ab.g, len.Ab.h], [len.Ra.g, len.Ra.h]]
+    const rectArray = [[len.Ab.g, len.Ra.g], [len.Ab.h, len.Ra.h]]
     if (rectArray.length == 2) {
       $('.GooglefenceTypeSelect').val('Rectangle')
       this.fenceType = 'Rectangle'
@@ -173,7 +174,8 @@ export class DashboardComponent implements OnInit {
     }
   }
   drawPolygon(e) {
-    console.log(e)
+    console.log(e.map)
+    this.nullplgn = e.map.data;
     this.polygon = e;
     const len = this.polygon.getPath().getLength();
     const polyArrayLatLng = [];
@@ -413,8 +415,20 @@ export class DashboardComponent implements OnInit {
   closeCreateFencingGoogle() {
     // $('.gmnoprint').addClass('d-none');
     // $('.createFenceGoogleMap').addClass('d-none')
-    const event = this.map.getRenderingType();
-    console.log(event)
+    // const event = this.circle;
+    // console.log(event.setMap())
     // this.map.set(null)
+    // event.setMap(null);
+
+    // const event = this.nullplgn;
+    // console.log(this.polygon)
+    // debugger;
+    // event.remove();
+    // this.map.data.setMap = () => {
+    //   return null;
+    // };
+    debugger;
+    this.map.data.setMap(true)
+    // console.log(this.map.data.setMap)
   }
 }

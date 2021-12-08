@@ -2,6 +2,7 @@
   "compileOnSave": true,
   "compilerOptions": {
     "baseUrl": "./",
+    "types": ["node"],
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
@@ -17,6 +18,6 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
   }
 }
