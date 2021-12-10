@@ -34,6 +34,7 @@
     "@schematics/angular": "^11.0.3",
     "@swimlane/ngx-charts": "16.0.0",
     "@swimlane/ngx-datatable": "18.0.0",
+    "@types/ftp": "^0.3.33",
     "angular-calendar": "0.28.22",
     "angular-datatables": "^11.0.2",
     "angular-in-memory-web-api": "0.11.0",

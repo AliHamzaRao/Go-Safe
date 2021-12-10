@@ -5,6 +5,7 @@
     "types": [
       "node",
       "jasmine",
+      "ftp"
     ]
   },
   "files": [

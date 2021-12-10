@@ -5,7 +5,6 @@ import {
   HostListener,
   ViewChildren,
   QueryList,
-  ɵɵtrustConstantResourceUrl,
 } from "@angular/core";
 import { ActivatedRoute, Router, NavigationEnd } from "@angular/router";
 import { PerfectScrollbarDirective } from "ngx-perfect-scrollbar";
@@ -38,6 +37,7 @@ var circle;
 var plgn;
 var marker;
 var polyline;
+var Historydata = [];
 @Component({
   selector: "app-pages",
   templateUrl: "./pages.component.html",
@@ -80,6 +80,21 @@ export class PagesComponent implements OnInit {
   circleMarkers: any[] = [];
   currentMap = mapType;
   newCircle: any;
+  historyInfo: any = {
+    GPSDateTime: "test",
+    Speed: "test",
+    RPM: "test",
+    ACC: "test",
+    Alarm: "test",
+    Status: "test",
+    Dir: "test",
+    Distance: "test",
+    Latitude: "test",
+    Longitude: "test",
+    Location: "test",
+    RECDateTime: "test",
+    Index: -1,
+  };
   @ViewChild(DashboardComponent, { static: true }) child: DashboardComponent;
   @ViewChild("sidenav") sidenav: any;
   @ViewChild("backToTop") backToTop: any;
@@ -337,6 +352,7 @@ export class PagesComponent implements OnInit {
       this.setTime = setInterval(() => {
         this.latitude = this.markerData[this.currentState][0];
         this.longitude = this.markerData[this.currentState][1];
+        this.historyInfo = Historydata[this.currentState];
         this.currentState++;
         if (this.currentState === this.markerData.length - 1) {
           this.pause();
@@ -1032,15 +1048,23 @@ export class historyDialogComponent implements OnInit {
     let speed = this.speed;
     let veh_reg_no = reg_no;
     var data = {
-      veh_reg_no: veh_reg_no,
-      History_type: History_type,
-      de_start: dateStart,
-      de_end: dateEnd,
-      speed: speed,
+      veh_reg_no: "G1C-2424",
+      History_type: "Replay",
+      de_start: "2021-04-01 00:00:00.000",
+      de_end: "2021-04-15 00:00:00.000",
+      speed: false,
     };
+    // var data = {
+    //   veh_reg_no: veh_reg_no,
+    //   History_type: History_type,
+    //   de_start: dateStart,
+    //   de_end: dateEnd,
+    //   speed: speed,
+    // };
     this.historyService.DeviceHistory(data).subscribe((data) => {
       this.historyDataService.setNewMarkers(JSON.stringify(data.data.History));
       if (data.status) {
+        Historydata = data.data.History;
         if (data.data.History.length) {
           data.data.History.forEach((el, i) => {
             this.markerData.push([

@@ -743,16 +743,16 @@
             >
               Latitude
             </h6>
-            <h6 class="text-muted m-0 p-0">32.4533 / 32* 31* 43.7* N</h6>
+            <h6 class="text-muted m-0 p-0">{{ historyInfo.Latitude }}</h6>
           </div>
           <div class="border-right" style="padding: 10px">
             <h6
               class="m-0"
               style="color: #18497d; margin-bottom: 5px !important"
             >
-              Latitude
+              Longitude
             </h6>
-            <h6 class="text-muted m-0 p-0">32.4533 / 32* 31* 43.7* N</h6>
+            <h6 class="text-muted m-0 p-0">{{ historyInfo.Longitude }}</h6>
           </div>
           <div style="padding: 10px">
             <h6
@@ -761,7 +761,7 @@
             >
               Last Updated
             </h6>
-            <h6 class="text-muted m-0 p-0">Dec 17 2020 4:02:34 PM</h6>
+            <h6 class="text-muted m-0 p-0">{{ historyInfo.RECDateTime }}</h6>
           </div>
         </div>
       </div>
@@ -785,7 +785,7 @@
             >
               Velocity
             </h6>
-            <h6 class="text-muted m-0 p-0">21.0 MPH / 35KPH</h6>
+            <h6 class="text-muted m-0 p-0">{{ historyInfo.Speed }}</h6>
           </div>
           <div
             class="border-right"
@@ -804,7 +804,7 @@
             >
               Heading
             </h6>
-            <h6 class="text-muted m-0 p-0">184* South</h6>
+            <h6 class="text-muted m-0 p-0">{{ historyInfo.Dir }} South</h6>
           </div>
           <div
             class="border-right"
@@ -842,7 +842,10 @@
             >
               Ignition
             </h6>
-            <h6 class="text-muted m-0 p-0">Off</h6>
+            <h6 class="text-muted m-0 p-0" *ngIf="historyInfo.Speed != '0'">
+              ON
+            </h6>
+            <h6 class="text-muted m-0 p-0" ngElse>OFF</h6>
           </div>
           <div
             style="

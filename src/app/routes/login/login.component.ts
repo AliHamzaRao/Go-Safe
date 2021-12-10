@@ -7,6 +7,8 @@ import { Settings } from '../../_core/settings/app.settings.model';
 import { userService } from 'src/app/_core/_AppServices/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/_core/_AppServices/auth.service';
+import { CompanyInfoService } from 'src/app/_core/_AppServices/companyInfoService';
+import { Root } from 'src/app/_interfaces/DBresponse.model';
 const SECRET_KEY = 'secret_key';
 @Component({
   selector: 'app-login',
@@ -17,14 +19,16 @@ export class LoginComponent implements OnInit {
   public form: FormGroup;
   public settings: Settings;
   public um: userService;
+  public CompInfo: Root;
   loginStatus: boolean;
   IsOTP: boolean = false;
   loading = false;
   tokenStorage: any = "";
   apiInfoForm: FormGroup;
   ApiInfosubmitted = false;
+
   currentYear: number = new Date().getFullYear();
-  constructor(public appSettings: AppSettings, public fb: FormBuilder, public router: Router, public _userManagement: userService, private toastr: ToastrService, private authService: AuthService) {
+  constructor(public appSettings: AppSettings, public fb: FormBuilder, public router: Router, public _userManagement: userService, private toastr: ToastrService, private authService: AuthService, public companyInfoService: CompanyInfoService) {
     this.settings = this.appSettings.settings;
     this.settings.loadingSpinner = false;
     this.um = this._userManagement;
@@ -32,13 +36,16 @@ export class LoginComponent implements OnInit {
       'username': [null, Validators.compose([Validators.required])],
       'password': [null, Validators.compose([Validators.required])]
     });
-    this.apiInfoForm = this.fb.group({
-      ipaddress: [this.um.getIpAddress(), Validators.compose([Validators.required])],
-      port: [this.um.getPort(), Validators.compose([Validators.required])],
-      connectAutomatically: [],
-    });
+    // this.apiInfoForm = this.fb.group({
+    //   ipaddress: [this.um.getIpAddress(), Validators.compose([Validators.required])],
+    //   port: [this.um.getPort(), Validators.compose([Validators.required])],
+    //   connectAutomatically: [],
+    // });
   }
   ngOnInit(): void {
+    this.companyInfoService.getCompanyInfo().subscribe(data => {
+      this.CompInfo = data;
+    })
     // this.settings.loadingSpinner = false; 
     this.isEligible();
   }
@@ -57,9 +64,17 @@ export class LoginComponent implements OnInit {
     this.toastr.warning(msg, title);
   }
   get apiinfo() { return this.apiInfoForm.controls; }
-  onSubmit(values: Object) {
+  onSubmit(values: { username: string, password: string }) {
     this.loginStatus = false;
     this.loading = true;
+    let cmpCode = values.username.split("_");
+    let Api = this.CompInfo.network_config.find((item: any) => item.cmp_code === cmpCode[0])
+    var apiInfoJson = {
+      IpAddress: Api.address,
+      Port: Api.port,
+      connectAutomatically: true
+    }
+    localStorage.setItem('apiinfo', JSON.stringify(apiInfoJson));
     this.um.login(values).subscribe(
       (res: any) => {
         this.tokenStorage = res.access_token;
@@ -83,21 +98,19 @@ export class LoginComponent implements OnInit {
     );
     this.router.navigateByUrl('');
   }
-  onApiInfoSubmit() {
-    var apiInfoJson = {
-      IpAddress: this.apiinfo.ipaddress.value,
-      Port: this.apiinfo.port.value,
-      connectAutomatically: this.apiinfo.connectAutomatically.value
-    }
-    this.ApiInfosubmitted = true;
-    // stop here if form is invalid
-    if (this.apiInfoForm.invalid) {
-      return;
-    }
-    localStorage.removeItem('apiinfo');
-    localStorage.setItem('apiinfo', JSON.stringify(apiInfoJson));
-    this.showSuccess("Success", "Saved scuccessfully");
-
-
-  }
+  // onApiInfoSubmit() {
+  //   var apiInfoJson = {
+  //     IpAddress: this.apiinfo.ipaddress.value,
+  //     Port: this.apiinfo.port.value,
+  //     connectAutomatically: this.apiinfo.connectAutomatically.value
+  //   }
+  //   this.ApiInfosubmitted = true;
+  //   // stop here if form is invalid
+  //   if (this.apiInfoForm.invalid) {
+  //     return;
+  //   }
+  //   localStorage.removeItem('apiinfo');
+  //   localStorage.setItem('apiinfo', JSON.stringify(apiInfoJson));
+  //   this.showSuccess("Success", "Saved scuccessfully");
+  // }
 }
