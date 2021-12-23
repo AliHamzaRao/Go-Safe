@@ -297,6 +297,10 @@
   color: white !important;
   margin: 0px !important;
 }
+.disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+}
 .dialogContent {
   padding: 10px 20px !important;
   background-image: url("../../../assets/images/map.png") !important;

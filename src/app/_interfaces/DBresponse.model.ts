@@ -4,6 +4,12 @@ export class Response {
   message: string;
   data: Data;
 }
+export class VehicleResponse {
+  code: number;
+  status: boolean;
+  message: string;
+  data: Vehicles[];
+}
 export class AlarmsResponse {
   code: number;
   status: boolean;
@@ -46,6 +52,7 @@ export class GeoFence {
   public gf_diff: number;
 }
 export class Data {
+
   public History: History[];
   public GeoFence: GeoFence[];
   public History_Period: string;
@@ -73,8 +80,29 @@ export class NetworkConfig {
   public address: string;
   public port: string;
 }
-
+export class img {
+  public src: string
+}
 export class Root {
   public version: Version;
   public network_config: NetworkConfig[];
+}
+
+export class Vehicles {
+  grp_id: number;
+  datatrack: string;
+  device_id: string;
+  pmd: object;
+  vrn: object;
+  parent_grp_id: number;
+  grp_name: string;
+  grp_level: object;
+  grp_trk_id: object;
+  parent_grp_trk_id: object;
+  grp_sub_station: object;
+  Status: object;
+  usr_id: number;
+  SubMenu: object[];
+  speed: string;
+  veh_status: string;
 }

@@ -8,10 +8,11 @@ import { Vehicles } from 'src/app/_interfaces/vehicle.model';
 
 @Injectable()
 export class VehicleListResolver implements Resolve<Vehicles>{
-
+  // timer = timer(1000, 1000);
   constructor(private dashboardService: dashboardService, private router: Router) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<Vehicles> {
+    // this.timer.subscribe((data) => console.log(data)))
     return this.dashboardService.GetVehiclesTree().pipe(
       catchError(error => {
         this.router.navigate(['/500']);

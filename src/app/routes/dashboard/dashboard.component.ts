@@ -44,7 +44,8 @@ export class DashboardComponent implements OnInit {
   polygon: any;
   rectangle: any;
   circle: any;
-  iconUrl: string = "../../../assets/img/vendor/leaflet/new-icon/marker-icon.png";
+  iconUrl: string =
+    "../../../assets/img/vendor/leaflet/new-icon/marker-icon.png";
   FenceParam: any;
   fenceName: any;
   countryName: any;
@@ -56,7 +57,7 @@ export class DashboardComponent implements OnInit {
   managerOptions = {
     drawingControl: true,
     drawingControlOptions: {
-      drawingModes: ['polygon', 'circle', 'rectangle'],
+      drawingModes: ["polygon", "circle", "rectangle"],
     },
     polygonOptions: {
       draggable: false,
@@ -64,14 +65,14 @@ export class DashboardComponent implements OnInit {
       strokeOpacity: "0.6",
       strokeWeight: "2",
       fillColor: "#FF0000",
-      fillOpacity: "0.5"
+      fillOpacity: "0.5",
     },
     rectangleOptions: {
       fillColor: "#2876FC",
       fillOpacity: "0.5",
       strokeColor: "#2876FC",
       strokeOpacity: "0.6",
-      strokeWeight: "2"
+      strokeWeight: "2",
     },
     circleOptions: {
       fillColor: "#03C291",
@@ -79,7 +80,7 @@ export class DashboardComponent implements OnInit {
       strokeColor: "#03C291",
       strokeOpacity: "0.6",
       strokeWeight: "2",
-    }
+    },
   };
 
   //#region Constructor
@@ -107,23 +108,23 @@ export class DashboardComponent implements OnInit {
     );
     // this.singleDeviceDataService.singleDevice.subscribe((data) => this.singleDeviceData = JSON.parse(data))
     this.AllDeviceDataService.AllDevices.subscribe(
-      (data) => this.AllDevices = JSON.parse(data));
-    this.GeoFencingService.currentFence.subscribe(data => {
+      (data) => (this.AllDevices = JSON.parse(data))
+    );
+    this.GeoFencingService.currentFence.subscribe((data) => {
       this.geoFence = new fenceTypo(JSON.parse(data));
       this.geoFenceData = { ...this.geoFence };
-      console.log(this.geoFence)
       if (this.geoFence.fenceParam.length) {
         this.geoFence.fenceParam.forEach((item) => {
-          this.latitude = item.lat
-          this.longitude = item.lng
-        })
+          this.latitude = item.lat;
+          this.longitude = item.lng;
+        });
       }
-    })
+    });
     $(".mapDropdown").on("change", ($event) => {
       this.mapType = $(".mapDropdown").find(":selected").val();
       this.mapTypeService.SetMap(this.mapType);
     });
-    if ($('.googleMap').is(":visible")) {
+    if ($(".googleMap").is(":visible")) {
       this.AllDeviceDataService.AllDevices.subscribe(
         (data) => (this.AllDevices = JSON.parse(data))
       );
@@ -137,44 +138,44 @@ export class DashboardComponent implements OnInit {
   mapLoad($event) {
     this.map = $event;
     setTimeout(() => {
-      $('.gmnoprint').addClass('d-none')
-    }, 3000)
+      $(".gmnoprint").addClass("d-none");
+    }, 3000);
   }
   drawCircle(e) {
-    console.log(e)
     this.circle = e;
     let lat = e.getCenter().lat();
     let lng = e.getCenter().lng();
     let circleArr = [[lat, lng]];
     if (circleArr.length == 1) {
-      $('.GooglefenceTypeSelect').val('Circle')
-      this.fenceType = 'Circle'
-      $('.circleField').val(e.radius);
+      $(".GooglefenceTypeSelect").val("Circle");
+      this.fenceType = "Circle";
+      $(".circleField").val(e.radius);
       let param: string = "";
       this.FenceParam = circleArr.forEach((item: any[]) => {
-        param = item[0] + "," + item[1]
-      })
-      this.FenceParam = param.slice(0, param.length - 1)
+        param = item[0] + "," + item[1];
+      });
+      this.FenceParam = param.slice(0, param.length - 1);
       this.gf_diff = e.radius;
     }
   }
   drawRectangle(e) {
     this.rectangle = e;
-    console.log(this.rectangle)
-    const len = e.getBounds()
-    const rectArray = [[len.Ab.g, len.Ra.g], [len.Ab.h, len.Ra.h]]
+    const len = e.getBounds();
+    const rectArray = [
+      [len.Ab.g, len.Ra.g],
+      [len.Ab.h, len.Ra.h],
+    ];
     if (rectArray.length == 2) {
-      $('.GooglefenceTypeSelect').val('Rectangle')
-      this.fenceType = 'Rectangle'
+      $(".GooglefenceTypeSelect").val("Rectangle");
+      this.fenceType = "Rectangle";
       let param: string = "";
       this.FenceParam = rectArray.forEach((item: any[]) => {
-        param += item.toString() + "|"
-      })
-      this.FenceParam = param.slice(0, param.length - 1)
+        param += item.toString() + "|";
+      });
+      this.FenceParam = param.slice(0, param.length - 1);
     }
   }
   drawPolygon(e) {
-    console.log(e.map)
     this.nullplgn = e.map.data;
     this.polygon = e;
     const len = this.polygon.getPath().getLength();
@@ -186,74 +187,83 @@ export class DashboardComponent implements OnInit {
     }
     polyArrayLatLng.push(polyArrayLatLng[0]);
     if (polyArrayLatLng.length > 2) {
-      $('.GooglefenceTypeSelect').val('Polygon')
-      this.fenceType = 'Polygon'
+      $(".GooglefenceTypeSelect").val("Polygon");
+      this.fenceType = "Polygon";
       let param: string = "";
       this.FenceParam = polyArrayLatLng.forEach((item: any[]) => {
-        param += item.toString() + "|"
-      })
-      this.FenceParam = param.slice(0, param.length - 1)
+        param += item.toString() + "|";
+      });
+      this.FenceParam = param.slice(0, param.length - 1);
     }
   }
   sendPolygon() {
-    this.cityName = $('.cityGoogle').val();
-    this.countryName = $('.countryGoogle').val()
-    this.fenceName = $('.fenceNameGoogle').val();
+    this.cityName = $(".cityGoogle").val();
+    this.countryName = $(".countryGoogle").val();
+    this.fenceName = $(".fenceNameGoogle").val();
     let polyparams = {
       cmp_id: 0,
       cust_id: 0,
       gf_name: this.fenceName,
       gf_type: this.fenceType,
       gf_type_name: this.fenceType,
-      CityNCountry: this.cityName + ', ' + this.countryName,
-      FenceParam: this.FenceParam
-    }
-    if (this.cityName.length && this.countryName.length && this.fenceName.length) {
-      this.PostFence.addGeoFence(polyparams).subscribe(data => {
+      CityNCountry: this.cityName + ", " + this.countryName,
+      FenceParam: this.FenceParam,
+    };
+    if (
+      this.cityName.length &&
+      this.countryName.length &&
+      this.fenceName.length
+    ) {
+      this.PostFence.addGeoFence(polyparams).subscribe((data) => {
         if (data.status) {
-          this.Toast.success(data.message, "Polygon Created Successfully")
+          this.Toast.success(data.message, "Polygon Created Successfully");
+        } else {
+          this.Toast.error(
+            data.message,
+            `Failed to execute command due to code ${data.code}`
+          );
         }
-        else {
-          this.Toast.error(data.message, `Failed to execute command due to code ${data.code}`)
-        }
-      })
-    }
-    else {
-      this.Toast.warning('Please Fill up all the fields', "Invalid Input")
+      });
+    } else {
+      this.Toast.warning("Please Fill up all the fields", "Invalid Input");
     }
   }
   sendRectangle() {
-    this.cityName = $('.cityGoogle').val();
-    this.countryName = $('.countryGoogle').val()
-    this.fenceName = $('.fenceNameGoogle').val();
+    this.cityName = $(".cityGoogle").val();
+    this.countryName = $(".countryGoogle").val();
+    this.fenceName = $(".fenceNameGoogle").val();
     let rectParam = {
       cmp_id: 0,
       cust_id: 0,
       gf_name: this.fenceName,
       gf_type: this.fenceType,
       gf_type_name: this.fenceType,
-      CityNCountry: this.cityName + ', ' + this.countryName,
-      FenceParam: this.FenceParam
-    }
-    if (this.cityName.length && this.countryName.length && this.fenceName.length) {
-      this.PostFence.addGeoFence(rectParam).subscribe(data => {
+      CityNCountry: this.cityName + ", " + this.countryName,
+      FenceParam: this.FenceParam,
+    };
+    if (
+      this.cityName.length &&
+      this.countryName.length &&
+      this.fenceName.length
+    ) {
+      this.PostFence.addGeoFence(rectParam).subscribe((data) => {
         if (data.status) {
-          this.Toast.success(data.message, "Rectangle Created Successfully")
+          this.Toast.success(data.message, "Rectangle Created Successfully");
+        } else {
+          this.Toast.error(
+            data.message,
+            `Failed to execute command due to code ${data.code}`
+          );
         }
-        else {
-          this.Toast.error(data.message, `Failed to execute command due to code ${data.code}`)
-        }
-      })
-    }
-    else {
-      this.Toast.warning('Please Fill up all the fields', "Invalid Input")
+      });
+    } else {
+      this.Toast.warning("Please Fill up all the fields", "Invalid Input");
     }
   }
   sendCircle() {
-
-    this.cityName = $('.cityGoogle').val();
-    this.countryName = $('.countryGoogle').val()
-    this.fenceName = $('.fenceNameGoogle').val();
+    this.cityName = $(".cityGoogle").val();
+    this.countryName = $(".countryGoogle").val();
+    this.fenceName = $(".fenceNameGoogle").val();
     let circleParams = {
       cmp_id: 0,
       cust_id: 0,
@@ -261,21 +271,26 @@ export class DashboardComponent implements OnInit {
       gf_type: this.fenceType,
       gf_diff: this.gf_diff,
       gf_type_name: this.fenceType,
-      CityNCountry: this.cityName + ', ' + this.countryName,
-      FenceParam: this.FenceParam
-    }
-    if (this.cityName.length && this.countryName.length && this.fenceName.length) {
-      this.PostFence.addGeoFence(circleParams).subscribe(data => {
+      CityNCountry: this.cityName + ", " + this.countryName,
+      FenceParam: this.FenceParam,
+    };
+    if (
+      this.cityName.length &&
+      this.countryName.length &&
+      this.fenceName.length
+    ) {
+      this.PostFence.addGeoFence(circleParams).subscribe((data) => {
         if (data.status) {
-          this.Toast.success(data.message, "Rectangle Created Successfully")
+          this.Toast.success(data.message, "Rectangle Created Successfully");
+        } else {
+          this.Toast.error(
+            data.message,
+            `Failed to execute command due to code ${data.code}`
+          );
         }
-        else {
-          this.Toast.error(data.message, `Failed to execute command due to code ${data.code}`)
-        }
-      })
-    }
-    else {
-      this.Toast.warning('Please Fill up all the fields', "Invalid Input")
+      });
+    } else {
+      this.Toast.warning("Please Fill up all the fields", "Invalid Input");
     }
   }
   onInputChange(e) {
@@ -283,8 +298,8 @@ export class DashboardComponent implements OnInit {
   }
   //#endregion
   stop() {
-    $('.leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable').remove()
-    $('.leaflet-marker-shadow.leaflet-zoom-animated').remove()
+    $(".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable").remove();
+    $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
     this.currentState = 0;
     this.pause();
     this.interval = 1000;
@@ -292,38 +307,38 @@ export class DashboardComponent implements OnInit {
     this.longitude = 0;
   }
   drawLine() {
-    this.historyDataService.newMarkers.subscribe(data => this.markersData = JSON.parse(data))
+    this.historyDataService.newMarkers.subscribe(
+      (data) => (this.markersData = JSON.parse(data))
+    );
     this.markersData.forEach((el) => {
-      this.markerData.push([el.Latitude, el.Longitude])
-    })
+      this.markerData.push([el.Latitude, el.Longitude]);
+    });
   }
   speed() {
     if (this.markerData.length) {
       this.pause();
-      clearInterval(this.interval)
+      clearInterval(this.interval);
       this.interval = null;
       this.interval = 1000;
-      this.interval = this.interval - 500
+      this.interval = this.interval - 500;
       this.play();
-    }
-    else {
-      clearInterval(this.interval)
+    } else {
+      clearInterval(this.interval);
       this.interval = null;
       this.interval = 1000;
-      this.interval = this.interval - 500
+      this.interval = this.interval - 500;
     }
   }
   toggleDisplay() {
-    $(".vehicleCard").addClass('d-none');
-    $('.vehicleCardMore').addClass('d-none')
+    $(".vehicleCard").addClass("d-none");
+    $(".vehicleCardMore").addClass("d-none");
   }
   export() {
-    $('.export').toggleClass('d-none')
+    $(".export").toggleClass("d-none");
   }
   toggleInfoCard() {
-    $('.infoCard').toggleClass('d-none')
+    $(".infoCard").toggleClass("d-none");
   }
-
 
   pause() {
     clearInterval(this.setTime);
@@ -338,8 +353,8 @@ export class DashboardComponent implements OnInit {
         longitude: parseFloat(element.Longitude),
       });
     });
-    $('.pauseBtn').addClass("d-none")
-    $('.playBtn').removeClass('d-none')
+    $(".pauseBtn").addClass("d-none");
+    $(".playBtn").removeClass("d-none");
   }
   play() {
     this.historyDataService.newMarkers.subscribe((data) => {
@@ -351,9 +366,9 @@ export class DashboardComponent implements OnInit {
         longitude: parseFloat(element.Longitude),
       });
     });
-    $('.playBtn').addClass("d-none")
-    $('.pauseBtn').removeClass("d-none")
-    this.move()
+    $(".playBtn").addClass("d-none");
+    $(".pauseBtn").removeClass("d-none");
+    this.move();
   }
   move() {
     if (this.currentState !== this.markerData.length - 1) {
@@ -362,7 +377,7 @@ export class DashboardComponent implements OnInit {
         this.longitude = this.markerData[this.currentState].longitude;
         this.currentState++;
         if (this.currentState === this.markerData.length - 1) {
-          clearInterval(this.setTime)
+          clearInterval(this.setTime);
           this.interval = null;
         }
       }, this.interval);
@@ -375,11 +390,16 @@ export class DashboardComponent implements OnInit {
     );
     if (singleDevice.length) {
       this.singleDeviceData = [...singleDevice];
-      if ($('.recordDialogOffset').is(":visible") || $(".googleMapRecord").is(":visible")) {
-        this.Toast.error("Cannot Show device detail, until History is opened", "Error Showing device Details")
+      if (
+        $(".recordDialogOffset").is(":visible") ||
+        $(".googleMapRecord").is(":visible")
+      ) {
+        this.Toast.error(
+          "Cannot Show device detail, until History is opened",
+          "Error Showing device Details"
+        );
         return null;
-      }
-      else {
+      } else {
         $(".vehicleCard").removeClass("d-none");
         $(".vehicleCardMore").addClass("d-none");
         if (
@@ -391,9 +411,11 @@ export class DashboardComponent implements OnInit {
           }, 10000);
         }
       }
-    }
-    else {
-      this.Toast.info("The Data you requested for was not found", "Data Not found")
+    } else {
+      this.Toast.info(
+        "The Data you requested for was not found",
+        "Data Not found"
+      );
     }
   }
   //#endregion
@@ -410,25 +432,22 @@ export class DashboardComponent implements OnInit {
   //#endregion
 
   draw() {
-    $(".shapeSelect").toggleClass("d-none")
+    $(".shapeSelect").toggleClass("d-none");
   }
   closeCreateFencingGoogle() {
     // $('.gmnoprint').addClass('d-none');
     // $('.createFenceGoogleMap').addClass('d-none')
     // const event = this.circle;
-    // console.log(event.setMap())
+
     // this.map.set(null)
     // event.setMap(null);
 
     // const event = this.nullplgn;
-    // console.log(this.polygon)
-    // debugger;
+
     // event.remove();
     // this.map.data.setMap = () => {
     //   return null;
     // };
-    debugger;
-    this.map.data.setMap(true)
-    // console.log(this.map.data.setMap)
+    this.map.data.setMap(true);
   }
 }

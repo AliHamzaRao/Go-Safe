@@ -24,13 +24,12 @@
     class="small-logo"
     >G</a
   >
-  <a
-    *ngIf="settings.menu == 'horizontal'"
-    class="logo"
-    routerLink="/"
-    (click)="closeSubMenus()"
-    >GoSafe</a
-  >
+  <a class="logo" routerLink="/" (click)="closeSubMenus()">
+    <img
+      src="data:image/png;base64,{{ logo }}"
+      alt=""
+      style="width: 200px !important"
+  /></a>
   <div fxLayout="row" fxLayoutAlign="space-between" class="w-100">
     <div fxLayout="row" style="align-items: center">
       <button mat-button class="mat-hover">Live Tacking</button>
@@ -46,12 +45,20 @@
         <button mat-menu-item>Item 2</button>
       </mat-menu>
       <div class="form-group">
+        <!-- <mat-form-field appearance="fill">
+        <mat-label>Favorite food</mat-label>
+        <mat-select class="mapDropdown" name="mapType" id="mapType">
+          <mat-option value="Google Maps">Google Maps</mat-option>
+          <mat-option value="Open Street Maps">Open Street Maps</mat-option>
+        </mat-select>
+      </mat-form-field> -->
         <label for="mapType"></label>
         <select
           class="form-control mapDropdown"
           name="mapType"
           id="mapType"
           value="Google Maps"
+          (change)= "MapType($event)"
         >
           <option disabled value="Google Maps">Select Map</option>
           <option value="Google Maps">Google Maps</option>
@@ -216,7 +223,7 @@
   <app-breadcrumb></app-breadcrumb>
   <div [class.has-footer]="settings.hasFooter">
     <!-- Sidebar -->
-    <div class="col-md-12 row p-1 m-0">
+    <div class="col-md-12 row p-1 m-0" style="padding-bottom: 0px !important">
       <div class="col-md-2 p-1">
         <div class="shadow p-1 rounded" style="height: fit-content !important">
           <div class="panelKeysContainer rounded">
@@ -298,7 +305,7 @@
                       </span>
                     </span>
                   </mat-expansion-panel> -->
-                  <mat-expansion-panel>
+                  <mat-expansion-panel *ngIf="TREE_DATA.length">
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         <input type="checkbox" style="margin-right: 10px" />
@@ -317,6 +324,7 @@
                                 *ngIf="t1.vrn !== null"
                               >
                                 <input
+                                  id="{{ t1.device_id }}"
                                   type="checkbox"
                                   [attr.data-dataTrack]="t1.datatrack"
                                   [attr.data-device_id]="t1.device_id"
@@ -361,6 +369,7 @@
                                       *ngIf="t2.vrn !== null"
                                     >
                                       <input
+                                        id="{{ t2.device_id }}"
                                         type="checkbox"
                                         [attr.data-dataTrack]="t2.datatrack"
                                         [attr.data-device_id]="t2.device_id"
@@ -420,6 +429,7 @@
                                             *ngIf="t3.vrn !== null"
                                           >
                                             <input
+                                              id="{{ t3.device_id }}"
                                               type="checkbox"
                                               [attr.data-dataTrack]="
                                                 t3.datatrack
@@ -476,6 +486,9 @@
                       </span>
                     </span>
                   </mat-expansion-panel>
+                  <span *ngElse>
+                    <mat-spinner color="primary"> </mat-spinner>
+                  </span>
                 </mat-accordion>
               </mat-tab>
               <mat-tab>
@@ -602,11 +615,11 @@
 <!-- History Record -->
 <div class="recordDialogOffset d-none">
   <div class="export d-none">
-    <button mat-icon-button>
+    <button mat-icon-button (click)="exportToExcel()">
       <img src="../../../assets/icons/ExportToExcel.png" alt="" />
     </button>
     <br />
-    <button mat-icon-button>
+    <button mat-icon-button (click)="exportToPDF()">
       <img src="../../../assets/icons/ExportToPDF.png" alt="" />
     </button>
   </div>
@@ -842,7 +855,7 @@
             >
               Ignition
             </h6>
-            <h6 class="text-muted m-0 p-0" *ngIf="historyInfo.Speed != '0'">
+            <h6 class="text-muted m-0 p-0" *ngIf="historyInfo.Speed != 0">
               ON
             </h6>
             <h6 class="text-muted m-0 p-0" ngElse>OFF</h6>
@@ -1226,7 +1239,7 @@
                 Driver Name:
               </div>
               <div class="col-md-6">
-                {{ item.driver ? item.driver : "Gonzalez" }}
+                {{ item.driver ? item.driver : "N/A" }}
               </div>
             </div>
             <div class="col-12 row" style="margin: 5px 0px !important">
@@ -1274,7 +1287,7 @@
             <div class="col-12 row m-0">
               <div class="col-md-6">Drive Name</div>
               <div class="col-md-6">
-                {{ item.driver ? item.driver : "Gonzalez" }}
+                {{ item.driver ? item.driver : "N/A" }}
               </div>
             </div>
             <div class="col-12 row m-0">

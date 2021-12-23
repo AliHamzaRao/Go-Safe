@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, DebugEventListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { emailValidator } from '../../theme/utils/app-validators';
@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/_core/_AppServices/auth.service';
 import { CompanyInfoService } from 'src/app/_core/_AppServices/companyInfoService';
 import { Root } from 'src/app/_interfaces/DBresponse.model';
+import { CompanyImageService } from 'src/app/_core/_AppServices/companyImgService';
 const SECRET_KEY = 'secret_key';
 @Component({
   selector: 'app-login',
@@ -26,9 +27,9 @@ export class LoginComponent implements OnInit {
   tokenStorage: any = "";
   apiInfoForm: FormGroup;
   ApiInfosubmitted = false;
-
+  img: string;
   currentYear: number = new Date().getFullYear();
-  constructor(public appSettings: AppSettings, public fb: FormBuilder, public router: Router, public _userManagement: userService, private toastr: ToastrService, private authService: AuthService, public companyInfoService: CompanyInfoService) {
+  constructor(public appSettings: AppSettings, public fb: FormBuilder, public router: Router, public _userManagement: userService, private toastr: ToastrService, private authService: AuthService, public companyInfoService: CompanyInfoService, public companyImageService: CompanyImageService) {
     this.settings = this.appSettings.settings;
     this.settings.loadingSpinner = false;
     this.um = this._userManagement;
@@ -42,9 +43,13 @@ export class LoginComponent implements OnInit {
     //   connectAutomatically: [],
     // });
   }
-  ngOnInit(): void {
-    this.companyInfoService.getCompanyInfo().subscribe(data => {
+  async ngOnInit() {
+    this.img = localStorage.getItem('CompanyLogo');
+    this.img = this.img ? `data:image/png;base64,${this.img}` : '../../../assets/logos/logo 1-01.svg';
+    this.loading = true;
+    await this.companyInfoService.getCompanyInfo().subscribe(data => {
       this.CompInfo = data;
+      this.loading = false;
     })
     // this.settings.loadingSpinner = false; 
     this.isEligible();
@@ -64,7 +69,7 @@ export class LoginComponent implements OnInit {
     this.toastr.warning(msg, title);
   }
   get apiinfo() { return this.apiInfoForm.controls; }
-  onSubmit(values: { username: string, password: string }) {
+  async onSubmit(values: { username: string, password: string }) {
     this.loginStatus = false;
     this.loading = true;
     let cmpCode = values.username.split("_");
@@ -74,8 +79,11 @@ export class LoginComponent implements OnInit {
       Port: Api.port,
       connectAutomatically: true
     }
-    localStorage.setItem('apiinfo', JSON.stringify(apiInfoJson));
-    this.um.login(values).subscribe(
+    await this.companyImageService.getImg(Api.cmp_image).subscribe(data => {
+      localStorage.setItem('CompanyLogo', data.src)
+    })
+    await localStorage.setItem('apiinfo', JSON.stringify(apiInfoJson));
+    await this.um.login(values).subscribe(
       (res: any) => {
         this.tokenStorage = res.access_token;
         this.loading = false;
@@ -91,7 +99,6 @@ export class LoginComponent implements OnInit {
         } else if (err.status === 500) {
           alert('Something went wrong');
         } else {
-          console.log(err);
         }
         this.loading = false;
       }

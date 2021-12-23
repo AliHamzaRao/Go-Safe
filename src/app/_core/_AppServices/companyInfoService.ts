@@ -6,7 +6,6 @@ import { Root } from 'src/app/_interfaces/DBresponse.model';
     providedIn: 'root',
 })
 export class CompanyInfoService {
-    response: any;
     constructor(public http: HttpClient) { }
 
     // private currentMap = new BehaviorSubject('Open Street Maps');

@@ -406,7 +406,13 @@
 
 <div class="m-0 p-0 shadow rounded" style="height: 89vh !important">
   <div *ngIf="mapType === 'Open Street Maps'">
-    <div id="leaflet-map" style="height: 89vh !important" class="rounded"></div>
+    <div id="leafletContainer" class="rounded">
+      <div
+        id="leaflet-map"
+        class="rounded"
+        style="height: 89vh !important"
+      ></div>
+    </div>
   </div>
   <div *ngIf="mapType === 'Google Maps'">
     <agm-map
