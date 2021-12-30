@@ -102,7 +102,7 @@ export class Vehicles {
   grp_sub_station: object;
   Status: object;
   usr_id: number;
-  SubMenu: object[];
+  SubMenu: Vehicles[];
   speed: string;
   veh_status: string;
 }

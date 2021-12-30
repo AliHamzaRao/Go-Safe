@@ -1,24 +1,16 @@
-// import System;
-// import System.Collections.Generic;
-// import System.Linq;
-// import System.Text;
-//import System.Globalization;
-export class PacketParser {
 
+export class PacketParser {
     public constructor(p_data: string) {
-        this.DataTrack = p_data;
         let header: string = "";
         let update: string = "";
         let alarms: string = "";
         let i: number = 0;
-        // _headInfo + "<D>" + _dPacket + "<D>" + _aPacket;
         let ArrData: string[] = p_data.split("<D>");
         if ((ArrData.length == 3)) {
             header = ArrData[0];
             update = ArrData[1];
             alarms = ArrData[2];
         }
-
         i = 0;
         if ((update != "")) {
             let ArrUpd: string[] = update.split("<#>");
@@ -106,7 +98,6 @@ export class PacketParser {
         }
 
     }
-    public DataTrack = "";
     public group_id: string = "";
     public cluster_id: string = "";
     public proc_id: string = "";

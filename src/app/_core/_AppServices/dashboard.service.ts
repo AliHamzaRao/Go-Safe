@@ -24,7 +24,6 @@ export class dashboardService {
     var url = this.userSer.getApiUrl();
     var list = this.http.get<VehicleResponse>(url + "/api/VehicleTree/list/", { 'headers': this.headers }).pipe(
       catchError(error => {
-        console.log(error)
         this.router.navigate(['/500']);
         return of(null);
       }));

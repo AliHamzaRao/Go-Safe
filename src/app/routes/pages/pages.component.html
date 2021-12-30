@@ -1,18 +1,18 @@
 <!-- <mat-sidenav-container>
-  <mat-sidenav
-    *ngIf="settings.menu == 'vertical'"
-    [opened]="settings.sidenavIsOpened"
-    [mode]="settings.sidenavIsPinned ? 'side' : 'over'"
-    #sidenav
-    class="sidenav mat-elevation-z6"
-  > -->
+<mat-sidenav
+*ngIf="settings.menu == 'vertical'"
+[opened]="settings.sidenavIsOpened"
+[mode]="settings.sidenavIsPinned ? 'side' : 'over'"
+#sidenav
+class="sidenav mat-elevation-z6"
+> -->
 <!-- <app-sidenav></app-sidenav> -->
 <!-- </mat-sidenav> -->
 <!-- <mat-sidenav-content
-  id="main"
-  perfectScrollbar
-  [disabled]="settings.fixedHeader"
-  (psScrollY)="onPsScrollY($event)"
+id="main"
+perfectScrollbar
+[disabled]="settings.fixedHeader"
+(psScrollY)="onPsScrollY($event)"
 > -->
 <mat-toolbar style="background-color: #18497d; color: white" class="flex-p-x">
   <a
@@ -45,42 +45,19 @@
         <button mat-menu-item>Item 2</button>
       </mat-menu>
       <div class="form-group">
-        <!-- <mat-form-field appearance="fill">
-        <mat-label>Favorite food</mat-label>
-        <mat-select class="mapDropdown" name="mapType" id="mapType">
-          <mat-option value="Google Maps">Google Maps</mat-option>
-          <mat-option value="Open Street Maps">Open Street Maps</mat-option>
-        </mat-select>
-      </mat-form-field> -->
         <label for="mapType"></label>
         <select
           class="form-control mapDropdown"
           name="mapType"
           id="mapType"
           value="Google Maps"
-          (change)= "MapType($event)"
+          (change)="MapType($event)"
         >
           <option disabled value="Google Maps">Select Map</option>
           <option value="Google Maps">Google Maps</option>
           <option value="Open Street Maps" selected>Open Street Maps</option>
         </select>
       </div>
-      <!-- <button mat-button class="mat-hover" [matMenuTriggerFor]="mapMenu">
-        Map Type <mat-icon>keyboard_arrow_down</mat-icon>
-      </button>
-      <mat-menu #mapMenu="matMenu" class="mapMenu">
-        <button mat-menu-item class="mapType" (click)="mapType('Google Maps')">
-          Google Maps
-        </button>
-        <button
-        mat-menu-item
-          class="mapType"
-          (click)="mapType('Open Street Maps')"
-          >
-          Open Street Maps
-        </button>
-      </mat-menu> -->
-
       <button mat-button class="mat-hover" [matMenuTriggerFor]="reportsMenu">
         Reports <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
@@ -113,9 +90,6 @@
         >
           Asset Trips
         </button>
-        <!-- <button mat-menu-item class="mat-child border-bottom" routerLink='asset-trip-report'>
-      Asset Trips
-    </button> -->
         <button mat-menu-item class="mat-child border-bottom">
           Multi Assets Kilometer
         </button>
@@ -188,15 +162,27 @@
       fxLayoutAlign="center center"
       style="width: max-content !important"
     >
-      <!-- <span class="border-right">
-  <button mat-icon-button class="notificationsUnread" (click)="fetchNotifications()">
-    <mat-icon [matBadge]="notifications.length" matBadgePosition="after" matBadgeColor="accent">notifications
-    </mat-icon>
-  </button>
-  <button class="d-none notificationsRead" mat-icon-button (click)="toggleNotifications()">
-    <mat-icon>notifications</mat-icon>
-  </button>
-</span> -->
+      <span class="border-right">
+        <button
+          mat-icon-button
+          class="d-none notificationsUnread"
+          (click)="fetchNotifications()"
+        >
+          <mat-icon
+            [matBadge]="notifications.length"
+            matBadgePosition="after"
+            matBadgeColor="accent"
+            >notifications
+          </mat-icon>
+        </button>
+        <button
+          class="d-none notificationsRead"
+          mat-icon-button
+          (click)="toggleNotifications()"
+        >
+          <mat-icon>notifications</mat-icon>
+        </button>
+      </span>
       <span style="font-size: small; margin-left: 10px">Bhoomia Sharma</span>
       <button
         mat-button
@@ -245,7 +231,7 @@
                 style="margin-left: 8px; height: 30px; margin-bottom: -20px"
               />
               <br />
-              <span class="13px ​!important">Settings</span>
+              <span class="13px !important">Settings</span>
             </button>
             <button
               mat-button
@@ -269,7 +255,6 @@
                     src="../../../assets/icons/Online-White.png"
                     height="28px"
                   />
-                  <!-- <mat-icon>assignment</mat-icon> -->
                   <span style="font-size: small !important"
                     >Onine ({{ TREE_DATA.length }})</span
                   >
@@ -277,34 +262,35 @@
                 <input type="text" placeholder="Search" class="SearchInput" />
                 <mat-accordion>
                   <!-- <mat-expansion-panel style="margin-bottom: 0.6rem" class="ParentCheckBox">
-                    <mat-expansion-panel-header>
-                      <mat-panel-title>
+                        <mat-expansion-panel-header>
+                        <mat-panel-title>
                         <input type="checkbox" style="margin-right: 10px" />
                         Devices ({{ TREE_DATA[0].SubMenu.length }})
-                      </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <span *ngFor="let item of TREE_DATA; let i = index">
-                      <span *ngIf="item.grp_name === 'Devices'">
+                        </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <span *ngFor="let item of TREE_DATA; let i = index">
+                        <span *ngIf="item.grp_name === 'Devices'">
                         <div class="m-0 singleDevice border-bottom" *ngFor="let t1 of item.SubMenu; let j = index">
-                          <input type="checkbox" [attr.data-dataTrack]="t1.datatrack"
-                            [attr.data-device_id]="t1.device_id" (change)="
-                              onCheck($event, t1.datatrack, t1.device_id)
-                            " />
-                          <mat-icon>drive_eta</mat-icon>
-                          <span style="
-                              max-width: 10ch;
-                              white-space: nowrap;
-                              overflow: hidden;
-                              text-overflow: ellipsis;
-                            ">{{ t1.device_id }}
-                          </span>
-                          <small class="text-center">Car's <br />
-                            Speed</small>
-                          <mat-icon>arrow_forward</mat-icon>
+                        <input type="checkbox" [attr.data-dataTrack]="t1.datatrack"
+                        [attr.data-device_id]="t1.device_id" (change)="
+                        onCheck($event, t1.datatrack, t1.device_id)
+                        " />
+                        <mat-iconstyle="width: 30px !important;">drive_eta</mat-icon>
+                        <span style="
+                        max-width: 10ch;
+                        width: 10ch ;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        ">{{ t1.device_id }}
+                        </span>
+                        <small class="text-center">Car's <br />
+                        Speed</small>
+                        <mat-icon style="width: 30px !important;">arrow_forward</mat-icon>
                         </div>
-                      </span>
-                    </span>
-                  </mat-expansion-panel> -->
+                        </span>
+                        </span>
+                        </mat-expansion-panel> -->
                   <mat-expansion-panel *ngIf="TREE_DATA.length">
                     <mat-expansion-panel-header>
                       <mat-panel-title>
@@ -332,21 +318,29 @@
                                     onCheck($event, t1.datatrack, t1.device_id)
                                   "
                                 />
-                                <mat-icon>drive_eta</mat-icon>
+                                <mat-icon style="width: 30px !important"
+                                  >drive_eta</mat-icon
+                                >
                                 <span
                                   style="
                                     max-width: 10ch;
+                                    width: 10ch;
                                     white-space: nowrap;
                                     overflow: hidden;
                                     text-overflow: ellipsis;
                                   "
                                   >{{ t1.vrn }}
                                 </span>
-                                <small class="text-center"
-                                  >Car's <br />
-                                  Speed</small
-                                >
-                                <mat-icon>arrow_forward</mat-icon>
+                                <p
+                                  class="speedCheck text-center"
+                                  style="margin: 0px !important"
+                                  [attr.data-idforspeed]="t1.device_id"
+                                ></p>
+                                <div
+                                  style="width: 30px; height: 30px"
+                                  class="veh_status"
+                                  [attr.device-Id-Vrn]="t1.device_id"
+                                ></div>
                               </div>
                               <mat-expansion-panel *ngIf="t1.SubMenu.length">
                                 <mat-expansion-panel-header
@@ -381,26 +375,33 @@
                                           )
                                         "
                                       />
-                                      <mat-icon>drive_eta</mat-icon>
+                                      <mat-icon style="width: 30px !important"
+                                        >drive_eta</mat-icon
+                                      >
                                       <span
                                         style="
                                           max-width: 10ch;
+                                          width: 10ch;
                                           white-space: nowrap;
                                           overflow: hidden;
                                           text-overflow: ellipsis;
                                         "
                                         >{{ t2.vrn }}
                                       </span>
-                                      <small class="text-center"
-                                        >Car's <br />
-                                        Speed</small
-                                      >
-                                      <mat-icon>arrow_forward</mat-icon>
+                                      <p
+                                        class="speedCheck text-center"
+                                        style="margin: 0px !important"
+                                        [attr.data-idforspeed]="t2.device_id"
+                                      ></p>
+                                      <div
+                                        style="width: 30px; height: 30px"
+                                        class="veh_status"
+                                        [attr.device-Id-Vrn]="t2.device_id"
+                                      ></div>
                                     </div>
-                                    <mat-expansion-panel
-                                      *ngIf="t2.SubMenu.length"
-                                    >
+                                    <mat-expansion-panel>
                                       <mat-expansion-panel-header
+                                        *ngIf="t2.SubMenu.length"
                                         class="MorenestedPanelHeader"
                                       >
                                         <mat-panel-title>
@@ -445,23 +446,38 @@
                                                 )
                                               "
                                             />
-                                            <mat-icon>drive_eta</mat-icon>
+                                            <mat-icon
+                                              style="width: 30px !important"
+                                              >drive_eta</mat-icon
+                                            >
                                             <span
                                               style="
                                                 max-width: 10ch;
+                                                width: 10ch;
                                                 white-space: nowrap;
                                                 overflow: hidden;
                                                 text-overflow: ellipsis;
                                               "
                                               >{{ t3.vrn }}
                                             </span>
-                                            <small class="text-center"
-                                              >Car's <br />
-                                              Speed</small
-                                            >
-                                            <mat-icon>arrow_forward</mat-icon>
+                                            <p
+                                              class="speedCheck text-center"
+                                              style="margin: 0px !important"
+                                              [attr.data-idforspeed]="
+                                                t3.device_id
+                                              "
+                                            ></p>
+                                            <div
+                                              style="width: 30px; height: 30px"
+                                              class="veh_status"
+                                              [attr.device-id-vrn]="
+                                                t3.device_id
+                                              "
+                                            ></div>
                                           </div>
-                                          <mat-expansion-panel>
+                                          <mat-expansion-panel
+                                            *ngIf="t3.SubMenu.length"
+                                          >
                                             <mat-expansion-panel-header
                                               class="nestedPanelHeader"
                                             >
@@ -470,7 +486,9 @@
                                                   type="checkbox"
                                                   style="margin-right: 10px"
                                                 />
-                                                {{ t3.grp_name }}
+                                                {{ t3.grp_name }} ({{
+                                                  t3.SubMenu.length
+                                                }})
                                               </mat-panel-title>
                                             </mat-expansion-panel-header>
                                           </mat-expansion-panel>
@@ -518,7 +536,6 @@
       <div class="col-md-10 p-1" style="position: relative">
         <!-- <button (click)="play()">Play</button>
         <button (click)="pause()">Pause</button> -->
-
         <!-- Fence List -->
         <mat-selection-list
           [multiple]="false"
@@ -584,7 +601,6 @@
         </mat-selection-list>
         <!-- Fence List -->
         <router-outlet></router-outlet>
-        <!-- <app-dashboard></app-dashboard> -->
       </div>
     </div>
   </div>
@@ -855,7 +871,7 @@
             >
               Ignition
             </h6>
-            <h6 class="text-muted m-0 p-0" *ngIf="historyInfo.Speed != 0">
+            <h6 class="text-muted m-0 p-0" *ngIf="historyInfo.Speed != '0'">
               ON
             </h6>
             <h6 class="text-muted m-0 p-0" ngElse>OFF</h6>

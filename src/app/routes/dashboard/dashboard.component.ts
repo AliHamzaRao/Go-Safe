@@ -1,4 +1,4 @@
-import { Component, OnInit, ɵɵtrustConstantResourceUrl } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { AppSettings } from "../../_core/settings/app.settings";
 import { Settings } from "../../_core/settings/app.settings.model";
 import { MatDialog } from "@angular/material/dialog";
@@ -11,6 +11,11 @@ import { ToastrService } from "ngx-toastr";
 import { GeoFencingService } from "src/app/_core/_AppServices/GeoFencingService";
 import { fenceTypo } from "src/app/_interfaces/fenceTypo.model";
 import { GeoFencePostService } from "src/app/_core/_AppServices/GeoFencePostingService";
+import { ExportService } from "src/app/_core/_AppServices/exportService";
+import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
+import { Router } from "@angular/router";
+declare const google: any;
+var Historydata = [];
 @Component({
   selector: "app-dashboard",
   templateUrl: "./dashboard.component.html",
@@ -56,8 +61,9 @@ export class DashboardComponent implements OnInit {
   nullrect: any;
   managerOptions = {
     drawingControl: true,
+    drawingMode: null,
     drawingControlOptions: {
-      drawingModes: ["polygon", "circle", "rectangle"],
+      drawingModes: ["circle", "polygon", "rectangle"],
     },
     polygonOptions: {
       draggable: false,
@@ -83,6 +89,22 @@ export class DashboardComponent implements OnInit {
     },
   };
 
+  historyInfo: any = {
+    GPSDateTime: "test",
+    Speed: "0",
+    RPM: "test",
+    ACC: "test",
+    Alarm: "test",
+    Status: "test",
+    Dir: "test",
+    Distance: "test",
+    Latitude: "test",
+    Longitude: "test",
+    Location: "test",
+    RECDateTime: "test",
+    Index: -1,
+  };
+  reg_no: string = "";
   //#region Constructor
   constructor(
     public appSettings: AppSettings,
@@ -94,7 +116,10 @@ export class DashboardComponent implements OnInit {
     public singleDeviceDataService: SingleDeviceDataService,
     public Toast: ToastrService,
     public GeoFencingService: GeoFencingService,
-    public PostFence: GeoFencePostService
+    public PostFence: GeoFencePostService,
+    public ExportService: ExportService,
+    public RegistrationNoService: RegistrationNoService,
+    public Router: Router
   ) {
     this.settings = this.appSettings.settings;
   }
@@ -103,6 +128,10 @@ export class DashboardComponent implements OnInit {
   //#region OnInit Hook
   ngOnInit() {
     this.mapTypeService.newMap.subscribe((mapType) => (this.mapType = mapType));
+    this.RegistrationNoService.regNumber.subscribe((data) => {
+
+      this.reg_no = data
+    })
     this.markerService.newMarkers.subscribe(
       (markers) => (this.markers = JSON.parse(markers))
     );
@@ -129,19 +158,28 @@ export class DashboardComponent implements OnInit {
         (data) => (this.AllDevices = JSON.parse(data))
       );
     }
-  }
-  //#endregion
-  //#region After View Init Hook
-  ngAfterViewInit() {
-    // alert("test")
-  }
-  mapLoad($event) {
-    this.map = $event;
     setTimeout(() => {
       $(".gmnoprint").addClass("d-none");
     }, 3000);
   }
+  //#endregion
+
+  //#region After View Init Hook
+  ngAfterViewInit() {
+  }
+  mapLoad(e) {
+    setTimeout(() => {
+      $(".gmnoprint").addClass("d-none");
+    }, 3000);
+    this.map = e;
+  }
   drawCircle(e) {
+    if (this.circle) {
+      this.circle.setMap(null)
+    }
+    if (this.rectangle) {
+      this.rectangle.setMap(null)
+    }
     this.circle = e;
     let lat = e.getCenter().lat();
     let lng = e.getCenter().lng();
@@ -159,6 +197,12 @@ export class DashboardComponent implements OnInit {
     }
   }
   drawRectangle(e) {
+    if (this.rectangle) {
+      this.rectangle.setMap(null)
+    }
+    if (this.circle) {
+      this.circle.setMap(null)
+    }
     this.rectangle = e;
     const len = e.getBounds();
     const rectArray = [
@@ -176,7 +220,16 @@ export class DashboardComponent implements OnInit {
     }
   }
   drawPolygon(e) {
-    this.nullplgn = e.map.data;
+    this.managerOptions.drawingMode = null;
+    this.Router.navigateByUrl('/asset-trip-trip', { skipLocationChange: true }).then(() => {
+      this.Router.navigate(['/']);
+    });
+    if (this.circle) {
+      this.circle.setMap(null)
+    }
+    if (this.rectangle) {
+      this.rectangle.setMap(null)
+    }
     this.polygon = e;
     const len = this.polygon.getPath().getLength();
     const polyArrayLatLng = [];
@@ -306,14 +359,6 @@ export class DashboardComponent implements OnInit {
     this.latitude = 0;
     this.longitude = 0;
   }
-  drawLine() {
-    this.historyDataService.newMarkers.subscribe(
-      (data) => (this.markersData = JSON.parse(data))
-    );
-    this.markersData.forEach((el) => {
-      this.markerData.push([el.Latitude, el.Longitude]);
-    });
-  }
   speed() {
     if (this.markerData.length) {
       this.pause();
@@ -335,6 +380,20 @@ export class DashboardComponent implements OnInit {
   }
   export() {
     $(".export").toggleClass("d-none");
+  }
+  exportToExcel() {
+    this.historyDataService.newMarkers.subscribe((data) => {
+      this.markersData = JSON.parse(data);
+      Historydata = this.markersData
+    });
+    this.ExportService.downloadExcelFile(Historydata, this.reg_no);
+  }
+  exportToPDF() {
+    this.historyDataService.newMarkers.subscribe((data) => {
+      this.markersData = JSON.parse(data);
+      Historydata = this.markersData
+    });
+    this.ExportService.downloadPDF(Historydata, this.reg_no);
   }
   toggleInfoCard() {
     $(".infoCard").toggleClass("d-none");
@@ -359,6 +418,7 @@ export class DashboardComponent implements OnInit {
   play() {
     this.historyDataService.newMarkers.subscribe((data) => {
       this.markersData = JSON.parse(data);
+      Historydata = this.markersData
     });
     this.markersData.forEach((element) => {
       this.markerData.push({
@@ -367,14 +427,15 @@ export class DashboardComponent implements OnInit {
       });
     });
     $(".playBtn").addClass("d-none");
-    $(".pauseBtn").removeClass("d-none");
     this.move();
+    $(".pauseBtn").removeClass("d-none");
   }
   move() {
     if (this.currentState !== this.markerData.length - 1) {
       this.setTime = setInterval(() => {
         this.latitude = this.markerData[this.currentState].latitude;
         this.longitude = this.markerData[this.currentState].longitude;
+        this.historyInfo = Historydata[this.currentState];
         this.currentState++;
         if (this.currentState === this.markerData.length - 1) {
           clearInterval(this.setTime);
@@ -435,19 +496,8 @@ export class DashboardComponent implements OnInit {
     $(".shapeSelect").toggleClass("d-none");
   }
   closeCreateFencingGoogle() {
-    // $('.gmnoprint').addClass('d-none');
-    // $('.createFenceGoogleMap').addClass('d-none')
-    // const event = this.circle;
-
-    // this.map.set(null)
-    // event.setMap(null);
-
-    // const event = this.nullplgn;
-
-    // event.remove();
-    // this.map.data.setMap = () => {
-    //   return null;
-    // };
-    this.map.data.setMap(true);
+    this.Router.navigateByUrl('/asset-trip-trip', { skipLocationChange: true }).then(() => {
+      this.Router.navigate(['/']);
+    });
   }
 }

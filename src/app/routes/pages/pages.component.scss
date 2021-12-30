@@ -287,8 +287,14 @@
 }
 .singleDevice {
   display: flex;
-  justify-content: space-evenly;
+  // justify-content: space-evenly;
   align-items: center !important;
+}
+.singleDevice input[type="checkbox"] {
+  width: 30px !important;
+}
+.singleDevice .speedCheck {
+  width: 30px !important;
 }
 
 .dialogTitle {
