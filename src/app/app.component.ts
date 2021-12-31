@@ -1,3 +1,4 @@
+declare const require: any;
 import { Component } from '@angular/core';
 import { AppSettings } from './_core/settings/app.settings';
 import { Settings } from './_core/settings/app.settings.model';
@@ -8,9 +9,10 @@ import { Settings } from './_core/settings/app.settings.model';
 })
 export class AppComponent {
   public settings: Settings;
-  constructor(public appSettings:AppSettings){
-      this.settings = this.appSettings.settings;
-  } 
+  constructor(public appSettings: AppSettings) {
+    this.settings = this.appSettings.settings;
+  }
 
-  ngOnInit() { }
+  ngOnInit() {
+  }
 }

@@ -287,8 +287,14 @@
 }
 .singleDevice {
   display: flex;
-  justify-content: space-evenly;
+  // justify-content: space-evenly;
   align-items: center !important;
+}
+.singleDevice input[type="checkbox"] {
+  width: 30px !important;
+}
+.singleDevice .speedCheck {
+  width: 30px !important;
 }
 
 .dialogTitle {
@@ -296,6 +302,10 @@
   padding: 15px 10px !important;
   color: white !important;
   margin: 0px !important;
+}
+.disabled {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
 }
 .dialogContent {
   padding: 10px 20px !important;
@@ -360,6 +370,16 @@
   height: 75% !important;
 }
 
+.recordDialogOffset button:nth-of-type(5) img {
+  height: 50% !important;
+}
+.recordDialogOffset button:nth-of-type(6) img {
+  height: 50% !important;
+}
+.recordDialogOffset button:nth-of-type(7) img {
+  height: 50% !important;
+}
+
 // .recordControl:nth-of-type(1) {
 // margin-left: calc(10rem / 5);
 // background-image: url("../../../assets/icons/Export.png");
@@ -373,17 +393,15 @@
 // .recordControl:nth-of-type(4) {
 //   // background-image: url("../../../assets/icons/Play.png");
 // }
-// .recordControl:nth-of-type(5) {
-//   // background-image: url("../../../assets/icons/Speed.png");
-// }
-// .recordControl:nth-of-type(6) {
-//   // background-size: 30% !important;
-//   // background-image: url("../../../assets/icons/Stop.png");
-// }
-// .recordControl:nth-of-type(7) {
-// background-image: url("../../../assets/icons/HistoryInfo.png");
-// margin-right: 0px !important;
-// }
+.recordControl:nth-of-type(5) {
+  height: 50% !important;
+}
+.recordControl:nth-of-type(6) {
+  height: 50% !important;
+}
+.recordControl:nth-of-type(7) {
+  height: 50% !important;
+}
 .export {
   position: absolute;
   bottom: 90% !important;
@@ -534,4 +552,58 @@
   margin-top: 10px;
   margin-bottom: 10px;
   border-left: 2px solid #bca0dc;
+}
+.createFence {
+  height: max-content;
+  width: 400px;
+  position: absolute;
+  right: 17px;
+  top: 72px;
+  padding: 10px;
+  background: white;
+  outline: none;
+}
+.createFence h3 {
+  margin: 0px !important;
+}
+.createFence .fenceType {
+  width: 100%;
+  padding: 5px 20px;
+  border-radius: 10px;
+}
+.createFence .fenceType:focus {
+  box-shadow: none;
+  outline: none;
+}
+.createFence .confirmationBox {
+  padding: 10px !important;
+  display: flex;
+  justify-content: space-between;
+}
+.createFence .confirmationBox .fenceDrawBtn {
+  border: none;
+  outline: none;
+  background: rgb(185, 125, 11);
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  margin-right: 5px;
+}
+.createFence .confirmationBox .fenceCancelBtn {
+  border: none;
+  outline: none;
+  background: #bb2424;
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
+  margin-right: 5px;
+}
+
+.createFence .confirmationBox .fenceDoneBtn {
+  border: none;
+  outline: none;
+  background: rgb(24, 131, 24);
+  padding: 5px 10px;
+  border-radius: 5px;
+  color: white;
 }

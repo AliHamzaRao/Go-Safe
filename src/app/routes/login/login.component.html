@@ -1,7 +1,7 @@
 <div class="row no-gutters min-h-fullscreen bg-white">
   <div
     class="col-md-6 col-lg-7 col-xl-8 d-none d-md-block bg-img"
-    style="background-image: url('../../../assets/images/loginleftimage.png')"
+    style="background-image: url(../../assets/images/loginleftimage.png)"
     data-overlay="5"
   >
     <div class="row h-100 pl-50">
@@ -23,7 +23,10 @@
   <div class="col-md-6 col-lg-5 col-xl-4 align-self-center">
     <div class="px-80 py-30">
       <h1 class="text-center">
-        <img src="../../../assets/logos/logo 1-01.svg" alt="..." />
+        <img
+          src={{img}}
+          alt="..."
+        />
       </h1>
       <br />
       <p class="text-center">Sign into your account</p>
@@ -89,77 +92,37 @@
       </div>
       <br />
 
-      <div class="row">
-        <form
-          class="form-type-material"
-          [formGroup]="apiInfoForm"
-          (ngSubmit)="onApiInfoSubmit()"
-        >
-          <div class="row">
-            <div class="col-md-6">
-              <mat-form-field class="w-100">
-                <input
-                  matInput
-                  placeholder="Ip address"
-                  formControlName="ipaddress"
-                  [ngClass]="{
-                    'is-invalid': ApiInfosubmitted && apiinfo.ipaddress.errors
-                  }"
-                />
-                <mat-error *ngIf="form.controls.username.errors?.required"
-                  >Username is required</mat-error
-                >
-              </mat-form-field>
-            </div>
-            <div class="col-md-6">
-              <mat-form-field class="w-100">
-                <input
-                  matInput
-                  placeholder="Port # "
-                  type="number"
-                  formControlName="port"
-                  [ngClass]="{
-                    'is-invalid': ApiInfosubmitted && apiinfo.ipaddress.errors
-                  }"
-                />
-                <mat-error
-                  *ngIf="ApiInfosubmitted && apiinfo.port.errors"
-                  class="invalid-feedback"
-                >
-                  <mat-error *ngIf="apiinfo.port.errors.required"
-                    >Port # is required</mat-error
-                  >
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-          <br />
+      <!-- <div class="row">
+                <form class="form-type-material" [formGroup]="apiInfoForm" (ngSubmit)="onApiInfoSubmit()">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <mat-form-field class="w-100">
+                                <input matInput placeholder="Ip address" formControlName="ipaddress" [ngClass]="{ 'is-invalid': ApiInfosubmitted && apiinfo.ipaddress.errors } ">
+                                <mat-error *ngIf="form.controls.username.errors?.required">Username is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-md-6">
+                            <mat-form-field class="w-100 ">
+                                <input matInput placeholder="Port # " type="number" formControlName="port" [ngClass]="{ 'is-invalid': ApiInfosubmitted && apiinfo.ipaddress.errors } ">
+                                <mat-error *ngIf="ApiInfosubmitted && apiinfo.port.errors " class="invalid-feedback ">
+                                    <mat-error *ngIf="apiinfo.port.errors.required ">Port # is required</mat-error>
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
 
-          <div class="text-center">
-            <button
-              [disabled]="loading"
-              ng-click="SaveApiInfo() "
-              class="
-                btn
-                btn-bold
-                btn-theme
-                btn-round
-                btn-lg
-                btn-w-xl
-                btn-theme-login
-                btn-theme-lg
-              "
-            >
-              <span
-                *ngIf="loading"
-                class="spinner-border spinner-border-sm mr-1"
-              ></span>
-              Save
-              <i class="fa fa-save" aria-hidden="true "></i>
-            </button>
-          </div>
-        </form>
-      </div>
+                    </div>
+                    <br>
+
+                    <div class="text-center ">
+                        <button [disabled]="loading " ng-click="SaveApiInfo() " class="btn btn-bold btn-theme btn-round btn-lg btn-w-xl btn-theme-login btn-theme-lg ">
+                            <span *ngIf="loading " class="spinner-border spinner-border-sm mr-1 "></span>
+                            Save
+                            <i class="fa fa-save " aria-hidden="true "></i>
+                        </button>
+
+                    </div>
+                </form>
+            </div> -->
       <hr class="w-30px" />
 
       <p class="text-center text-muted fs-13 mt-20">

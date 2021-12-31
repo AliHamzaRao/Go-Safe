@@ -10,7 +10,7 @@
     >
       <span style="display: flex; align-items: center">
         <span class="carName"
-          >Device {{ item.device_id }}
+          >{{ item.veh_reg_no }}
           <img
             src="../../../assets/icons/Truck.png"
             style="height: 24px !important"
@@ -83,7 +83,7 @@
       style="display: flex; justify-content: space-between"
     >
       <span class="carName"
-        >Device {{ item.device_id }}
+        >Device {{ item.veh_reg_no }}
         <img
           src="../../../assets/icons/Truck.png"
           style="height: 34px !important"
@@ -373,7 +373,7 @@
           <div class="col-md-9 p-0 row m-0" style="color: #18497d">
             <div class="col-12 row m-0">
               <div class="col-md-6">Device#:</div>
-              <div class="col-md-6">{{ item.device_id }}</div>
+              <div class="col-md-6">{{ item.veh_reg_no }}</div>
             </div>
             <div class="col-12 row m-0">
               <div class="col-md-6">Device Type:</div>
@@ -404,9 +404,15 @@
   </div>
 </div>
 
-<div class="m-0 p-0 shadow rounded" style="height: 89vh !important">
+<div class="m-0 p-0 shadow rounded mapCont" style="height: 89vh !important">
   <div *ngIf="mapType === 'Open Street Maps'">
-    <div id="leaflet-map" style="height: 89vh !important" class="rounded"></div>
+    <div id="leafletContainer" class="rounded">
+      <div
+        id="leaflet-map"
+        class="rounded"
+        style="height: 89vh !important"
+      ></div>
+    </div>
   </div>
   <div *ngIf="mapType === 'Google Maps'">
     <agm-map
@@ -417,8 +423,11 @@
       [mapTypeId]="googleMapType"
       [fullscreenControl]="true"
       [mapTypeControl]="true"
+      [streetViewControl]="true"
+      [rotateControl]="true"
       [fitBounds]="true"
       [agmDrawingManager]="drawing"
+      (mapReady)="mapLoad($event)"
     >
       <agm-polyline>
         <agm-polyline-point
@@ -437,9 +446,6 @@
           </agm-marker>
         </span>
       </agm-polyline>
-
-      <!-- <agm-drawing-manager class="border"></agm-drawing-manager> -->
-      <!-- Drawing Ends -->
       <span *ngIf="geoFenceData.gf_type == 'Polygon'">
         <!-- <agm-marker *ngFor="let data of geoFenceData.fenceParam; let i = index;" [latitude]="data.lat"
           [longitude]="data.lng" [agmFitBounds]="true">
@@ -487,13 +493,12 @@
           [strokeWeight]="2"
           [visible]="true"
           [zIndex]="1"
-          [radius]="10"
+          [radius]="geoFenceData.gf_diff"
         ></agm-circle>
       </span>
       <span ngElse>
         {{ null }}
       </span>
-
       <!-- Drawing Ends -->
       <span *ngFor="let data of markers; let i = index">
         <span *ngIf="data[1] != 0 && data[2] != 0">
@@ -508,18 +513,124 @@
           </agm-marker>
         </span>
       </span>
+      <agm-drawing-manager
+        #drawing="agmDrawingManager"
+        [drawingControlOptions]="managerOptions.drawingControlOptions"
+        [drawingControl]="managerOptions.drawingControl"
+        [drawingControlOptions]="managerOptions.drawingControlOptions"
+        [polygonOptions]="managerOptions.polygonOptions"
+        (polygonComplete)="drawPolygon($event)"
+        [rectangleOptions]="managerOptions.rectangleOptions"
+        [cirlceOptions]="managerOptions.cirlceOptions"
+        [drawingMode]="managerOptions.drawingMode"
+        (circleComplete)="drawCircle($event)"
+        (rectangleComplete)="drawRectangle($event)"
+      >
+      </agm-drawing-manager>
     </agm-map>
+  </div>
+</div>
+<button
+  *ngIf="mapType === 'Google Maps'"
+  style="position: absolute; right: 15px; top: 10px"
+  mat-flat-button
+  color="primary"
+  class="closeGeoFenceBtnGoogle d-none"
+  (click)="RemoveFencing()"
+>
+  Close Geo Fencing Google
+</button>
+
+<div class="createFenceGoogleMap rounded shadow d-none">
+  <div style="display: flex; justify-content: space-between">
+    <h3>Geo Fence Information</h3>
+    <button mat-icon-button (click)="closeCreateFencingGoogle()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="row m-0 p-0">
+    <div class="col-12 p-0 m-0 pt-2">
+      <label>Select Fence Type</label>
+      <select
+        class="GooglefenceType GooglefenceTypeSelect"
+        disabled
+        (change)="onInputChange($event)"
+      >
+        <option value="Select Fence Type" disabled selected>
+          Select Fence Type
+        </option>
+        <option value="Circle">Circle</option>
+        <option value="Rectangle">Rectangle</option>
+        <option value="Polygon">Polygon</option>
+      </select>
+    </div>
+    <div class="col-12 p-0 m-0 pt-2" *ngIf="fenceType === 'Circle'">
+      <label>Circle Radius</label>
+      <input
+        class="GooglefenceType border radius circleField"
+        disabled
+        placeholder="Enter Circle Radius"
+      />
+    </div>
+    <div class="col-12 p-0 m-0 pt-2">
+      <label>Fence Name</label>
+      <input
+        class="GooglefenceType border fenceNameGoogle"
+        placeholder="Enter Fence Name"
+      />
+    </div>
+    <div class="col-12 p-0 m-0 pt-2">
+      <label>Country</label>
+      <input
+        class="GooglefenceType border countryGoogle"
+        placeholder="Enter Country"
+      />
+    </div>
+    <div class="col-12 p-0 m-0 pt-2">
+      <label>City</label>
+      <input
+        class="GooglefenceType border cityGoogle"
+        placeholder="Enter City"
+      />
+    </div>
+    <div class="col-12 p-0 m-0 confirmationBoxGoogle">
+      <span>
+        <button class="fenceCancelBtnGoogle">Cancel</button>
+        <button
+          class="fenceDoneBtnGoogle"
+          *ngIf="fenceType === 'Circle'"
+          (click)="sendCircle()"
+        >
+          Confirm
+        </button>
+        <button
+          class="fenceDoneBtnGoogle"
+          *ngIf="fenceType === 'Rectangle'"
+          (click)="sendRectangle()"
+        >
+          Confirm
+        </button>
+        <button
+          class="fenceDoneBtnGoogle"
+          *ngIf="fenceType === 'Polygon'"
+          (click)="sendPolygon()"
+        >
+          Confirm
+        </button>
+      </span>
+    </div>
   </div>
 </div>
 
 <!-- History Record -->
 <div class="recordDialog googleMapRecord d-none">
   <div class="export d-none">
-    <button mat-icon-button>
+    <button mat-icon-button (click)="exportToExcel()">
       <img src="../../../assets/icons/ExportToExcel.png" alt="" />
     </button>
     <br />
-    <button mat-icon-button>
+    <button mat-icon-button (click)="exportToPDF()">
       <img src="../../../assets/icons/ExportToPDF.png" alt="" />
     </button>
   </div>
@@ -656,7 +767,7 @@
             >
               Latitude
             </h6>
-            <h6 class="text-muted m-0 p-0">32.4533 / 32* 31* 43.7* N</h6>
+            <h6 class="text-muted m-0 p-0">{{ historyInfo.Latitude }}</h6>
           </div>
           <div class="border-right" style="padding: 10px">
             <h6
@@ -665,7 +776,7 @@
             >
               Latitude
             </h6>
-            <h6 class="text-muted m-0 p-0">32.4533 / 32* 31* 43.7* N</h6>
+            <h6 class="text-muted m-0 p-0">{{ historyInfo.Longitude }}</h6>
           </div>
           <div style="padding: 10px">
             <h6
@@ -674,7 +785,7 @@
             >
               Last Updated
             </h6>
-            <h6 class="text-muted m-0 p-0">Dec 17 2020 4:02:34 PM</h6>
+            <h6 class="text-muted m-0 p-0">{{ historyInfo.RECDateTime }}</h6>
           </div>
         </div>
       </div>
@@ -698,7 +809,7 @@
             >
               Velocity
             </h6>
-            <h6 class="text-muted m-0 p-0">21.0 MPH / 35KPH</h6>
+            <h6 class="text-muted m-0 p-0">{{ historyInfo.Speed }}</h6>
           </div>
           <div
             class="border-right"
@@ -717,7 +828,7 @@
             >
               Heading
             </h6>
-            <h6 class="text-muted m-0 p-0">184* South</h6>
+            <h6 class="text-muted m-0 p-0">{{ historyInfo.Dir }} South</h6>
           </div>
           <div
             class="border-right"
@@ -755,7 +866,10 @@
             >
               Ignition
             </h6>
-            <h6 class="text-muted m-0 p-0">Off</h6>
+            <h6 class="text-muted m-0 p-0" *ngIf="historyInfo.Speed != '0'">
+              ON
+            </h6>
+            <h6 class="text-muted m-0 p-0" ngElse>OFF</h6>
           </div>
           <div
             style="

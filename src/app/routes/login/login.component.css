@@ -4917,7 +4917,11 @@ a.bg-dark:hover {
   content: "";
 }
 .d-none {
+<<<<<<< HEAD
   display: none !important;
+=======
+    display: none !important
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 .d-inline {
   display: inline !important;
@@ -7497,11 +7501,20 @@ a.text-dark:hover {
 } /*!
  *  Font Awesome 4.7.0 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
+<<<<<<< HEAD
  */
 @font-face {
   font-family: FontAwesome;
   font-weight: 400;
   font-style: normal;
+=======
+ */ 
+@font-face {
+    src:"";
+    font-family: FontAwesome;
+    font-weight: 400;
+    font-style: normal
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 .fa {
   display: inline-block;
@@ -7608,29 +7621,69 @@ a.text-dark:hover {
   }
 }
 .fa-rotate-90 {
+<<<<<<< HEAD
   -webkit-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
   transform: rotate(90deg);
+=======
+    filter:  "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
+    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
+    -webkit-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg)
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 .fa-rotate-180 {
+<<<<<<< HEAD
   -webkit-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
   transform: rotate(180deg);
+=======
+    filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
+    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2)";
+    -webkit-transform: rotate(180deg);
+    -ms-transform: rotate(180deg);
+    transform: rotate(180deg)
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 .fa-rotate-270 {
+<<<<<<< HEAD
   -webkit-transform: rotate(270deg);
   -ms-transform: rotate(270deg);
   transform: rotate(270deg);
+=======
+    filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)";
+    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=3)";
+    -webkit-transform: rotate(270deg);
+    -ms-transform: rotate(270deg);
+    transform: rotate(270deg)
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 .fa-flip-horizontal {
+<<<<<<< HEAD
   -webkit-transform: scale(-1, 1);
   -ms-transform: scale(-1, 1);
   transform: scale(-1, 1);
+=======
+    filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)";
+    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1)";
+    -webkit-transform: scale(-1, 1);
+    -ms-transform: scale(-1, 1);
+    transform: scale(-1, 1)
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 .fa-flip-vertical {
+<<<<<<< HEAD
   -webkit-transform: scale(1, -1);
   -ms-transform: scale(1, -1);
   transform: scale(1, -1);
+=======
+    filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";
+    -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=2, mirror=1)";
+    -webkit-transform: scale(1, -1);
+    -ms-transform: scale(1, -1);
+    transform: scale(1, -1)
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 :root .fa-flip-horizontal,
 :root .fa-flip-vertical,
@@ -9819,11 +9872,19 @@ a.text-dark:hover {
   clip: auto;
 }
 @font-face {
+<<<<<<< HEAD
   font-family: themify;
   font-weight: 400;
   font-style: normal;
+=======
+    src:'';
+    font-family: themify;
+    font-weight: 400;
+    font-style: normal
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 [class*=" ti-"],
+<<<<<<< HEAD
 [class^="ti-"] {
   font-family: themify;
   speak: none;
@@ -9834,6 +9895,19 @@ a.text-dark:hover {
   line-height: 1;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+=======
+[class^=ti-] {
+    font-family: themify;
+    speak-as: none;
+    /* speak: none; */
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 .ti-wand:before {
   content: "\e600";
@@ -13641,9 +13715,16 @@ img {
   overflow: hidden;
 }
 [class*="img-hov-"] img {
+<<<<<<< HEAD
   -webkit-transition: 0.45s;
   transition: 0.45s;
   -webkit-backface-visibility: hidden;
+=======
+    -webkit-transition: .45s;
+    transition: .45s;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 .img-hov-fadein {
   -webkit-transition: 0.45s;
@@ -13888,6 +13969,7 @@ img {
   color: #313944;
 }
 .teaser-zoe p.description {
+<<<<<<< HEAD
   position: absolute;
   bottom: 8em;
   padding: 2em;
@@ -13907,6 +13989,19 @@ img {
   transition: transform 0.35s, -webkit-transform 0.35s;
   -webkit-transform: translate3d(0, 200%, 0);
   transform: translate3d(0, 200%, 0);
+=======
+    position: absolute;
+    bottom: 8em;
+    padding: 2em;
+    color: #fff;
+    text-transform: none;
+    font-size: 90%;
+    opacity: 0;
+    -webkit-transition: opacity 0.35s;
+    transition: opacity 0.35s;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 .teaser-zoe .icon-links a span::before {
   padding: 8px 10px;
@@ -15133,7 +15228,11 @@ img {
   padding-left: 0;
 }
 .table-actions .table-action:last-child {
+<<<<<<< HEAD
   padding-rightt: 0;
+=======
+    padding-right: 0
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 .table-actions .dropdown {
   display: inline-block;
@@ -31706,15 +31805,40 @@ a.text-danger:hover {
   box-shadow: none;
 }
 .text-hue-rotate {
+<<<<<<< HEAD
   color: #f35626;
   background-image: -webkit-linear-gradient(92deg, #f35626, #feab3a);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   -webkit-animation: hue-rotate 60s infinite linear;
+=======
+    color: #f35626;
+    background-image: -webkit-linear-gradient(92deg, #f35626, #feab3a);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: hue-rotate 60s infinite linear;
+    -webkit-animation: hue-rotate 60s infinite linear;
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 .bg-hue-rotate {
+<<<<<<< HEAD
   -webkit-animation: hue-rotate 30s linear infinite;
 }
+=======
+    animation: hue-rotate 30s linear infinite;
+    -webkit-animation: hue-rotate 30s linear infinite;
+}
+
+@keyframes hue {
+    from {
+        -webkit-filter: hue-rotate(0deg)
+    }
+    to {
+        -webkit-filter: hue-rotate(-360deg)
+    }
+}
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 @-webkit-keyframes hue {
   from {
     -webkit-filter: hue-rotate(0);
@@ -31733,7 +31857,11 @@ a.text-danger:hover {
   margin: 0 !important;
 }
 .no-shadow {
+<<<<<<< HEAD
   shadow: none;
+=======
+    box-shadow: none
+>>>>>>> c2d1300c702882af8f0fee3827aa73988c9ec02a
 }
 .no-text-shadow {
   text-shadow: none;
