@@ -14,7 +14,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
         data: { breadcrumb: 'Dashboard' },
-        // resolve: { model: VehicleListResolver },
+        resolve: { model: VehicleListResolver },
         children: [
             { path: '', loadChildren: () => import('./routes/dashboard/dashboard.module').then(m => m.DashboardModule) },
             { path: 'asset-trip-report', data: { breadcrumb: 'Asset Trip Report' }, loadChildren: () => import('./routes/Assets/asset-trip-report/asset-trip-report.module').then(m => m.AssetTripReportModule) },

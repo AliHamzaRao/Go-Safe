@@ -418,8 +418,8 @@
     <agm-map
       style="height: 89vh !important"
       class="rounded googleMap"
-      [latitude]="latitude"
-      [longitude]="longitude"
+      [latitude]="lat"
+      [longitude]="lng"
       [mapTypeId]="googleMapType"
       [fullscreenControl]="true"
       [mapTypeControl]="true"
@@ -596,7 +596,7 @@
     </div>
     <div class="col-12 p-0 m-0 confirmationBoxGoogle">
       <span>
-        <button class="fenceCancelBtnGoogle">Cancel</button>
+        <button class="fenceCancelBtnGoogle"  (click)="closeCreateFencingGoogle()">Cancel</button>
         <button
           class="fenceDoneBtnGoogle"
           *ngIf="fenceType === 'Circle'"

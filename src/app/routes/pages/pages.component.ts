@@ -52,8 +52,8 @@ var dataArr: PacketParser[] = [];
 export class PagesComponent implements OnInit {
   public settings: Settings;
   logo: string;
-  lat = 0;
-  lng = 0;
+  lat = 31.4884152;
+  lng = 74.3704655;
   zoom = 2;
   TREE_DATA: Vehicles[] = [];
   AllDevices: any[] = [];
@@ -145,6 +145,7 @@ export class PagesComponent implements OnInit {
     this.logo = localStorage.getItem("CompanyLogo");
     this.mapTypeService.newMap.subscribe((mapType) => {
       mapType = mapType;
+      this.currentMap = mapType;
     });
     this.AllDeviceDataService.AllDevices.subscribe((data) => (this.AllDevices = JSON.parse(data)));
     this.getVehTree();
@@ -245,6 +246,7 @@ export class PagesComponent implements OnInit {
       });
     }, 300000);
     mapType = $(".mapDropdown").find(":selected").val();
+    this.currentMap = mapType;
     if (window.innerWidth <= 768) {
       this.settings.menu = "vertical";
       this.settings.sidenavIsOpened = false;
@@ -259,6 +261,7 @@ export class PagesComponent implements OnInit {
   // }
   MapType(e) {
     mapType = e.target.value;
+    this.currentMap = mapType;
     this.closeFencing();
     $(".vehicleCard").addClass("d-none");
     $(".vehicleCardMore").addClass("d-none");
@@ -943,28 +946,32 @@ export class PagesComponent implements OnInit {
     this.closeFencing();
   }
   RemoveFencing() {
-    if (rect) {
-      map.removeLayer(rect);
-    }
-    if (circle) {
-      map.removeLayer(circle);
-    }
-    if (plgn) {
-      map.removeLayer(plgn);
-    }
-    if (marker) {
-      map.removeLayer(marker);
-      $(
-        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
-      ).remove();
-      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
-    }
-    $(".GeoFence").addClass("d-none");
-    if (!rect || !plgn || !circle || !marker) {
-      setTimeout(() => {
-        $(".closeGeoFenceBtn").addClass("d-none");
-      }, 1000);
-    }
+    this.RefreshMap()
+    setTimeout(() => {
+      $(".closeGeoFenceBtn").addClass("d-none");
+    }, 1000);
+    // if (rect) {
+    //   map.removeLayer(rect);
+    // }
+    // if (circle) {
+    //   map.removeLayer(circle);
+    // }
+    // if (plgn) {
+    //   map.removeLayer(plgn);
+    // }
+    // if (marker) {
+    //   map.removeLayer(marker);
+    //   $(
+    //     ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
+    //   ).remove();
+    //   $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
+    // }
+    // $(".GeoFence").addClass("d-none");
+    // if (!rect || !plgn || !circle || !marker) {
+    //   setTimeout(() => {
+    //     $(".closeGeoFenceBtn").addClass("d-none");
+    //   }, 1000);
+    // }
   }
   GeoFencing() {
     this.GeoFence.geoFence().subscribe((data) => {
@@ -1288,36 +1295,33 @@ export class PagesComponent implements OnInit {
     }
   }
   fetchNotifications() {
+
     let alarmsData = {
       deviceID: this.AllDevices[this.AllDevices.length - 1].device_id,
       clusterID: this.AllDevices[this.AllDevices.length - 1].cluster_id,
       vehicleID: this.AllDevices[this.AllDevices.length - 1].veh_id
     }
     this.Alarms.getNotifications(alarmsData).subscribe((res) => {
-      $('.notificationsUnread').removeClass('d-none')
       if (!res.status) {
         this.Toast.error(res.message, "Error Showing Notifications");
       } else {
         console.log(res.data)
         this.notifications = res.data;
         $('.notificationsUnread').removeClass('d-none')
+        this.readNotifications();
       }
+
     });
-    this.Alarms.getNotifications(alarmsData).subscribe((res) => {
-      $('.notificationsUnread').removeClass('d-none')
-      if (!res.status) {
-        this.Toast.error(res.message, "Error Showing Notifications");
-      } else {
-        this.notifications = res.data;
-        $('.notificationsUnread').removeClass('d-none')
-      }
-    });
-    this.toggleNotifications();
   }
-  toggleNotifications() {
-    $(".notificationPanel").toggleClass("d-none");
-    $(".notificationsUnread").toggleClass("d-none");
-    $(".notificationsRead").toggleClass("d-none");
+  readNotifications() {
+    $(".notificationsUnread").addClass("d-none");
+    $(".notificationPanel").removeClass("d-none");
+    $(".notificationsRead").removeClass("d-none");
+  }
+  unReadNotifications() {
+    $(".notificationsUnread").removeClass("d-none");
+    $(".notificationPanel").addClass("d-none");
+    $(".notificationsRead").addClass("d-none");
   }
   //#endregion
 }

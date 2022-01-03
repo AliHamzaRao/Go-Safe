@@ -44,6 +44,17 @@ perfectScrollbar
         <button mat-menu-item>Item 1</button>
         <button mat-menu-item>Item 2</button>
       </mat-menu>
+      <!-- 
+      <mat-form-field appearance="fill">
+        <mat-label>Choose an option</mat-label>
+        <select matNativeControl>
+          <option value="" selected></option>
+          <option value="volvo">Volvo</option>
+          <option value="saab" disabled>Saab</option>
+          <option value="mercedes">Mercedes</option>
+          <option value="audi">Audi</option>
+        </select>
+      </mat-form-field> -->
       <div class="form-group">
         <label for="mapType"></label>
         <select
@@ -164,8 +175,9 @@ perfectScrollbar
     >
       <span class="border-right">
         <button
+          [class.d-none]="AllDevices.length == 0"
           mat-icon-button
-          class="d-none notificationsUnread"
+          class="notificationsUnread"
           (click)="fetchNotifications()"
         >
           <mat-icon
@@ -178,7 +190,7 @@ perfectScrollbar
         <button
           class="d-none notificationsRead"
           mat-icon-button
-          (click)="toggleNotifications()"
+          (click)="unReadNotifications()"
         >
           <mat-icon>notifications</mat-icon>
         </button>
@@ -401,7 +413,7 @@ perfectScrollbar
                                     </div>
                                     <mat-expansion-panel>
                                       <mat-expansion-panel-header
-                                        *ngIf="t2.SubMenu.length"
+                                        *ngIf="t2.grp_name"
                                         class="MorenestedPanelHeader"
                                       >
                                         <mat-panel-title>
@@ -476,7 +488,7 @@ perfectScrollbar
                                             ></div>
                                           </div>
                                           <mat-expansion-panel
-                                            *ngIf="t3.SubMenu.length"
+                                            *ngIf="t3.grp_name"
                                           >
                                             <mat-expansion-panel-header
                                               class="nestedPanelHeader"
