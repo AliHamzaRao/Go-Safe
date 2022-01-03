@@ -41,7 +41,7 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "optimization":false,
+            "optimization": false,
             "sourceMap": true,
             "assets": [
               "src/favicon32.ico",
@@ -49,7 +49,7 @@
               "src/web.config"
             ],
             "styles": [
-               "src/styles.scss",
+              "src/styles.scss",
               "./node_modules/datatables.net-dt/css/jquery.dataTables.css",
               "./node_modules/bootstrap/dist/css/bootstrap.css",
               "./node_modules/font-awesome/css/font-awesome.css"
@@ -88,8 +88,8 @@
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
+                  "maximumWarning": "6mb",
+                  "maximumError": "10mb"
                 }
               ],
               "serviceWorker": true,
