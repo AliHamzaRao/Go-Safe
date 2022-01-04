@@ -491,7 +491,14 @@ export class DashboardComponent implements OnInit {
     $(".vehicleCardMore").addClass("d-none");
   }
   //#endregion
-
+  CloseHistory() {
+    $(".googleMapRecord").addClass("d-none");
+    $('.closeHistoryGoogle').addClass('d-none')
+    this.Router.navigateByUrl('/asset-trip-trip', { skipLocationChange: true }).then(() => {
+      this.Router.navigate(['/']);
+      $(".gmnoprint").addClass("d-none");
+    })
+  }
   draw() {
     $(".shapeSelect").toggleClass("d-none");
   }

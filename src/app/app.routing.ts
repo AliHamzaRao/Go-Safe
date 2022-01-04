@@ -19,6 +19,16 @@ export const routes: Routes = [
             { path: '', loadChildren: () => import('./routes/dashboard/dashboard.module').then(m => m.DashboardModule) },
             { path: 'asset-trip-report', data: { breadcrumb: 'Asset Trip Report' }, loadChildren: () => import('./routes/Assets/asset-trip-report/asset-trip-report.module').then(m => m.AssetTripReportModule) },
         ],
+    }, {
+        path: 'vehicles',
+        component: PagesComponent,
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        data: { breadcrumb: 'Vehicles' },
+        resolve: { model: VehicleListResolver },
+        children: [
+            { path: '', loadChildren: () => import('./routes/dashboard/dashboard.module').then(m => m.DashboardModule) }
+        ],
     },
     { path: 'login', loadChildren: () => import('./routes/login/login.module').then(m => m.LoginModule) },
     { path: 'error', component: ErrorComponent, data: { breadcrumb: 'Error' } },

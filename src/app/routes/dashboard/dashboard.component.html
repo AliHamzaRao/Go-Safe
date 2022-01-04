@@ -538,7 +538,19 @@
   class="closeGeoFenceBtnGoogle d-none"
   (click)="RemoveFencing()"
 >
-  Close Geo Fencing Google
+  Close Geo Fencing
+</button>
+
+<button
+
+  *ngIf="mapType === 'Google Maps'"
+  style="position: absolute; right: 15px; top: 10px"
+  mat-flat-button
+  color="primary"
+  class="closeHistoryGoogle d-none"
+  (click)="CloseHistory()"
+>
+  Close Geo Fencing
 </button>
 
 <div class="createFenceGoogleMap rounded shadow d-none">

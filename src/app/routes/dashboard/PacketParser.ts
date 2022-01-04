@@ -1,6 +1,7 @@
 
 export class PacketParser {
     public constructor(p_data: string) {
+        this.dataTrack = p_data;
         let header: string = "";
         let update: string = "";
         let alarms: string = "";
@@ -98,6 +99,7 @@ export class PacketParser {
         }
 
     }
+    public dataTrack: string = "";
     public group_id: string = "";
     public cluster_id: string = "";
     public proc_id: string = "";

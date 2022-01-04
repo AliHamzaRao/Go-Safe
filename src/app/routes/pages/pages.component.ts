@@ -89,6 +89,10 @@ export class PagesComponent implements OnInit {
   checkedDevices: any[] = [];
   AllMarkers: any[] = [];
   childArray: Vehicles[] = [];
+  showGrouped: boolean = false;
+  onlineDevices: PacketParser[] = [];
+  offlineDevices: PacketParser[] = [];
+  AllVehicles: PacketParser[] = [];
   historyInfo: any = {
     GPSDateTime: "test",
     Speed: "0",
@@ -142,14 +146,23 @@ export class PagesComponent implements OnInit {
   }
   //#region OnInit
   ngOnInit() {
+    this.offlineDevices = [];
+    this.onlineDevices = []
+    if (window.location.pathname == "/vehicles") {
+      this.showGrouped = true;
+    }
     this.logo = localStorage.getItem("CompanyLogo");
-    this.mapTypeService.newMap.subscribe((mapType) => {
-      mapType = mapType;
+    this.mapTypeService.newMap.subscribe((data) => {
+      mapType = data;
       this.currentMap = mapType;
     });
     this.AllDeviceDataService.AllDevices.subscribe((data) => (this.AllDevices = JSON.parse(data)));
     this.getVehTree();
+    this.loadLeafLetMap()
     setInterval(() => {
+      dataArr = [];
+      this.offlineDevices = [];
+      this.onlineDevices = []
       this.childArray = [];
       $('.notificationsUnread').addClass('d-none')
       $(".notificationPanel").addClass("d-none");
@@ -185,6 +198,15 @@ export class PagesComponent implements OnInit {
           }
         });
         setTimeout(() => {
+          this.AllVehicles = dataArr;
+          dataArr.forEach((item: PacketParser) => {
+            if (item.Online == '1') {
+              this.onlineDevices.push(item)
+            }
+            else if (item.Online == '0') {
+              this.offlineDevices.push(item)
+            }
+          })
           $(".speedCheck").each(function () {
             var vehicle = $(this).attr("data-idforspeed");
             var obj = dataArr.find(
@@ -245,7 +267,6 @@ export class PagesComponent implements OnInit {
         }, 3000);
       });
     }, 300000);
-    mapType = $(".mapDropdown").find(":selected").val();
     this.currentMap = mapType;
     if (window.innerWidth <= 768) {
       this.settings.menu = "vertical";
@@ -304,6 +325,9 @@ export class PagesComponent implements OnInit {
     }
   }
   getVehTree() {
+    dataArr = [];
+    this.offlineDevices = [];
+    this.onlineDevices = []
     try {
       // // this.route.data.subscribe((data) => {
       // //   data["model"].data.forEach((item: any, index: any) => {
@@ -350,11 +374,15 @@ export class PagesComponent implements OnInit {
           this.Toast.error(data.message, `Error Code ${data.code}`);
         }
         setTimeout(() => {
-          // let anchor = document.createElement('a')
-          // var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ TreeData: this.TREE_DATA[1], paprsedData: dataArr }));
-          // anchor.setAttribute("href", dataStr);
-          // anchor.setAttribute("download", "Data.json");
-          // anchor.click();
+          this.AllVehicles = dataArr;
+          dataArr.forEach((item: PacketParser) => {
+            if (item.Online == '1') {
+              this.onlineDevices.push(item)
+            }
+            else if (item.Online == '0') {
+              this.offlineDevices.push(item)
+            }
+          })
           $(".speedCheck").each(function () {
             var vehicle = $(this).attr("data-idforspeed");
             var obj = dataArr.find(
@@ -687,7 +715,6 @@ export class PagesComponent implements OnInit {
         this.lat = parseFloat(this.data.lat);
         this.lng = parseFloat(this.data.lng);
         marker = [this.data.device_id, this.data.lat, this.data.lng];
-        debugger;
         let tempObj = this.checkedDevices.find((item) => item.id == this.data.device_id)
         if (!tempObj) {
           this.checkedDevices.push({
@@ -724,6 +751,8 @@ export class PagesComponent implements OnInit {
         this.setLeafLetMarkers();
         this.AllDevices.push(this.data);
         $('.notificationsUnread').removeClass('d-none')
+        $(".notificationPanel").addClass("d-none");
+        $(".notificationsRead").addClass("d-none");
         this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
         this.AllDeviceDataService.AllDevices.subscribe((data) => {
           this.AllDevices = JSON.parse(data);
@@ -828,7 +857,14 @@ export class PagesComponent implements OnInit {
     $(".vehicleCardLeaflet").addClass("d-none");
     $(".vehicleCardLeafletMore").addClass("d-none");
   }
-
+  closeHistory() {
+    this.RefreshMap()
+    setTimeout(() => {
+      this.setLeafLetMarkers();
+    }, 1000);
+    $(".recordDialogOffset").addClass("d-none");
+    $('.closeHistory').addClass('d-none')
+  }
   Draw(fenceData: any) {
     let nest = [];
     let nestArray = [];
@@ -947,6 +983,9 @@ export class PagesComponent implements OnInit {
   }
   RemoveFencing() {
     this.RefreshMap()
+    setTimeout(() => {
+      this.setLeafLetMarkers();
+    }, 1000);
     setTimeout(() => {
       $(".closeGeoFenceBtn").addClass("d-none");
     }, 1000);
@@ -1393,8 +1432,10 @@ export class historyDialogComponent implements OnInit {
           this.dialog.closeAll();
           if (mapType == "Google Maps") {
             $(".googleMapRecord").removeClass("d-none");
+            $('.closeHistoryGoogle').removeClass('d-none')
           } else {
             $(".recordDialogOffset").removeClass("d-none");
+            $('.closeHistory').removeClass('d-none')
           }
           $(".vehicleCard").addClass("d-none");
           $(".vehicleCardMore").addClass("d-none");
@@ -1450,11 +1491,11 @@ export class ControlDialogComponent {
 export class ResetOdometerDialogComponent {
   constructor(public dialog: MatDialog) { }
   onOdometerReset() {
-    this.dialog.closeAll();
+    // this.dialog.closeAll();
     this.dialog.open(OdometerResetSuccessDialogComponent);
   }
   closeResetOdometer() {
-    this.dialog.closeAll();
+    // this.dialog.closeAll();
     this.dialog.open(ControlDialogComponent);
   }
 }

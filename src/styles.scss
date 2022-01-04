@@ -61,6 +61,12 @@ $material-icons-font-path: "~material-icons/iconfont/";
   width: 30%;
 }
 
+.mat-tab-body-content {
+  max-height: 68.8vh !important;
+}
+.mat-tab-body-content::-webkit-scrollbar {
+  display: none;
+}
 .mat-expansion-panel-body {
   padding: 0 !important;
   height: 30vh !important;
