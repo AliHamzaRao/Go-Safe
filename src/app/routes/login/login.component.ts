@@ -85,9 +85,11 @@ export class LoginComponent implements OnInit {
     await localStorage.setItem('apiinfo', JSON.stringify(apiInfoJson));
     await this.um.login(values).subscribe(
       (res: any) => {
+        console.log(res)
         this.tokenStorage = res.access_token;
         this.loading = false;
         this.showSuccess("success", "Login successfully");
+        this.authService.setUsername(res.usr_name);
         this.authService.setToken(res.access_token);
         this.router.navigateByUrl('/');
       },

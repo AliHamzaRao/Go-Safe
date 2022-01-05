@@ -186,7 +186,9 @@ perfectScrollbar
           <mat-icon>notifications</mat-icon>
         </button>
       </span>
-      <span style="font-size: small; margin-left: 10px">Bhoomia Sharma</span>
+      <span style="font-size: small; margin-left: 10px"
+        >Welcome! {{ username.toUpperCase() }}</span
+      >
       <button
         mat-button
         class="mat-hover"
@@ -251,18 +253,20 @@ perfectScrollbar
             </button>
           </div>
           <div class="vehicleList">
-            <mat-tab-group [disablePagination]="true" *ngIf="!showGrouped">
-              <mat-tab>
+            <mat-tab-group
+              (selectedTabChange)="tabChanged($event)"
+              [disablePagination]="true"
+              *ngIf="!showGrouped"
+            >
+              <mat-tab [isActive]="true">
                 <ng-template mat-tab-label>
                   <img
                     src="../../../assets/icons/Online-White.png"
                     height="28px"
                   />
-                  <span style="font-size: small !important"
-                    >Onine ({{ onlineDevices.length }})</span
-                  >
+                  <span style="font-size: small !important">Grouped</span>
                 </ng-template>
-                <input type="text" placeholder="Search" class="SearchInput" />
+                <!-- <input type="text" placeholder="Search" class="SearchInput" /> -->
                 <span>
                   <div
                     class="m-0 singleDevice border-bottom"
@@ -329,17 +333,17 @@ perfectScrollbar
                         [alt]="item.veh_status"
                       />
                     </div>
-                    <!-- <div
+                    <div
                       style="width: 30px; height: 30px"
                       [attr.device-Id-Vrn]="item.device_id"
-                      ngElse
+                      *ngIf="item.veh_status == ''"
                     >
                       <img
                         style="height: 30px"
                         src="../../../assets/icons/Disconected.png"
                         [alt]="item.veh_status"
                       />
-                    </div> -->
+                    </div>
                   </div>
                 </span>
               </mat-tab>
@@ -350,12 +354,12 @@ perfectScrollbar
                     height="28px"
                   />
                   <span style="font-size: small">
-                    Offline ({{ offlineDevices.length }})</span
+                    Assets ({{ onlineDevices.length }})</span
                   >
                 </ng-template>
                 <div
                   class="m-0 singleDevice border-bottom"
-                  *ngFor="let item of offlineDevices; let i = index"
+                  *ngFor="let item of onlineDevices; let i = index"
                 >
                   <input
                     id="{{ item.device_id }}"
@@ -418,7 +422,7 @@ perfectScrollbar
                   </div>
                 </div>
               </mat-tab>
-              <mat-tab>
+              <!-- <mat-tab>
                 <ng-template mat-tab-label>
                   <img
                     src="../../../assets/icons/Alarms-White.png"
@@ -427,10 +431,14 @@ perfectScrollbar
                   <span style="font-size: small"> Alarms </span>
                 </ng-template>
                 Content 1
-              </mat-tab>
+              </mat-tab> -->
             </mat-tab-group>
-            <mat-tab-group [disablePagination]="true" *ngIf="showGrouped">
-              <mat-tab>
+            <mat-tab-group
+              (selectedTabChange)="tabChanged($event)"
+              [disablePagination]="true"
+              *ngIf="showGrouped"
+            >
+              <mat-tab [isActive]="true">
                 <ng-template mat-tab-label>
                   <img
                     src="../../../assets/icons/Online-White.png"
@@ -717,7 +725,7 @@ perfectScrollbar
                   <div
                     style="width: 30px; height: 30px"
                     [attr.device-Id-Vrn]="item.device_id"
-                    *ngIf="item.veh_status == 'Idle'"
+                    *ngIf="item.veh_status == 'Parked'"
                   >
                     <img
                       style="height: 30px"
@@ -728,7 +736,7 @@ perfectScrollbar
                   <div
                     style="width: 30px; height: 30px"
                     [attr.device-Id-Vrn]="item.device_id"
-                    *ngIf="item.veh_status == 'Parked'"
+                    *ngIf="item.veh_status == 'Idle'"
                   >
                     <img
                       style="height: 30px"
@@ -1165,12 +1173,13 @@ perfectScrollbar
             alt="..."
         /></span>
       </span>
+
       <button
         type="button"
-        class="showMoreButton btn btn-sm"
-        (click)="toggleInfo()"
+        class="closeBtn btn btn-sm"
+        (click)="closeDetails()"
       >
-        Show More
+        Close
       </button>
     </div>
     <div
@@ -1222,6 +1231,24 @@ perfectScrollbar
         </div>
       </div>
     </div>
+
+    <div
+      class="col-md-12 p-0"
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 5px 0px;
+      "
+    >
+      <button
+        type="button"
+        class="showMoreButton btn btn-sm"
+        (click)="toggleInfo()"
+      >
+        Show More
+      </button>
+    </div>
   </div>
 </div>
 <div class="vehicleCardLeafletMore col-md-12 m-0 row d-none rounded">
@@ -1239,10 +1266,10 @@ perfectScrollbar
       /></span>
       <button
         type="button"
-        class="showLessButton btn btn-sm"
-        (click)="toggleInfo()"
+        class="closeBtnLess btn btn-sm"
+        (click)="closeDetails()"
       >
-        Show Less
+        Close
       </button>
     </div>
     <div class="col-md-12 row m-0">
@@ -1548,6 +1575,23 @@ perfectScrollbar
           </div>
         </div>
       </div>
+    </div>
+    <div
+      class="col-md-12 p-0"
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 5px 0px;
+      "
+    >
+      <button
+        type="button"
+        class="showLessButton btn btn-sm"
+        (click)="toggleInfo()"
+      >
+        Show Less
+      </button>
     </div>
   </div>
 </div>

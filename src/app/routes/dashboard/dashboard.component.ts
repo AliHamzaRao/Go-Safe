@@ -463,14 +463,6 @@ export class DashboardComponent implements OnInit {
       } else {
         $(".vehicleCard").removeClass("d-none");
         $(".vehicleCardMore").addClass("d-none");
-        if (
-          $(".vehicleCard").is(":visible") ||
-          $(".vehicleCardMore").is(":visible")
-        ) {
-          setTimeout(() => {
-            this.closeDetails();
-          }, 10000);
-        }
       }
     } else {
       this.Toast.info(

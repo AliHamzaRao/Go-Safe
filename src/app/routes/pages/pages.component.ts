@@ -51,6 +51,7 @@ var dataArr: PacketParser[] = [];
 })
 export class PagesComponent implements OnInit {
   public settings: Settings;
+  username: string;
   logo: string;
   lat = 31.4884152;
   lng = 74.3704655;
@@ -152,13 +153,17 @@ export class PagesComponent implements OnInit {
       this.showGrouped = true;
     }
     this.logo = localStorage.getItem("CompanyLogo");
+    this.username = localStorage.getItem("username") || 'Test';
     this.mapTypeService.newMap.subscribe((data) => {
       mapType = data;
       this.currentMap = mapType;
     });
     this.AllDeviceDataService.AllDevices.subscribe((data) => (this.AllDevices = JSON.parse(data)));
     this.getVehTree();
-    this.loadLeafLetMap()
+    if (map) {
+      map.off();
+      this.loadLeafLetMap();
+    }
     setInterval(() => {
       dataArr = [];
       this.offlineDevices = [];
@@ -242,7 +247,6 @@ export class PagesComponent implements OnInit {
           if (this.checkedDevices.length) {
             this.markers = [];
             setTimeout(() => {
-              console.log(this.checkedDevices)
               this.checkedDevices.forEach((item) => {
                 this.AllMarkers.forEach((CM) => {
                   map.removeLayer(CM);
@@ -257,8 +261,10 @@ export class PagesComponent implements OnInit {
                   obj.datatrack,
                   obj.device_id
                 );
-
-                $(`#${item.id}`).prop("checked", true);
+                $(`[data-device_id=${item.id}]`).each(() => {
+                  $(this).prop('checked', true)
+                })
+                // $(`#${item.id}`).prop("checked", true);
               }, 5000);
               this.checkedDevices = [];
               this.AllMarkers = [];
@@ -280,6 +286,14 @@ export class PagesComponent implements OnInit {
   // MatMapType(e){
   //   
   // }
+  tabChanged(e) {
+    console.log(e)
+    if (this.checkedDevices.length) {
+      this.checkedDevices.forEach((item) => {
+        $(`[data-device_id= ${item.id}]`).prop('checked', true)
+      })
+    }
+  }
   MapType(e) {
     mapType = e.target.value;
     this.currentMap = mapType;
@@ -446,6 +460,7 @@ export class PagesComponent implements OnInit {
   Logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("apiinfo");
+    localStorage.removeItem("username");
     this.router.navigate(["/login"]);
   }
   //#endregion
@@ -692,14 +707,14 @@ export class PagesComponent implements OnInit {
     } else {
       $(".vehicleCardLeaflet").removeClass("d-none");
       $(".vehicleCardLeafletMore").addClass("d-none");
-      if (
-        $(".vehicleCardLeaflet").is(":visible") ||
-        $(".vehicleCardLeafletMore").is(":visible")
-      ) {
-        setTimeout(() => {
-          this.closeDetails();
-        }, 10000);
-      }
+      // if (
+      //   $(".vehicleCardLeaflet").is(":visible") ||
+      //   $(".vehicleCardLeafletMore").is(":visible")
+      // ) {
+      //   setTimeout(() => {
+      //     this.closeDetails();
+      //   }, 10000);
+      // }
     }
   }
   // #endregion
@@ -710,6 +725,9 @@ export class PagesComponent implements OnInit {
     let marker: string[];
     if (e.target.checked) {
       if (mapType === "Google Maps") {
+        $(`[data-device_id=${_id}]`).each(() => {
+          $(this).prop('checked', true)
+        })
         this.newPacketParse = new PacketParser(DataTrack);
         this.data = { ...this.newPacketParse };
         this.lat = parseFloat(this.data.lat);
@@ -771,6 +789,10 @@ export class PagesComponent implements OnInit {
       let checkedDeviceIndex = this.checkedDevices.findIndex(
         (item) => item === _id
       );
+      $(`[data-device_id=${_id}]`).each((el, index) => {
+        console.log(el, index)
+        $(index).prop('checked', false)
+      })
       this.checkedDevices.splice(checkedDeviceIndex, 1);
       this.AllDevices.splice(index, 1);
       let MarkerIndex = this.markers.findIndex(
@@ -1053,7 +1075,6 @@ export class PagesComponent implements OnInit {
       $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
     }
   }
-
   onInputChange = (e) => {
     this.fenceType = e.target.value;
     switch (this.fenceType) {
@@ -1381,6 +1402,8 @@ export class historyDialogComponent implements OnInit {
   setTime: any;
   interval: number = 500;
   loading: boolean = false;
+  formValid: boolean = false;
+  dateValid: boolean = false;
   public form: FormGroup;
   constructor(
     public dialog: MatDialog,
@@ -1393,64 +1416,85 @@ export class historyDialogComponent implements OnInit {
     this.speed = e.target.checked;
   }
   onSubmit() {
-    this.loading = true;
     let History_type = $("#historyType").val();
     let dateStart = $("#de_start").val().toLocaleString().replace("T", " ");
     let dateEnd = $("#de_end").val().toLocaleString().replace("T", " ");
     let speed = this.speed;
     let veh_reg_no = reg_no;
-    var data = {
-      veh_reg_no: "G1C-2424",
-      History_type: "Replay",
-      de_start: "2021-04-01 00:00:00.000",
-      de_end: "2021-04-15 00:00:00.000",
-      speed: false,
-    };
+    console.log(Date.parse(dateStart), Date.parse(dateEnd))
     // var data = {
-    //   veh_reg_no: veh_reg_no,
-    //   History_type: History_type,
-    //   de_start: dateStart,
-    //   de_end: dateEnd,
-    //   speed: speed,
+    //   veh_reg_no: "G1C-2424",
+    //   History_type: "Replay",
+    //   de_start: "2021-04-01 00:00:00.000",
+    //   de_end: "2021-04-15 00:00:00.000",
+    //   speed: false,
     // };
-    this.historyService.DeviceHistory(data).subscribe((data) => {
-      this.historyDataService.setNewMarkers(JSON.stringify(data.data.History));
-      if (data.status) {
-        Historydata = data.data.History;
-        if (data.data.History.length) {
-          data.data.History.forEach((el, i) => {
-            this.markerData.push([
-              parseFloat(el.Latitude),
-              parseFloat(el.Longitude),
-            ]);
-            this.lat = parseFloat(el.Latitude);
-            this.lng = parseFloat(el.Longitude);
-          });
-          this.Toast.success(data.data.ErrorMessage, data.message);
-          map.setView([this.lat, this.lng], 10);
-          L.polyline(this.markerData).addTo(map);
-          this.dialog.closeAll();
-          if (mapType == "Google Maps") {
-            $(".googleMapRecord").removeClass("d-none");
-            $('.closeHistoryGoogle').removeClass('d-none')
-          } else {
-            $(".recordDialogOffset").removeClass("d-none");
-            $('.closeHistory').removeClass('d-none')
-          }
-          $(".vehicleCard").addClass("d-none");
-          $(".vehicleCardMore").addClass("d-none");
-          $(".vehicleCardLeaflet").addClass("d-none");
-          $(".vehicleCardLeafletMore").addClass("d-none");
-        } else {
-          this.Toast.error(data.data.ErrorMessage, data.message);
-        }
-      } else {
-        this.Toast.error(
-          "We cannot proceed to your request now please check your network connection",
-          "Error Drawing Route"
-        );
+    if (History_type && dateStart && dateEnd && speed && veh_reg_no) {
+      if (Date.parse(dateStart) > Date.parse(dateEnd)) {
+        this.dateValid = false;
+        this.Toast.error('Start Date cannot be bigger than End Date')
       }
-    });
+      if (Date.parse(dateStart) < Date.parse(dateEnd)) {
+        this.dateValid = true;
+        this.formValid = true;
+      }
+      if (this.dateValid) {
+        if (this.formValid) {
+          this.loading = true;
+          var data = {
+            veh_reg_no: veh_reg_no,
+            History_type: History_type,
+            de_start: dateStart,
+            de_end: dateEnd,
+            speed: speed,
+          };
+          this.historyService.DeviceHistory(data).subscribe((data) => {
+            this.historyDataService.setNewMarkers(JSON.stringify(data.data.History));
+            if (data.status) {
+              Historydata = data.data.History;
+              if (data.data.History.length) {
+                data.data.History.forEach((el, i) => {
+                  this.markerData.push([
+                    parseFloat(el.Latitude),
+                    parseFloat(el.Longitude),
+                  ]);
+                  this.lat = parseFloat(el.Latitude);
+                  this.lng = parseFloat(el.Longitude);
+                });
+                this.Toast.success(data.data.ErrorMessage, data.message);
+                map.setView([this.lat, this.lng], 10);
+                L.polyline(this.markerData).addTo(map);
+                this.dialog.closeAll();
+                if (mapType == "Google Maps") {
+                  $(".googleMapRecord").removeClass("d-none");
+                  $('.closeHistoryGoogle').removeClass('d-none')
+                } else {
+                  $(".recordDialogOffset").removeClass("d-none");
+                  $('.closeHistory').removeClass('d-none')
+                }
+                $(".vehicleCard").addClass("d-none");
+                $(".vehicleCardMore").addClass("d-none");
+                $(".vehicleCardLeaflet").addClass("d-none");
+                $(".vehicleCardLeafletMore").addClass("d-none");
+              } else {
+                this.Toast.error(data.data.ErrorMessage, data.message);
+              }
+            } else {
+              this.Toast.error(
+                "We cannot proceed to your request now please check your network connection",
+                "Error Drawing Route"
+              );
+            }
+          });
+        }
+        else {
+          this.Toast.error('Please fillout all the fields')
+        }
+      }
+    }
+    else {
+      this.Toast.error('Please Fill out all the fields')
+    }
   }
 }
 @Component({
@@ -1560,7 +1604,6 @@ export class PictureChannelDialogComponent {
     this.dialog.open(ControlDialogComponent);
   }
 }
-
 @Component({
   selector: "app-picture-taken-dialog",
   templateUrl: "./Dialogs/PictureTakeSuccessDialog.html",

@@ -34,7 +34,7 @@ $material-icons-font-path: "~material-icons/iconfont/";
   height: 48px;
   padding: 0px !important;
   cursor: pointer;
-  min-width: calc(100% / 3) !important;
+  min-width: calc(100% / 2) !important;
   text-align: center;
   display: inline-flex;
   justify-content: center;
@@ -47,6 +47,10 @@ $material-icons-font-path: "~material-icons/iconfont/";
 }
 .mat-tab-label:focus,
 .mat-tab-label:active {
+  color: #18497d !important;
+  background-color: rgb(251, 182, 42) !important;
+}
+.mat-tab-label[aria-selected="true"] {
   color: #18497d !important;
   background-color: rgb(251, 182, 42) !important;
 }
@@ -69,7 +73,7 @@ $material-icons-font-path: "~material-icons/iconfont/";
 }
 .mat-expansion-panel-body {
   padding: 0 !important;
-  height: 30vh !important;
+  min-height: fit-content !important;
   max-height: 40vh !important;
   overflow-y: scroll;
 }
@@ -167,6 +171,7 @@ $material-icons-font-path: "~material-icons/iconfont/";
 .cursor-default {
   cursor: default;
 }
+
 .cursor-e-resize {
   cursor: e-resize;
 }

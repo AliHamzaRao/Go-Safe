@@ -65,16 +65,8 @@
           <div class="text-center">
             <button
               [disabled]="loading"
-              class="
-                btn
-                btn-bold
-                btn-theme
-                btn-round
-                btn-lg
-                btn-w-xl
-                btn-theme-login
-                btn-theme-lg
-              "
+              [class.cursor-not-allowed]="loading"
+              class="btn btn-bold btn-theme btn-round btn-lg btn-w-xl btn-theme-login btn-theme-lg"
             >
               <span
                 *ngIf="loading"

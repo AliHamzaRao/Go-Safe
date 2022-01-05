@@ -20,7 +20,9 @@ export class AuthService {
   getToken(): string {
     return localStorage.getItem("token");
   }
-
+  setUsername(username: string): void {
+    localStorage.setItem('username', username)
+  }
   setToken(token: string): void {
     localStorage.setItem("token", token);
   }
@@ -58,8 +60,7 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     const token = localStorage.getItem('token');
-    if (token !== null && token !== '' && token !== undefined)
-    {
+    if (token !== null && token !== '' && token !== undefined) {
       return true;
     }
     return false;
