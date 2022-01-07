@@ -1,3 +1,5 @@
+import { PacketParser } from "../routes/dashboard/PacketParser";
+
 // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 class SubMenu3 {
   grp_id: number;
@@ -16,6 +18,7 @@ class SubMenu3 {
   SubMenu: object[];
   speed: string;
   veh_status: string;
+  OnlineDevice: PacketParser[];
 }
 
 export class Vehicles {
@@ -35,4 +38,5 @@ export class Vehicles {
   SubMenu: SubMenu3[];
   speed: string;
   veh_status: string;
+  OnlineDevice: PacketParser[];
 }

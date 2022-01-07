@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  HostListener,
-  ViewChildren,
-  QueryList,
-} from "@angular/core";
+import { Component, OnInit, ViewChild, HostListener, ViewChildren, QueryList } from "@angular/core";
 import { ActivatedRoute, Router, NavigationEnd } from "@angular/router";
 import { PerfectScrollbarDirective } from "ngx-perfect-scrollbar";
 import { AppSettings } from "../../_core/settings/app.settings";
@@ -31,6 +24,7 @@ import { ExportService } from "src/app/_core/_AppServices/exportService";
 import { Vehicles } from "src/app/_interfaces/vehicle.model";
 import { dashboardService } from "src/app/_core/_AppServices/dashboard.service";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
+// Global Variables
 declare var L;
 var map;
 var el;
@@ -50,6 +44,7 @@ var dataArr: PacketParser[] = [];
   providers: [MenuService],
 })
 export class PagesComponent implements OnInit {
+  //#region Properties
   public settings: Settings;
   username: string;
   logo: string;
@@ -63,7 +58,6 @@ export class PagesComponent implements OnInit {
   mapBounds: any = [];
   newPacketParse: any;
   data: any;
-  message: string;
   latitude: 0;
   longitude: 0;
   interval: number = 1000;
@@ -94,6 +88,7 @@ export class PagesComponent implements OnInit {
   onlineDevices: PacketParser[] = [];
   offlineDevices: PacketParser[] = [];
   AllVehicles: PacketParser[] = [];
+  OnlineGroups: any[] = [];
   historyInfo: any = {
     GPSDateTime: "test",
     Speed: "0",
@@ -122,7 +117,7 @@ export class PagesComponent implements OnInit {
   public showBackToTop: boolean = false;
   public toggleSearchBar: boolean = false;
   private defaultMenu: string;
-
+  //#endregion
   constructor(
     public appSettings: AppSettings,
     public router: Router,
@@ -164,11 +159,13 @@ export class PagesComponent implements OnInit {
       map.off();
       this.loadLeafLetMap();
     }
+
     setInterval(() => {
       dataArr = [];
       this.offlineDevices = [];
       this.onlineDevices = []
       this.childArray = [];
+      this.OnlineGroups = [];
       $('.notificationsUnread').addClass('d-none')
       $(".notificationPanel").addClass("d-none");
       $(".notificationsRead").addClass("d-none");
@@ -206,6 +203,14 @@ export class PagesComponent implements OnInit {
           this.AllVehicles = dataArr;
           dataArr.forEach((item: PacketParser) => {
             if (item.Online == '1') {
+              let obj = this.TREE_DATA[1].SubMenu.find((data: Vehicles) => data.grp_id.toString() == item.group_id)
+              let nest = obj.SubMenu.find((value: Vehicles) => value.device_id == item.device_id)
+              console.log(nest['veh_id'])
+              if (nest['device_id'] == item.device_id) {
+                obj.OnlineDevice.push(item)
+                this.OnlineGroups.push(obj)
+                console.log(this.OnlineGroups, "Online Groups")
+              }
               this.onlineDevices.push(item)
             }
             else if (item.Online == '0') {
@@ -283,9 +288,9 @@ export class PagesComponent implements OnInit {
     this.menuTypeOption = this.settings.menuType;
     this.defaultMenu = this.settings.menu;
   }
-  // MatMapType(e){
-  //   
-  // }
+  //#endregion
+
+  //#region TabChangeEvent
   tabChanged(e) {
     console.log(e)
     if (this.checkedDevices.length) {
@@ -294,6 +299,9 @@ export class PagesComponent implements OnInit {
       })
     }
   }
+  //#endregion
+
+  //#region MapType change Event
   MapType(e) {
     mapType = e.target.value;
     this.currentMap = mapType;
@@ -338,10 +346,14 @@ export class PagesComponent implements OnInit {
       }, 1000);
     }
   }
+  //#endregion
+
+  //#region Get Veh Data
   getVehTree() {
     dataArr = [];
     this.offlineDevices = [];
-    this.onlineDevices = []
+    this.onlineDevices = [];
+    this.OnlineGroups = [];
     try {
       // // this.route.data.subscribe((data) => {
       // //   data["model"].data.forEach((item: any, index: any) => {
@@ -391,6 +403,15 @@ export class PagesComponent implements OnInit {
           this.AllVehicles = dataArr;
           dataArr.forEach((item: PacketParser) => {
             if (item.Online == '1') {
+              let obj = this.TREE_DATA[1].SubMenu.find((data: Vehicles) => data.grp_id.toString() == item.group_id)
+              obj.OnlineDevice = [];
+              let nest = obj.SubMenu.find((value: Vehicles) => value.device_id == item.device_id)
+              console.log(nest['veh_id'])
+              if (nest['device_id'] == item.device_id) {
+                obj.OnlineDevice.push(item)
+                this.OnlineGroups.push(obj)
+                console.log(this.OnlineGroups, "Online Groups")
+              }
               this.onlineDevices.push(item)
             }
             else if (item.Online == '0') {
@@ -433,6 +454,7 @@ export class PagesComponent implements OnInit {
     }
   }
   //#endregion
+
   //#region AfterViewInit Hook
   ngAfterViewInit() {
     this.loadLeafLetMap();
@@ -456,6 +478,7 @@ export class PagesComponent implements OnInit {
       );
   }
   //#endregion
+
   //#region Logout
   Logout() {
     localStorage.removeItem("token");
@@ -464,6 +487,7 @@ export class PagesComponent implements OnInit {
     this.router.navigate(["/login"]);
   }
   //#endregion
+
   //#region Menu Events
   public chooseMenu() {
     this.settings.menu = this.menuOption;
@@ -545,6 +569,7 @@ export class PagesComponent implements OnInit {
     }
   }
   //#endregion
+
   //#region Load Leaflet Maps
   loadLeafLetMap() {
     el = document.getElementById("leaflet-map");
@@ -555,6 +580,9 @@ export class PagesComponent implements OnInit {
         '&copy; <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a> contributors',
     }).addTo(map);
   }
+  //#endregion
+
+  //#region Refresh Map
   RefreshMap() {
     $("#leafletContainer")
       .html("")
@@ -565,6 +593,22 @@ export class PagesComponent implements OnInit {
       this.loadLeafLetMap();
     });
   }
+  //#endregion
+
+  //#region All History Methods
+  //#region Export History Data
+  export() {
+    $(".export").toggleClass("d-none");
+  }
+  exportToExcel() {
+    this.ExportService.downloadExcelFile(Historydata, reg_no);
+  }
+  exportToPDF() {
+    this.ExportService.downloadPDF(Historydata, reg_no);
+  }
+  //#endregion
+
+  //#region History Play State Methods
   stop() {
     $(".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable").remove();
     $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
@@ -629,20 +673,12 @@ export class PagesComponent implements OnInit {
       this.interval = this.interval - 500;
     }
   }
+  //#endregion
+
   toggleDisplay() {
     $(".vehicleCardLeaflet").addClass("d-none");
     $(".vehicleCardLeafletMore").addClass("d-none");
   }
-  export() {
-    $(".export").toggleClass("d-none");
-  }
-  exportToExcel() {
-    this.ExportService.downloadExcelFile(Historydata, reg_no);
-  }
-  exportToPDF() {
-    this.ExportService.downloadPDF(Historydata, reg_no);
-  }
-
   draw() {
     polyline = L.polyline([
       this.markerData[0],
@@ -654,6 +690,7 @@ export class PagesComponent implements OnInit {
     $(".infoCard").toggleClass("d-none");
   }
   //#endregion
+
   //#region SetLeafLet Markers
   setLeafLetMarkers() {
     this.markers.forEach((element: any, index: string | number) => {
@@ -677,8 +714,8 @@ export class PagesComponent implements OnInit {
     });
   }
   //#endregion
-  //#region Selected Marker Info
 
+  //#region Selected Marker Info
   getMarkerInfo(info: any[]) {
     this.AllDeviceDataService.AllDevices.subscribe(
       (data) => (this.AllDevices = JSON.parse(data))
@@ -707,18 +744,11 @@ export class PagesComponent implements OnInit {
     } else {
       $(".vehicleCardLeaflet").removeClass("d-none");
       $(".vehicleCardLeafletMore").addClass("d-none");
-      // if (
-      //   $(".vehicleCardLeaflet").is(":visible") ||
-      //   $(".vehicleCardLeafletMore").is(":visible")
-      // ) {
-      //   setTimeout(() => {
-      //     this.closeDetails();
-      //   }, 10000);
-      // }
     }
   }
   // #endregion
 
+  //#region Marker Settinfs and Sending Method
   MarkerSettingFunction(e, DataTrack: string, _id: any) {
     $(".vehicleCardLeaflet").addClass("d-none");
     $(".vehicleCardLeafletMore").addClass("d-none");
@@ -817,12 +847,14 @@ export class PagesComponent implements OnInit {
       }
     }
   }
+  //#endregion
 
   //#region On CheckBox
   onCheck(e, DataTrack: string, _id: any) {
     this.MarkerSettingFunction(e, DataTrack, _id);
   }
   //#endregion
+
   //#region Close Car Details Card
   closeDetails() {
     $(".vehicleCardLeaflet").addClass("d-none");
@@ -833,6 +865,7 @@ export class PagesComponent implements OnInit {
     $(".vehicleCardLeafletMore").toggleClass("d-none");
   }
   //#endregion
+
   //#region Dialog Methods
   openHistoryDialog() {
     if (this.AllDevices.length == 1) {
@@ -887,6 +920,9 @@ export class PagesComponent implements OnInit {
     $(".recordDialogOffset").addClass("d-none");
     $('.closeHistory').addClass('d-none')
   }
+  //#endregion
+
+  //#region All GeoFencing Methods
   Draw(fenceData: any) {
     let nest = [];
     let nestArray = [];
@@ -1043,38 +1079,6 @@ export class PagesComponent implements OnInit {
   closeFencing() {
     $(".selectionList").addClass("d-none");
   }
-  closeCreateFencing() {
-    this.fenceType = "Select Fence Type";
-    $(".fenceType").val("Select Fence Type");
-    map.off();
-    this.RefreshMap();
-    setTimeout(() => {
-      this.setLeafLetMarkers();
-    }, 1000);
-
-    $(".createFence").addClass("d-none");
-    if (this.rectangle) {
-      map.removeLayer(this.rectangle);
-      $(
-        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
-      ).remove();
-      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
-    }
-    if (this.newCircle) {
-      map.removeLayer(this.newCircle);
-      $(
-        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
-      ).remove();
-      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
-    }
-    if (this.polygon) {
-      map.removeLayer(this.polygon);
-      $(
-        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
-      ).remove();
-      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
-    }
-  }
   onInputChange = (e) => {
     this.fenceType = e.target.value;
     switch (this.fenceType) {
@@ -1226,6 +1230,38 @@ export class PagesComponent implements OnInit {
       $(".createFence").removeClass("d-none");
     }
   }
+  closeCreateFencing() {
+    this.fenceType = "Select Fence Type";
+    $(".fenceType").val("Select Fence Type");
+    map.off();
+    this.RefreshMap();
+    setTimeout(() => {
+      this.setLeafLetMarkers();
+    }, 1000);
+
+    $(".createFence").addClass("d-none");
+    if (this.rectangle) {
+      map.removeLayer(this.rectangle);
+      $(
+        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
+      ).remove();
+      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
+    }
+    if (this.newCircle) {
+      map.removeLayer(this.newCircle);
+      $(
+        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
+      ).remove();
+      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
+    }
+    if (this.polygon) {
+      map.removeLayer(this.polygon);
+      $(
+        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
+      ).remove();
+      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
+    }
+  }
   sendCircle() {
     if (this.circleMarkers.length) {
       this.cityName = $(".city").val();
@@ -1354,6 +1390,9 @@ export class PagesComponent implements OnInit {
       this.Toast.error("Please Draw a Rectangle first", "Coundn't save");
     }
   }
+  //#endregion
+
+  //#region Alarm Metods
   fetchNotifications() {
 
     let alarmsData = {
@@ -1478,6 +1517,7 @@ export class historyDialogComponent implements OnInit {
                 $(".vehicleCardLeafletMore").addClass("d-none");
               } else {
                 this.Toast.error(data.data.ErrorMessage, data.message);
+                this.loading = false;
               }
             } else {
               this.Toast.error(

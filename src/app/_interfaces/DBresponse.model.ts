@@ -1,3 +1,4 @@
+import { PacketParser } from '../routes/dashboard/PacketParser';
 export class Response {
   code: number;
   status: boolean;
@@ -105,4 +106,5 @@ export class Vehicles {
   SubMenu: Vehicles[];
   speed: string;
   veh_status: string;
+  OnlineDevice: PacketParser[];
 }
