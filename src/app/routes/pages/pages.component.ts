@@ -24,6 +24,8 @@ import { ExportService } from "src/app/_core/_AppServices/exportService";
 import { Vehicles } from "src/app/_interfaces/vehicle.model";
 import { dashboardService } from "src/app/_core/_AppServices/dashboard.service";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
+import { CurrentStateService } from '../../_core/_AppServices/CurrentStateService';
+import { CurrentState, CurrentStateResponse } from '../../_interfaces/DBresponse.model';
 // Global Variables
 declare var L;
 var map;
@@ -136,14 +138,13 @@ export class PagesComponent implements OnInit {
     public PostFence: GeoFencePostService,
     public ExportService: ExportService,
     public dashboardService: dashboardService,
-    public RegistrationNoService: RegistrationNoService
+    public RegistrationNoService: RegistrationNoService,
+    public CurrentStateService: CurrentStateService
   ) {
     this.settings = this.appSettings.settings;
   }
   //#region OnInit
   ngOnInit() {
-    this.offlineDevices = [];
-    this.onlineDevices = []
     if (window.location.pathname == "/vehicles") {
       this.showGrouped = true;
     }
@@ -201,22 +202,24 @@ export class PagesComponent implements OnInit {
         });
         setTimeout(() => {
           this.AllVehicles = dataArr;
-          dataArr.forEach((item: PacketParser) => {
-            if (item.Online == '1') {
-              let obj = this.TREE_DATA[1].SubMenu.find((data: Vehicles) => data.grp_id.toString() == item.group_id)
-              let nest = obj.SubMenu.find((value: Vehicles) => value.device_id == item.device_id)
-              console.log(nest['veh_id'])
-              if (nest['device_id'] == item.device_id) {
-                obj.OnlineDevice.push(item)
-                this.OnlineGroups.push(obj)
-                console.log(this.OnlineGroups, "Online Groups")
+          if (dataArr.length) {
+            dataArr.forEach((item: PacketParser) => {
+              if (item.Online == '1') {
+                let obj = this.TREE_DATA[1].SubMenu.find((data: Vehicles) => data.grp_id.toString() == item.group_id)
+                let nest = obj.SubMenu.find((value: Vehicles) => value.device_id == item.device_id)
+                console.log(nest['veh_id'])
+                if (nest['device_id'] == item.device_id) {
+                  obj.OnlineDevice.push(item)
+                  this.OnlineGroups.push(obj)
+                  console.log(this.OnlineGroups, "Online Groups")
+                }
+                this.onlineDevices.push(item)
               }
-              this.onlineDevices.push(item)
-            }
-            else if (item.Online == '0') {
-              this.offlineDevices.push(item)
-            }
-          })
+              else if (item.Online == '0') {
+                this.offlineDevices.push(item)
+              }
+            })
+          }
           $(".speedCheck").each(function () {
             var vehicle = $(this).attr("data-idforspeed");
             var obj = dataArr.find(
@@ -277,7 +280,7 @@ export class PagesComponent implements OnInit {
           }
         }, 3000);
       });
-    }, 300000);
+    }, 30000);
     this.currentMap = mapType;
     if (window.innerWidth <= 768) {
       this.settings.menu = "vertical";
@@ -352,7 +355,8 @@ export class PagesComponent implements OnInit {
   getVehTree() {
     dataArr = [];
     this.offlineDevices = [];
-    this.onlineDevices = [];
+    this.onlineDevices = []
+    this.childArray = [];
     this.OnlineGroups = [];
     try {
       // // this.route.data.subscribe((data) => {
@@ -401,23 +405,25 @@ export class PagesComponent implements OnInit {
         }
         setTimeout(() => {
           this.AllVehicles = dataArr;
-          dataArr.forEach((item: PacketParser) => {
-            if (item.Online == '1') {
-              let obj = this.TREE_DATA[1].SubMenu.find((data: Vehicles) => data.grp_id.toString() == item.group_id)
-              obj.OnlineDevice = [];
-              let nest = obj.SubMenu.find((value: Vehicles) => value.device_id == item.device_id)
-              console.log(nest['veh_id'])
-              if (nest['device_id'] == item.device_id) {
-                obj.OnlineDevice.push(item)
-                this.OnlineGroups.push(obj)
-                console.log(this.OnlineGroups, "Online Groups")
+          if (dataArr.length) {
+            dataArr.forEach((item: PacketParser) => {
+              if (item.Online == '1') {
+                let obj = this.TREE_DATA[1].SubMenu.find((data: Vehicles) => data.grp_id.toString() == item.group_id)
+                obj.OnlineDevice = [];
+                let nest = obj.SubMenu.find((value: Vehicles) => value.device_id == item.device_id)
+                console.log(nest['veh_id'])
+                if (nest['device_id'] == item.device_id) {
+                  obj.OnlineDevice.push(item)
+                  this.OnlineGroups.push(obj)
+                  console.log(this.OnlineGroups, "Online Groups")
+                }
+                this.onlineDevices.push(item)
               }
-              this.onlineDevices.push(item)
-            }
-            else if (item.Online == '0') {
-              this.offlineDevices.push(item)
-            }
-          })
+              else if (item.Online == '0') {
+                this.offlineDevices.push(item)
+              }
+            })
+          }
           $(".speedCheck").each(function () {
             var vehicle = $(this).attr("data-idforspeed");
             var obj = dataArr.find(
@@ -760,9 +766,25 @@ export class PagesComponent implements OnInit {
         })
         this.newPacketParse = new PacketParser(DataTrack);
         this.data = { ...this.newPacketParse };
-        this.lat = parseFloat(this.data.lat);
-        this.lng = parseFloat(this.data.lng);
-        marker = [this.data.device_id, this.data.lat, this.data.lng];
+        // this.data.veh_id
+        this.CurrentStateService.getCurrentState(this.data.veh_id).subscribe((el: CurrentStateResponse) => {
+          if (el.status) {
+            this.markers = [];
+            console.log(el)
+            el.data.forEach((item) => {
+              this.lat = parseFloat(item.lat);
+              this.lng = parseFloat(item.long);
+              marker = [this.data.device_id, item.lat, item.long];
+              this.markers.push(marker);
+              let markerString = JSON.stringify(this.markers);
+              this.markersService.SetMarkers(markerString);
+              this.setLeafLetMarkers();
+            })
+          }
+          else {
+            console.log('There are some errors')
+          }
+        })
         let tempObj = this.checkedDevices.find((item) => item.id == this.data.device_id)
         if (!tempObj) {
           this.checkedDevices.push({
@@ -770,9 +792,6 @@ export class PagesComponent implements OnInit {
             id: _id,
           });
         }
-        this.markers.push(marker);
-        let markerString = JSON.stringify(this.markers);
-        this.markersService.SetMarkers(markerString);
         this.AllDevices.push(this.data);
         $('.notificationsUnread').removeClass('d-none')
         this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
@@ -783,9 +802,25 @@ export class PagesComponent implements OnInit {
       if (mapType === "Open Street Maps") {
         this.newPacketParse = new PacketParser(DataTrack);
         this.data = { ...this.newPacketParse };
-        this.lat = parseFloat(this.data.lat);
-        this.lng = parseFloat(this.data.lng);
-        marker = [this.data.device_id, this.data.lat, this.data.lng];
+        // this.data.veh_id
+        this.CurrentStateService.getCurrentState(this.data.veh_id).subscribe((el: CurrentStateResponse) => {
+          if (el.status) {
+            console.log(el)
+            this.markers = [];
+            el.data.forEach((item) => {
+              this.lat = parseFloat(item.lat);
+              this.lng = parseFloat(item.long);
+              marker = [this.data.device_id, item.lat, item.long];
+              this.markers.push(marker);
+              let markerString = JSON.stringify(this.markers);
+              this.markersService.SetMarkers(markerString);
+              this.setLeafLetMarkers();
+            })
+          }
+          else {
+            console.log('There are some errors')
+          }
+        })
         let tempObj = this.checkedDevices.find((item) => item.id == this.data.device_id)
         if (!tempObj) {
           this.checkedDevices.push({
@@ -793,10 +828,6 @@ export class PagesComponent implements OnInit {
             id: _id,
           });
         }
-        this.markers.push(marker);
-        let markerString = JSON.stringify(this.markers);
-        this.markersService.SetMarkers(markerString);
-        this.setLeafLetMarkers();
         this.AllDevices.push(this.data);
         $('.notificationsUnread').removeClass('d-none')
         $(".notificationPanel").addClass("d-none");

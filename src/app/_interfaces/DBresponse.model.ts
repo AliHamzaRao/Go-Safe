@@ -88,7 +88,21 @@ export class Root {
   public version: Version;
   public network_config: NetworkConfig[];
 }
-
+export class CurrentStateResponse {
+  code: number;
+  status: boolean;
+  message: string;
+  data: CurrentState[];
+}
+export class CurrentState {
+  vehicleId: number;
+  lat: string;
+  long: string;
+  timestamp: Date;
+  speed: string;
+  engineStatus: string;
+  Location_name: string;
+}
 export class Vehicles {
   grp_id: number;
   datatrack: string;
