@@ -91,6 +91,7 @@ export class PagesComponent implements OnInit {
   offlineDevices: PacketParser[] = [];
   AllVehicles: PacketParser[] = [];
   OnlineGroups: any[] = [];
+  idArr: number[] = []
   historyInfo: any = {
     GPSDateTime: "test",
     Speed: "0",
@@ -145,6 +146,11 @@ export class PagesComponent implements OnInit {
   }
   //#region OnInit
   ngOnInit() {
+    dataArr = [];
+    this.offlineDevices = [];
+    this.onlineDevices = []
+    this.childArray = [];
+    this.OnlineGroups = [];
     if (window.location.pathname == "/vehicles") {
       this.showGrouped = true;
     }
@@ -207,13 +213,27 @@ export class PagesComponent implements OnInit {
               if (item.Online == '1') {
                 let obj = this.TREE_DATA[1].SubMenu.find((data: Vehicles) => data.grp_id.toString() == item.group_id)
                 let nest = obj.SubMenu.find((value: Vehicles) => value.device_id == item.device_id)
-                console.log(nest['veh_id'])
-                if (nest['device_id'] == item.device_id) {
-                  obj.OnlineDevice.push(item)
-                  this.OnlineGroups.push(obj)
-                  console.log(this.OnlineGroups, "Online Groups")
+                obj.OnlineDevice = [];
+                if (nest) {
+                  console.log(nest['veh_id'])
+                  if (nest['device_id'] == item.device_id) {
+                    obj.OnlineDevice.push(item)
+                    // this.OnlineGroups.push(obj)
+                    if (this.OnlineGroups.length) {
+                      this.OnlineGroups.forEach((tempGP: Vehicles) => {
+                        if (tempGP.grp_name !== obj.grp_name) {
+                          console.log(false);
+                          this.OnlineGroups.push(obj)
+                          console.log(this.OnlineGroups, "Online Groups")
+                        }
+                      })
+                    }
+                    else {
+                      this.OnlineGroups.push(obj)
+                    }
+                  }
+                  this.onlineDevices.push(item)
                 }
-                this.onlineDevices.push(item)
               }
               else if (item.Online == '0') {
                 this.offlineDevices.push(item)
@@ -280,7 +300,7 @@ export class PagesComponent implements OnInit {
           }
         }, 3000);
       });
-    }, 30000);
+    }, 60000);
     this.currentMap = mapType;
     if (window.innerWidth <= 768) {
       this.settings.menu = "vertical";
@@ -415,7 +435,15 @@ export class PagesComponent implements OnInit {
                 if (nest['device_id'] == item.device_id) {
                   obj.OnlineDevice.push(item)
                   this.OnlineGroups.push(obj)
-                  console.log(this.OnlineGroups, "Online Groups")
+                  if (this.OnlineGroups.length) {
+                    this.OnlineGroups.forEach((tempGP: Vehicles) => {
+                      if (tempGP.grp_name !== obj.grp_name) {
+                        console.log(false);
+                        this.OnlineGroups.push(obj)
+                        console.log(this.OnlineGroups, "Online Groups")
+                      }
+                    })
+                  }
                 }
                 this.onlineDevices.push(item)
               }
@@ -767,7 +795,9 @@ export class PagesComponent implements OnInit {
         this.newPacketParse = new PacketParser(DataTrack);
         this.data = { ...this.newPacketParse };
         // this.data.veh_id
-        this.CurrentStateService.getCurrentState(this.data.veh_id).subscribe((el: CurrentStateResponse) => {
+        this.idArr.push(this.data.veh_id)
+        console.log(this.idArr)
+        this.CurrentStateService.getCurrentState(this.idArr.toString()).subscribe((el: CurrentStateResponse) => {
           if (el.status) {
             this.markers = [];
             console.log(el)
@@ -803,10 +833,12 @@ export class PagesComponent implements OnInit {
         this.newPacketParse = new PacketParser(DataTrack);
         this.data = { ...this.newPacketParse };
         // this.data.veh_id
-        this.CurrentStateService.getCurrentState(this.data.veh_id).subscribe((el: CurrentStateResponse) => {
+        this.idArr.push(this.data.veh_id)
+        console.log(this.idArr)
+        this.CurrentStateService.getCurrentState(this.idArr.toString()).subscribe((el: CurrentStateResponse) => {
           if (el.status) {
-            console.log(el)
             this.markers = [];
+            console.log(el)
             el.data.forEach((item) => {
               this.lat = parseFloat(item.lat);
               this.lng = parseFloat(item.long);
@@ -1138,7 +1170,8 @@ export class PagesComponent implements OnInit {
             this.newCircle = L.circle(...this.circleMarkers, radius);
             this.circleRadius = radius;
             this.newCircle.addTo(map);
-          } else {
+          }
+          else {
             return null;
           }
         });
