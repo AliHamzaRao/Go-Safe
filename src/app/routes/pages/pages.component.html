@@ -32,8 +32,10 @@ perfectScrollbar
   /></a>
   <div fxLayout="row" fxLayoutAlign="space-between" class="w-100">
     <div fxLayout="row" style="align-items: center">
-      <button mat-button class="mat-hover">Live Tacking</button>
-      <button mat-button class="mat-hover">Vehicles</button>
+      <button mat-button class="mat-hover" routerLink="">Live Tacking</button>
+      <button mat-button class="mat-hover" routerLink="vehicles">
+        Vehicles
+      </button>
       <button mat-button [matMenuTriggerFor]="GeoFenceMenu" class="mat-hover">
         Geofence <mat-icon>keyboard_arrow_down </mat-icon>
       </button>
@@ -164,8 +166,9 @@ perfectScrollbar
     >
       <span class="border-right">
         <button
+          [class.d-none]="AllDevices.length == 0"
           mat-icon-button
-          class="d-none notificationsUnread"
+          class="notificationsUnread"
           (click)="fetchNotifications()"
         >
           <mat-icon
@@ -178,12 +181,14 @@ perfectScrollbar
         <button
           class="d-none notificationsRead"
           mat-icon-button
-          (click)="toggleNotifications()"
+          (click)="unReadNotifications()"
         >
           <mat-icon>notifications</mat-icon>
         </button>
       </span>
-      <span style="font-size: small; margin-left: 10px">Bhoomia Sharma</span>
+      <span style="font-size: small; margin-left: 10px"
+        >Welcome! {{ username.toUpperCase() }}</span
+      >
       <button
         mat-button
         class="mat-hover"
@@ -248,266 +253,177 @@ perfectScrollbar
             </button>
           </div>
           <div class="vehicleList">
-            <mat-tab-group [disablePagination]="true">
-              <mat-tab>
+            <mat-tab-group
+              (selectedTabChange)="tabChanged($event)"
+              [disablePagination]="true"
+              *ngIf="!showGrouped"
+            >
+              <mat-tab [isActive]="true">
                 <ng-template mat-tab-label>
                   <img
                     src="../../../assets/icons/Online-White.png"
                     height="28px"
                   />
-                  <span style="font-size: small !important"
-                    >Onine ({{ TREE_DATA.length }})</span
-                  >
+                  <span style="font-size: small !important">Grouped</span>
                 </ng-template>
-                <input type="text" placeholder="Search" class="SearchInput" />
                 <mat-accordion>
-                  <!-- <mat-expansion-panel style="margin-bottom: 0.6rem" class="ParentCheckBox">
-                        <mat-expansion-panel-header>
+                  <span *ngFor="let item of OnlineGroups; let i = index">
+                    <mat-expansion-panel>
+                      <mat-expansion-panel-header class="nestedPanelHeader">
                         <mat-panel-title>
-                        <input type="checkbox" style="margin-right: 10px" />
-                        Devices ({{ TREE_DATA[0].SubMenu.length }})
+                          <input type="checkbox" style="margin-right: 10px" />
+                          {{ item.grp_name }} ({{ item.OnlineDevice.length }})
                         </mat-panel-title>
-                        </mat-expansion-panel-header>
-                        <span *ngFor="let item of TREE_DATA; let i = index">
-                        <span *ngIf="item.grp_name === 'Devices'">
-                        <div class="m-0 singleDevice border-bottom" *ngFor="let t1 of item.SubMenu; let j = index">
-                        <input type="checkbox" [attr.data-dataTrack]="t1.datatrack"
-                        [attr.data-device_id]="t1.device_id" (change)="
-                        onCheck($event, t1.datatrack, t1.device_id)
-                        " />
-                        <mat-iconstyle="width: 30px !important;">drive_eta</mat-icon>
-                        <span style="
+                      </mat-expansion-panel-header>
+                      <div
+                        class="m-0 singleDevice border-bottom"
+                        *ngFor="let t1 of item.OnlineDevice; let i = index"
+                      >
+                        <input
+                          id="{{ t1.device_id }}"
+                          type="checkbox"
+                          [attr.data-dataTrack]="t1.dataTrack"
+                          [attr.data-device_id]="t1.device_id"
+                          (change)="onCheck($event, t1.dataTrack, t1.device_id)"
+                        />
+                        <mat-icon style="width: 30px !important"
+                          >drive_eta</mat-icon
+                        >
+                        <span
+                          style="
+                            max-width: 10ch;
+                            width: 10ch;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                          "
+                          >{{ t1.veh_reg_no }}
+                        </span>
+                        <p
+                          class="speedCheck text-center"
+                          style="margin: 0px !important"
+                          [attr.data-idforspeed]="t1.device_id"
+                        >
+                          {{ t1.speed }} <br />
+                          kph
+                        </p>
+                        <div
+                          style="width: 30px; height: 30px"
+                          [attr.device-Id-Vrn]="t1.device_id"
+                          *ngIf="t1.veh_status == 'Idle'"
+                        >
+                          <img
+                            style="height: 30px"
+                            src="../../../assets/icons/RedArrow.png"
+                            [alt]="t1.veh_status"
+                          />
+                        </div>
+                        <div
+                          style="width: 30px; height: 30px"
+                          [attr.device-Id-Vrn]="t1.device_id"
+                          *ngIf="t1.veh_status == 'Parked'"
+                        >
+                          <img
+                            style="height: 30px"
+                            src="../../../assets/icons/YellowArrow.png"
+                            [alt]="t1.veh_status"
+                          />
+                        </div>
+                        <div
+                          style="width: 30px; height: 30px"
+                          [attr.device-Id-Vrn]="t1.device_id"
+                          *ngIf="t1.veh_status == 'Moving'"
+                        >
+                          <img
+                            style="height: 30px"
+                            src="../../../assets/icons/GreenArrow.png"
+                            [alt]="t1.veh_status"
+                          />
+                        </div>
+                      </div>
+                    </mat-expansion-panel>
+                  </span>
+                </mat-accordion>
+                <!-- <input type="text" placeholder="Search" class="SearchInput" /> -->
+                <!-- <span>
+                  <div
+                    class="m-0 singleDevice border-bottom"
+                    *ngFor="let item of onlineDevices; let i = index"
+                  >
+                    <input
+                      id="{{ item.device_id }}"
+                      type="checkbox"
+                      [attr.data-dataTrack]="item.dataTrack"
+                      [attr.data-device_id]="item.device_id"
+                      (change)="onCheck($event, item.dataTrack, item.device_id)"
+                    />
+                    <mat-icon style="width: 30px !important"
+                      >drive_eta</mat-icon
+                    >
+                    <span
+                      style="
                         max-width: 10ch;
-                        width: 10ch ;
+                        width: 10ch;
                         white-space: nowrap;
                         overflow: hidden;
                         text-overflow: ellipsis;
-                        ">{{ t1.device_id }}
-                        </span>
-                        <small class="text-center">Car's <br />
-                        Speed</small>
-                        <mat-icon style="width: 30px !important;">arrow_forward</mat-icon>
-                        </div>
-                        </span>
-                        </span>
-                        </mat-expansion-panel> -->
-                  <mat-expansion-panel *ngIf="TREE_DATA.length">
-                    <mat-expansion-panel-header>
-                      <mat-panel-title>
-                        <input type="checkbox" style="margin-right: 10px" />
-                        Assets ({{ TREE_DATA[1].SubMenu.length }})
-                      </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <span *ngFor="let item of TREE_DATA; let i = index">
-                      <span *ngIf="item.grp_name === 'Assets'">
-                        <span *ngIf="item.SubMenu.length">
-                          <mat-accordion>
-                            <span
-                              *ngFor="let t1 of item.SubMenu; let j = index"
-                            >
-                              <div
-                                class="m-0 singleDevice border-bottom"
-                                *ngIf="t1.vrn !== null"
-                              >
-                                <input
-                                  id="{{ t1.device_id }}"
-                                  type="checkbox"
-                                  [attr.data-dataTrack]="t1.datatrack"
-                                  [attr.data-device_id]="t1.device_id"
-                                  (change)="
-                                    onCheck($event, t1.datatrack, t1.device_id)
-                                  "
-                                />
-                                <mat-icon style="width: 30px !important"
-                                  >drive_eta</mat-icon
-                                >
-                                <span
-                                  style="
-                                    max-width: 10ch;
-                                    width: 10ch;
-                                    white-space: nowrap;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                  "
-                                  >{{ t1.vrn }}
-                                </span>
-                                <p
-                                  class="speedCheck text-center"
-                                  style="margin: 0px !important"
-                                  [attr.data-idforspeed]="t1.device_id"
-                                ></p>
-                                <div
-                                  style="width: 30px; height: 30px"
-                                  class="veh_status"
-                                  [attr.device-Id-Vrn]="t1.device_id"
-                                ></div>
-                              </div>
-                              <mat-expansion-panel *ngIf="t1.SubMenu.length">
-                                <mat-expansion-panel-header
-                                  class="nestedPanelHeader"
-                                >
-                                  <mat-panel-title>
-                                    <input
-                                      type="checkbox"
-                                      style="margin-right: 10px"
-                                    />
-                                    {{ t1.grp_name }} ({{ t1.SubMenu.length }})
-                                  </mat-panel-title>
-                                </mat-expansion-panel-header>
-                                <span *ngIf="t1.SubMenu.length">
-                                  <span
-                                    *ngFor="let t2 of t1.SubMenu; let k = index"
-                                  >
-                                    <div
-                                      class="m-0 singleDevice border-bottom"
-                                      *ngIf="t2.vrn !== null"
-                                    >
-                                      <input
-                                        id="{{ t2.device_id }}"
-                                        type="checkbox"
-                                        [attr.data-dataTrack]="t2.datatrack"
-                                        [attr.data-device_id]="t2.device_id"
-                                        (change)="
-                                          onCheck(
-                                            $event,
-                                            t2.datatrack,
-                                            t2.device_id
-                                          )
-                                        "
-                                      />
-                                      <mat-icon style="width: 30px !important"
-                                        >drive_eta</mat-icon
-                                      >
-                                      <span
-                                        style="
-                                          max-width: 10ch;
-                                          width: 10ch;
-                                          white-space: nowrap;
-                                          overflow: hidden;
-                                          text-overflow: ellipsis;
-                                        "
-                                        >{{ t2.vrn }}
-                                      </span>
-                                      <p
-                                        class="speedCheck text-center"
-                                        style="margin: 0px !important"
-                                        [attr.data-idforspeed]="t2.device_id"
-                                      ></p>
-                                      <div
-                                        style="width: 30px; height: 30px"
-                                        class="veh_status"
-                                        [attr.device-Id-Vrn]="t2.device_id"
-                                      ></div>
-                                    </div>
-                                    <mat-expansion-panel>
-                                      <mat-expansion-panel-header
-                                        *ngIf="t2.SubMenu.length"
-                                        class="MorenestedPanelHeader"
-                                      >
-                                        <mat-panel-title>
-                                          <input
-                                            type="checkbox"
-                                            style="margin-right: 10px"
-                                          />
-                                          {{ t2.grp_name }} ({{
-                                            t2.SubMenu.length
-                                          }})
-                                        </mat-panel-title>
-                                      </mat-expansion-panel-header>
-                                      <span *ngIf="t2.SubMenu.length">
-                                        <span
-                                          *ngFor="
-                                            let t3 of t2.SubMenu;
-                                            let l = index
-                                          "
-                                        >
-                                          <div
-                                            class="
-                                              m-0
-                                              singleDevice
-                                              border-bottom
-                                            "
-                                            *ngIf="t3.vrn !== null"
-                                          >
-                                            <input
-                                              id="{{ t3.device_id }}"
-                                              type="checkbox"
-                                              [attr.data-dataTrack]="
-                                                t3.datatrack
-                                              "
-                                              [attr.data-device_id]="
-                                                t3.device_id
-                                              "
-                                              (change)="
-                                                onCheck(
-                                                  $event,
-                                                  t3.datatrack,
-                                                  t3.device_id
-                                                )
-                                              "
-                                            />
-                                            <mat-icon
-                                              style="width: 30px !important"
-                                              >drive_eta</mat-icon
-                                            >
-                                            <span
-                                              style="
-                                                max-width: 10ch;
-                                                width: 10ch;
-                                                white-space: nowrap;
-                                                overflow: hidden;
-                                                text-overflow: ellipsis;
-                                              "
-                                              >{{ t3.vrn }}
-                                            </span>
-                                            <p
-                                              class="speedCheck text-center"
-                                              style="margin: 0px !important"
-                                              [attr.data-idforspeed]="
-                                                t3.device_id
-                                              "
-                                            ></p>
-                                            <div
-                                              style="width: 30px; height: 30px"
-                                              class="veh_status"
-                                              [attr.device-id-vrn]="
-                                                t3.device_id
-                                              "
-                                            ></div>
-                                          </div>
-                                          <mat-expansion-panel
-                                            *ngIf="t3.SubMenu.length"
-                                          >
-                                            <mat-expansion-panel-header
-                                              class="nestedPanelHeader"
-                                            >
-                                              <mat-panel-title>
-                                                <input
-                                                  type="checkbox"
-                                                  style="margin-right: 10px"
-                                                />
-                                                {{ t3.grp_name }} ({{
-                                                  t3.SubMenu.length
-                                                }})
-                                              </mat-panel-title>
-                                            </mat-expansion-panel-header>
-                                          </mat-expansion-panel>
-                                        </span>
-                                      </span>
-                                    </mat-expansion-panel>
-                                  </span>
-                                </span>
-                              </mat-expansion-panel>
-                            </span>
-                          </mat-accordion>
-                        </span>
-                      </span>
+                      "
+                      >{{ item.veh_reg_no }}
                     </span>
-                  </mat-expansion-panel>
-                  <span *ngElse>
-                    <mat-spinner color="primary"> </mat-spinner>
-                  </span>
-                </mat-accordion>
+                    <p
+                      class="speedCheck text-center"
+                      style="margin: 0px !important"
+                      [attr.data-idforspeed]="item.device_id"
+                    >
+                      {{ item.speed }} <br />
+                      kph
+                    </p>
+                    <div
+                      style="width: 30px; height: 30px"
+                      [attr.device-Id-Vrn]="item.device_id"
+                      *ngIf="item.veh_status == 'Idle'"
+                    >
+                      <img
+                        style="height: 30px"
+                        src="../../../assets/icons/RedArrow.png"
+                        [alt]="item.veh_status"
+                      />
+                    </div>
+                    <div
+                      style="width: 30px; height: 30px"
+                      [attr.device-Id-Vrn]="item.device_id"
+                      *ngIf="item.veh_status == 'Parked'"
+                    >
+                      <img
+                        style="height: 30px"
+                        src="../../../assets/icons/YellowArrow.png"
+                        [alt]="item.veh_status"
+                      />
+                    </div>
+                    <div
+                      style="width: 30px; height: 30px"
+                      [attr.device-Id-Vrn]="item.device_id"
+                      *ngIf="item.veh_status == 'Moving'"
+                    >
+                      <img
+                        style="height: 30px"
+                        src="../../../assets/icons/GreenArrow.png"
+                        [alt]="item.veh_status"
+                      />
+                    </div>
+                    <div
+                      style="width: 30px; height: 30px"
+                      [attr.device-Id-Vrn]="item.device_id"
+                      *ngIf="item.veh_status == ''"
+                    >
+                      <img
+                        style="height: 30px"
+                        src="../../../assets/icons/Disconected.png"
+                        [alt]="item.veh_status"
+                      />
+                    </div>
+                  </div>
+                </span> -->
               </mat-tab>
               <mat-tab>
                 <ng-template mat-tab-label>
@@ -515,11 +431,76 @@ perfectScrollbar
                     src="../../../assets/icons/Offline-White.png"
                     height="28px"
                   />
-                  <span style="font-size: small"> Offline </span>
+                  <span style="font-size: small">
+                    Assets ({{ onlineDevices.length }})</span
+                  >
                 </ng-template>
-                Content 1
+                <div
+                  class="m-0 singleDevice border-bottom"
+                  *ngFor="let item of onlineDevices; let i = index"
+                >
+                  <input
+                    id="{{ item.device_id }}"
+                    type="checkbox"
+                    [attr.data-dataTrack]="item.dataTrack"
+                    [attr.data-device_id]="item.device_id"
+                    (change)="onCheck($event, item.dataTrack, item.device_id)"
+                  />
+                  <mat-icon style="width: 30px !important">drive_eta</mat-icon>
+                  <span
+                    style="
+                      max-width: 10ch;
+                      width: 10ch;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                    "
+                    >{{ item.veh_reg_no }}
+                  </span>
+                  <p
+                    class="speedCheck text-center"
+                    style="margin: 0px !important"
+                    [attr.data-idforspeed]="item.device_id"
+                  >
+                    {{ item.speed }} <br />
+                    kph
+                  </p>
+                  <div
+                    style="width: 30px; height: 30px"
+                    [attr.device-Id-Vrn]="item.device_id"
+                    *ngIf="item.veh_status == 'Idle'"
+                  >
+                    <img
+                      style="height: 30px"
+                      src="../../../assets/icons/RedArrow.png"
+                      [alt]="item.veh_status"
+                    />
+                  </div>
+                  <div
+                    style="width: 30px; height: 30px"
+                    [attr.device-Id-Vrn]="item.device_id"
+                    *ngIf="item.veh_status == 'Parked'"
+                  >
+                    <img
+                      style="height: 30px"
+                      src="../../../assets/icons/YellowArrow.png"
+                      [alt]="item.veh_status"
+                    />
+                  </div>
+                  <div
+                    style="width: 30px; height: 30px"
+                    [attr.device-Id-Vrn]="item.device_id"
+                    *ngIf="item.veh_status == 'Moving'"
+                  >
+                    <img
+                      style="height: 30px"
+                      src="../../../assets/icons/GreenArrow.png"
+                      [alt]="item.veh_status"
+                    />
+                  </div>
+                </div>
               </mat-tab>
-              <mat-tab>
+              <!-- <mat-tab>
                 <ng-template mat-tab-label>
                   <img
                     src="../../../assets/icons/Alarms-White.png"
@@ -528,6 +509,331 @@ perfectScrollbar
                   <span style="font-size: small"> Alarms </span>
                 </ng-template>
                 Content 1
+              </mat-tab> -->
+            </mat-tab-group>
+            <mat-tab-group
+              (selectedTabChange)="tabChanged($event)"
+              [disablePagination]="true"
+              *ngIf="showGrouped"
+            >
+              <mat-tab [isActive]="true">
+                <ng-template mat-tab-label>
+                  <img
+                    src="../../../assets/icons/Online-White.png"
+                    height="28px"
+                  />
+                  <span style="font-size: small !important">Grouped</span>
+                </ng-template>
+                <mat-accordion>
+                  <!-- <mat-expansion-panel style="margin-bottom: 0.6rem" class="ParentCheckBox">
+                      <mat-expansion-panel-header>
+                      <mat-panel-title>
+                      <input type="checkbox" style="margin-right: 10px" />
+                      Devices ({{ TREE_DATA[0].SubMenu.length }})
+                      </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <span *ngFor="let item of TREE_DATA; let i = index">
+                      <span *ngIf="item.grp_name === 'Devices'">
+                      <div class="m-0 singleDevice border-bottom" *ngFor="let t1 of item.SubMenu; let j = index">
+                      <input type="checkbox" [attr.data-dataTrack]="t1.datatrack"
+                      [attr.data-device_id]="t1.device_id" (change)="
+                      onCheck($event, t1.datatrack, t1.device_id)
+                      " />
+                      <mat-iconstyle="width: 30px !important;">drive_eta</mat-icon>
+                      <span style="
+                      max-width: 10ch;
+                      width: 10ch ;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      ">{{ t1.device_id }}
+                      </span>
+                      <small class="text-center">Car's <br />
+                      Speed</small>
+                      <mat-icon style="width: 30px !important;">arrow_forward</mat-icon>
+                      </div>
+                      </span>
+                      </span>
+                      </mat-expansion-panel> -->
+                  <!-- <mat-expansion-panel *ngIf="TREE_DATA.length">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        <input type="checkbox" style="margin-right: 10px" />
+                        Assets ({{ TREE_DATA[1].SubMenu.length }})
+                      </mat-panel-title>
+                    </mat-expansion-panel-header> -->
+                  <span *ngFor="let item of TREE_DATA; let i = index">
+                    <span *ngIf="item.grp_name === 'Assets'">
+                      <span *ngIf="item.SubMenu.length">
+                        <mat-accordion>
+                          <span *ngFor="let t1 of item.SubMenu; let j = index">
+                            <div
+                              class="m-0 singleDevice border-bottom"
+                              *ngIf="t1.vrn !== null"
+                            >
+                              <input
+                                id="{{ t1.device_id }}"
+                                type="checkbox"
+                                [attr.data-dataTrack]="t1.datatrack"
+                                [attr.data-device_id]="t1.device_id"
+                                (change)="
+                                  onCheck($event, t1.datatrack, t1.device_id)
+                                "
+                              />
+                              <mat-icon style="width: 30px !important"
+                                >drive_eta</mat-icon
+                              >
+                              <span
+                                style="
+                                  max-width: 10ch;
+                                  width: 10ch;
+                                  white-space: nowrap;
+                                  overflow: hidden;
+                                  text-overflow: ellipsis;
+                                "
+                                >{{ t1.vrn }}
+                              </span>
+                              <p
+                                class="speedCheck text-center"
+                                style="margin: 0px !important"
+                                [attr.data-idforspeed]="t1.device_id"
+                              ></p>
+                              <div
+                                style="width: 30px; height: 30px"
+                                class="veh_status"
+                                [attr.device-Id-Vrn]="t1.device_id"
+                              ></div>
+                            </div>
+                            <mat-expansion-panel *ngIf="t1.SubMenu.length">
+                              <mat-expansion-panel-header
+                                class="nestedPanelHeader"
+                              >
+                                <mat-panel-title>
+                                  <input
+                                    type="checkbox"
+                                    style="margin-right: 10px"
+                                  />
+                                  {{ t1.grp_name }} ({{ t1.SubMenu.length }})
+                                </mat-panel-title>
+                              </mat-expansion-panel-header>
+                              <span *ngIf="t1.SubMenu.length">
+                                <span
+                                  *ngFor="let t2 of t1.SubMenu; let k = index"
+                                >
+                                  <div
+                                    class="m-0 singleDevice border-bottom"
+                                    *ngIf="t2.vrn !== null"
+                                  >
+                                    <input
+                                      id="{{ t2.device_id }}"
+                                      type="checkbox"
+                                      [attr.data-dataTrack]="t2.datatrack"
+                                      [attr.data-device_id]="t2.device_id"
+                                      (change)="
+                                        onCheck(
+                                          $event,
+                                          t2.datatrack,
+                                          t2.device_id
+                                        )
+                                      "
+                                    />
+                                    <mat-icon style="width: 30px !important"
+                                      >drive_eta</mat-icon
+                                    >
+                                    <span
+                                      style="
+                                        max-width: 10ch;
+                                        width: 10ch;
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                      "
+                                      >{{ t2.vrn }}
+                                    </span>
+                                    <p
+                                      class="speedCheck text-center"
+                                      style="margin: 0px !important"
+                                      [attr.data-idforspeed]="t2.device_id"
+                                    ></p>
+                                    <div
+                                      style="width: 30px; height: 30px"
+                                      class="veh_status"
+                                      [attr.device-Id-Vrn]="t2.device_id"
+                                    ></div>
+                                  </div>
+                                  <mat-expansion-panel>
+                                    <mat-expansion-panel-header
+                                      *ngIf="t2.grp_name"
+                                      class="MorenestedPanelHeader"
+                                    >
+                                      <mat-panel-title>
+                                        <input
+                                          type="checkbox"
+                                          style="margin-right: 10px"
+                                        />
+                                        {{ t2.grp_name }} ({{
+                                          t2.SubMenu.length
+                                        }})
+                                      </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <span *ngIf="t2.SubMenu.length">
+                                      <span
+                                        *ngFor="
+                                          let t3 of t2.SubMenu;
+                                          let l = index
+                                        "
+                                      >
+                                        <div
+                                          class="m-0 singleDevice border-bottom"
+                                          *ngIf="t3.vrn !== null"
+                                        >
+                                          <input
+                                            id="{{ t3.device_id }}"
+                                            type="checkbox"
+                                            [attr.data-dataTrack]="t3.datatrack"
+                                            [attr.data-device_id]="t3.device_id"
+                                            (change)="
+                                              onCheck(
+                                                $event,
+                                                t3.datatrack,
+                                                t3.device_id
+                                              )
+                                            "
+                                          />
+                                          <mat-icon
+                                            style="width: 30px !important"
+                                            >drive_eta</mat-icon
+                                          >
+                                          <span
+                                            style="
+                                              max-width: 10ch;
+                                              width: 10ch;
+                                              white-space: nowrap;
+                                              overflow: hidden;
+                                              text-overflow: ellipsis;
+                                            "
+                                            >{{ t3.vrn }}
+                                          </span>
+                                          <p
+                                            class="speedCheck text-center"
+                                            style="margin: 0px !important"
+                                            [attr.data-idforspeed]="
+                                              t3.device_id
+                                            "
+                                          ></p>
+                                          <div
+                                            style="width: 30px; height: 30px"
+                                            class="veh_status"
+                                            [attr.device-id-vrn]="t3.device_id"
+                                          ></div>
+                                        </div>
+                                        <mat-expansion-panel
+                                          *ngIf="t3.grp_name"
+                                        >
+                                          <mat-expansion-panel-header
+                                            class="nestedPanelHeader"
+                                          >
+                                            <mat-panel-title>
+                                              <input
+                                                type="checkbox"
+                                                style="margin-right: 10px"
+                                              />
+                                              {{ t3.grp_name }} ({{
+                                                t3.SubMenu.length
+                                              }})
+                                            </mat-panel-title>
+                                          </mat-expansion-panel-header>
+                                        </mat-expansion-panel>
+                                      </span>
+                                    </span>
+                                  </mat-expansion-panel>
+                                </span>
+                              </span>
+                            </mat-expansion-panel>
+                          </span>
+                        </mat-accordion>
+                      </span>
+                    </span>
+                  </span>
+                  <!-- </mat-expansion-panel> -->
+                </mat-accordion>
+                <span> </span>
+              </mat-tab>
+              <mat-tab>
+                <ng-template mat-tab-label>
+                  <img
+                    src="../../../assets/icons/Online-White.png"
+                    height="28px"
+                  />
+                  <span style="font-size: small !important"
+                    >Assets ({{ AllVehicles.length }})</span
+                  >
+                </ng-template>
+
+                <div
+                  class="m-0 singleDevice border-bottom"
+                  *ngFor="let item of AllVehicles; let i = index"
+                >
+                  <input
+                    id="{{ item.device_id }}"
+                    type="checkbox"
+                    [attr.data-dataTrack]="item.dataTrack"
+                    [attr.data-device_id]="item.device_id"
+                    (change)="onCheck($event, item.dataTrack, item.device_id)"
+                  />
+                  <mat-icon style="width: 30px !important">drive_eta</mat-icon>
+                  <span
+                    style="
+                      max-width: 10ch;
+                      width: 10ch;
+                      white-space: nowrap;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                    "
+                    >{{ item.veh_reg_no }}
+                  </span>
+                  <p
+                    class="speedCheck text-center"
+                    style="margin: 0px !important"
+                    [attr.data-idforspeed]="item.device_id"
+                  >
+                    {{ item.speed }} <br />
+                    kph
+                  </p>
+                  <div
+                    style="width: 30px; height: 30px"
+                    [attr.device-Id-Vrn]="item.device_id"
+                    *ngIf="item.veh_status == 'Parked'"
+                  >
+                    <img
+                      style="height: 30px"
+                      src="../../../assets/icons/RedArrow.png"
+                      [alt]="item.veh_status"
+                    />
+                  </div>
+                  <div
+                    style="width: 30px; height: 30px"
+                    [attr.device-Id-Vrn]="item.device_id"
+                    *ngIf="item.veh_status == 'Idle'"
+                  >
+                    <img
+                      style="height: 30px"
+                      src="../../../assets/icons/YellowArrow.png"
+                      [alt]="item.veh_status"
+                    />
+                  </div>
+                  <div
+                    style="width: 30px; height: 30px"
+                    [attr.device-Id-Vrn]="item.device_id"
+                    *ngIf="item.veh_status == 'Moving'"
+                  >
+                    <img
+                      style="height: 30px"
+                      src="../../../assets/icons/GreenArrow.png"
+                      [alt]="item.veh_status"
+                    />
+                  </div>
+                </div>
               </mat-tab>
             </mat-tab-group>
           </div>
@@ -626,6 +932,17 @@ perfectScrollbar
   (click)="RemoveFencing()"
 >
   Close Geo Fencing
+</button>
+
+<button
+  *ngIf="currentMap === 'Open Street Maps'"
+  style="position: absolute; right: 15px; top: 71px"
+  mat-flat-button
+  color="primary"
+  class="closeHistory d-none"
+  (click)="closeHistory()"
+>
+  Close History
 </button>
 
 <!-- History Record -->
@@ -729,7 +1046,7 @@ perfectScrollbar
       class="card-body row m-0 p-2 rounded"
       style="
         background-color: #f6f6f6 !important;
-        background-image: url('../../../../assets/images/map.png');
+        background-image: url('./assets/images/map.png');
 
         background-size: 51%;
         background-repeat: no-repeat;
@@ -934,12 +1251,13 @@ perfectScrollbar
             alt="..."
         /></span>
       </span>
+
       <button
         type="button"
-        class="showMoreButton btn btn-sm"
-        (click)="toggleInfo()"
+        class="closeBtn btn btn-sm"
+        (click)="closeDetails()"
       >
-        Show More
+        Close
       </button>
     </div>
     <div
@@ -991,6 +1309,24 @@ perfectScrollbar
         </div>
       </div>
     </div>
+
+    <div
+      class="col-md-12 p-0"
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 5px 0px;
+      "
+    >
+      <button
+        type="button"
+        class="showMoreButton btn btn-sm"
+        (click)="toggleInfo()"
+      >
+        Show More
+      </button>
+    </div>
   </div>
 </div>
 <div class="vehicleCardLeafletMore col-md-12 m-0 row d-none rounded">
@@ -1008,10 +1344,10 @@ perfectScrollbar
       /></span>
       <button
         type="button"
-        class="showLessButton btn btn-sm"
-        (click)="toggleInfo()"
+        class="closeBtnLess btn btn-sm"
+        (click)="closeDetails()"
       >
-        Show Less
+        Close
       </button>
     </div>
     <div class="col-md-12 row m-0">
@@ -1317,6 +1653,23 @@ perfectScrollbar
           </div>
         </div>
       </div>
+    </div>
+    <div
+      class="col-md-12 p-0"
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 5px 0px;
+      "
+    >
+      <button
+        type="button"
+        class="showLessButton btn btn-sm"
+        (click)="toggleInfo()"
+      >
+        Show Less
+      </button>
     </div>
   </div>
 </div>

@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ViewChild,
-  HostListener,
-  ViewChildren,
-  QueryList,
-} from "@angular/core";
+import { Component, OnInit, ViewChild, HostListener, ViewChildren, QueryList } from "@angular/core";
 import { ActivatedRoute, Router, NavigationEnd } from "@angular/router";
 import { PerfectScrollbarDirective } from "ngx-perfect-scrollbar";
 import { AppSettings } from "../../_core/settings/app.settings";
@@ -31,6 +24,9 @@ import { ExportService } from "src/app/_core/_AppServices/exportService";
 import { Vehicles } from "src/app/_interfaces/vehicle.model";
 import { dashboardService } from "src/app/_core/_AppServices/dashboard.service";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
+import { CurrentStateService } from '../../_core/_AppServices/CurrentStateService';
+import { CurrentState, CurrentStateResponse } from '../../_interfaces/DBresponse.model';
+// Global Variables
 declare var L;
 var map;
 var el;
@@ -50,10 +46,12 @@ var dataArr: PacketParser[] = [];
   providers: [MenuService],
 })
 export class PagesComponent implements OnInit {
+  //#region Properties
   public settings: Settings;
+  username: string;
   logo: string;
-  lat = 0;
-  lng = 0;
+  lat = 31.4884152;
+  lng = 74.3704655;
   zoom = 2;
   TREE_DATA: Vehicles[] = [];
   AllDevices: any[] = [];
@@ -62,7 +60,6 @@ export class PagesComponent implements OnInit {
   mapBounds: any = [];
   newPacketParse: any;
   data: any;
-  message: string;
   latitude: 0;
   longitude: 0;
   interval: number = 1000;
@@ -89,6 +86,12 @@ export class PagesComponent implements OnInit {
   checkedDevices: any[] = [];
   AllMarkers: any[] = [];
   childArray: Vehicles[] = [];
+  showGrouped: boolean = false;
+  onlineDevices: PacketParser[] = [];
+  offlineDevices: PacketParser[] = [];
+  AllVehicles: PacketParser[] = [];
+  OnlineGroups: any[] = [];
+  idArr: number[] = []
   historyInfo: any = {
     GPSDateTime: "test",
     Speed: "0",
@@ -117,7 +120,7 @@ export class PagesComponent implements OnInit {
   public showBackToTop: boolean = false;
   public toggleSearchBar: boolean = false;
   private defaultMenu: string;
-
+  //#endregion
   constructor(
     public appSettings: AppSettings,
     public router: Router,
@@ -136,20 +139,40 @@ export class PagesComponent implements OnInit {
     public PostFence: GeoFencePostService,
     public ExportService: ExportService,
     public dashboardService: dashboardService,
-    public RegistrationNoService: RegistrationNoService
+    public RegistrationNoService: RegistrationNoService,
+    public CurrentStateService: CurrentStateService
   ) {
     this.settings = this.appSettings.settings;
   }
   //#region OnInit
   ngOnInit() {
+    dataArr = [];
+    this.offlineDevices = [];
+    this.onlineDevices = []
+    this.childArray = [];
+    this.OnlineGroups = [];
+    if (window.location.pathname == "/vehicles") {
+      this.showGrouped = true;
+    }
     this.logo = localStorage.getItem("CompanyLogo");
-    this.mapTypeService.newMap.subscribe((mapType) => {
-      mapType = mapType;
+    this.username = localStorage.getItem("username") || 'Test';
+    this.mapTypeService.newMap.subscribe((data) => {
+      mapType = data;
+      this.currentMap = mapType;
     });
     this.AllDeviceDataService.AllDevices.subscribe((data) => (this.AllDevices = JSON.parse(data)));
     this.getVehTree();
+    if (map) {
+      map.off();
+      this.loadLeafLetMap();
+    }
+
     setInterval(() => {
+      dataArr = [];
+      this.offlineDevices = [];
+      this.onlineDevices = []
       this.childArray = [];
+      this.OnlineGroups = [];
       $('.notificationsUnread').addClass('d-none')
       $(".notificationPanel").addClass("d-none");
       $(".notificationsRead").addClass("d-none");
@@ -184,6 +207,39 @@ export class PagesComponent implements OnInit {
           }
         });
         setTimeout(() => {
+          this.AllVehicles = dataArr;
+          if (dataArr.length) {
+            dataArr.forEach((item: PacketParser) => {
+              if (item.Online == '1') {
+                let obj = this.TREE_DATA[1].SubMenu.find((data: Vehicles) => data.grp_id.toString() == item.group_id)
+                let nest = obj.SubMenu.find((value: Vehicles) => value.device_id == item.device_id)
+                obj.OnlineDevice = [];
+                if (nest) {
+                  console.log(nest['veh_id'])
+                  if (nest['device_id'] == item.device_id) {
+                    obj.OnlineDevice.push(item)
+                    // this.OnlineGroups.push(obj)
+                    if (this.OnlineGroups.length) {
+                      this.OnlineGroups.forEach((tempGP: Vehicles) => {
+                        if (tempGP.grp_name !== obj.grp_name) {
+                          console.log(false);
+                          this.OnlineGroups.push(obj)
+                          console.log(this.OnlineGroups, "Online Groups")
+                        }
+                      })
+                    }
+                    else {
+                      this.OnlineGroups.push(obj)
+                    }
+                  }
+                  this.onlineDevices.push(item)
+                }
+              }
+              else if (item.Online == '0') {
+                this.offlineDevices.push(item)
+              }
+            })
+          }
           $(".speedCheck").each(function () {
             var vehicle = $(this).attr("data-idforspeed");
             var obj = dataArr.find(
@@ -219,7 +275,6 @@ export class PagesComponent implements OnInit {
           if (this.checkedDevices.length) {
             this.markers = [];
             setTimeout(() => {
-              console.log(this.checkedDevices)
               this.checkedDevices.forEach((item) => {
                 this.AllMarkers.forEach((CM) => {
                   map.removeLayer(CM);
@@ -234,8 +289,10 @@ export class PagesComponent implements OnInit {
                   obj.datatrack,
                   obj.device_id
                 );
-
-                $(`#${item.id}`).prop("checked", true);
+                $(`[data-device_id=${item.id}]`).each(() => {
+                  $(this).prop('checked', true)
+                })
+                // $(`#${item.id}`).prop("checked", true);
               }, 5000);
               this.checkedDevices = [];
               this.AllMarkers = [];
@@ -243,8 +300,8 @@ export class PagesComponent implements OnInit {
           }
         }, 3000);
       });
-    }, 300000);
-    mapType = $(".mapDropdown").find(":selected").val();
+    }, 60000);
+    this.currentMap = mapType;
     if (window.innerWidth <= 768) {
       this.settings.menu = "vertical";
       this.settings.sidenavIsOpened = false;
@@ -254,11 +311,23 @@ export class PagesComponent implements OnInit {
     this.menuTypeOption = this.settings.menuType;
     this.defaultMenu = this.settings.menu;
   }
-  // MatMapType(e){
-  //   
-  // }
+  //#endregion
+
+  //#region TabChangeEvent
+  tabChanged(e) {
+    console.log(e)
+    if (this.checkedDevices.length) {
+      this.checkedDevices.forEach((item) => {
+        $(`[data-device_id= ${item.id}]`).prop('checked', true)
+      })
+    }
+  }
+  //#endregion
+
+  //#region MapType change Event
   MapType(e) {
     mapType = e.target.value;
+    this.currentMap = mapType;
     this.closeFencing();
     $(".vehicleCard").addClass("d-none");
     $(".vehicleCardMore").addClass("d-none");
@@ -300,7 +369,15 @@ export class PagesComponent implements OnInit {
       }, 1000);
     }
   }
+  //#endregion
+
+  //#region Get Veh Data
   getVehTree() {
+    dataArr = [];
+    this.offlineDevices = [];
+    this.onlineDevices = []
+    this.childArray = [];
+    this.OnlineGroups = [];
     try {
       // // this.route.data.subscribe((data) => {
       // //   data["model"].data.forEach((item: any, index: any) => {
@@ -347,11 +424,34 @@ export class PagesComponent implements OnInit {
           this.Toast.error(data.message, `Error Code ${data.code}`);
         }
         setTimeout(() => {
-          // let anchor = document.createElement('a')
-          // var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ TreeData: this.TREE_DATA[1], paprsedData: dataArr }));
-          // anchor.setAttribute("href", dataStr);
-          // anchor.setAttribute("download", "Data.json");
-          // anchor.click();
+          this.AllVehicles = dataArr;
+          if (dataArr.length) {
+            dataArr.forEach((item: PacketParser) => {
+              if (item.Online == '1') {
+                let obj = this.TREE_DATA[1].SubMenu.find((data: Vehicles) => data.grp_id.toString() == item.group_id)
+                obj.OnlineDevice = [];
+                let nest = obj.SubMenu.find((value: Vehicles) => value.device_id == item.device_id)
+                console.log(nest['veh_id'])
+                if (nest['device_id'] == item.device_id) {
+                  obj.OnlineDevice.push(item)
+                  this.OnlineGroups.push(obj)
+                  if (this.OnlineGroups.length) {
+                    this.OnlineGroups.forEach((tempGP: Vehicles) => {
+                      if (tempGP.grp_name !== obj.grp_name) {
+                        console.log(false);
+                        this.OnlineGroups.push(obj)
+                        console.log(this.OnlineGroups, "Online Groups")
+                      }
+                    })
+                  }
+                }
+                this.onlineDevices.push(item)
+              }
+              else if (item.Online == '0') {
+                this.offlineDevices.push(item)
+              }
+            })
+          }
           $(".speedCheck").each(function () {
             var vehicle = $(this).attr("data-idforspeed");
             var obj = dataArr.find(
@@ -388,6 +488,7 @@ export class PagesComponent implements OnInit {
     }
   }
   //#endregion
+
   //#region AfterViewInit Hook
   ngAfterViewInit() {
     this.loadLeafLetMap();
@@ -411,13 +512,16 @@ export class PagesComponent implements OnInit {
       );
   }
   //#endregion
+
   //#region Logout
   Logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("apiinfo");
+    localStorage.removeItem("username");
     this.router.navigate(["/login"]);
   }
   //#endregion
+
   //#region Menu Events
   public chooseMenu() {
     this.settings.menu = this.menuOption;
@@ -499,6 +603,7 @@ export class PagesComponent implements OnInit {
     }
   }
   //#endregion
+
   //#region Load Leaflet Maps
   loadLeafLetMap() {
     el = document.getElementById("leaflet-map");
@@ -509,6 +614,9 @@ export class PagesComponent implements OnInit {
         '&copy; <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a> contributors',
     }).addTo(map);
   }
+  //#endregion
+
+  //#region Refresh Map
   RefreshMap() {
     $("#leafletContainer")
       .html("")
@@ -519,6 +627,22 @@ export class PagesComponent implements OnInit {
       this.loadLeafLetMap();
     });
   }
+  //#endregion
+
+  //#region All History Methods
+  //#region Export History Data
+  export() {
+    $(".export").toggleClass("d-none");
+  }
+  exportToExcel() {
+    this.ExportService.downloadExcelFile(Historydata, reg_no);
+  }
+  exportToPDF() {
+    this.ExportService.downloadPDF(Historydata, reg_no);
+  }
+  //#endregion
+
+  //#region History Play State Methods
   stop() {
     $(".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable").remove();
     $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
@@ -583,20 +707,12 @@ export class PagesComponent implements OnInit {
       this.interval = this.interval - 500;
     }
   }
+  //#endregion
+
   toggleDisplay() {
     $(".vehicleCardLeaflet").addClass("d-none");
     $(".vehicleCardLeafletMore").addClass("d-none");
   }
-  export() {
-    $(".export").toggleClass("d-none");
-  }
-  exportToExcel() {
-    this.ExportService.downloadExcelFile(Historydata, reg_no);
-  }
-  exportToPDF() {
-    this.ExportService.downloadPDF(Historydata, reg_no);
-  }
-
   draw() {
     polyline = L.polyline([
       this.markerData[0],
@@ -608,6 +724,7 @@ export class PagesComponent implements OnInit {
     $(".infoCard").toggleClass("d-none");
   }
   //#endregion
+
   //#region SetLeafLet Markers
   setLeafLetMarkers() {
     this.markers.forEach((element: any, index: string | number) => {
@@ -631,8 +748,8 @@ export class PagesComponent implements OnInit {
     });
   }
   //#endregion
-  //#region Selected Marker Info
 
+  //#region Selected Marker Info
   getMarkerInfo(info: any[]) {
     this.AllDeviceDataService.AllDevices.subscribe(
       (data) => (this.AllDevices = JSON.parse(data))
@@ -661,30 +778,43 @@ export class PagesComponent implements OnInit {
     } else {
       $(".vehicleCardLeaflet").removeClass("d-none");
       $(".vehicleCardLeafletMore").addClass("d-none");
-      if (
-        $(".vehicleCardLeaflet").is(":visible") ||
-        $(".vehicleCardLeafletMore").is(":visible")
-      ) {
-        setTimeout(() => {
-          this.closeDetails();
-        }, 10000);
-      }
     }
   }
   // #endregion
 
+  //#region Marker Settinfs and Sending Method
   MarkerSettingFunction(e, DataTrack: string, _id: any) {
     $(".vehicleCardLeaflet").addClass("d-none");
     $(".vehicleCardLeafletMore").addClass("d-none");
     let marker: string[];
     if (e.target.checked) {
       if (mapType === "Google Maps") {
+        $(`[data-device_id=${_id}]`).each(() => {
+          $(this).prop('checked', true)
+        })
         this.newPacketParse = new PacketParser(DataTrack);
         this.data = { ...this.newPacketParse };
-        this.lat = parseFloat(this.data.lat);
-        this.lng = parseFloat(this.data.lng);
-        marker = [this.data.device_id, this.data.lat, this.data.lng];
-        debugger;
+        // this.data.veh_id
+        this.idArr.push(this.data.veh_id)
+        console.log(this.idArr)
+        this.CurrentStateService.getCurrentState(this.idArr.toString()).subscribe((el: CurrentStateResponse) => {
+          if (el.status) {
+            this.markers = [];
+            console.log(el)
+            el.data.forEach((item) => {
+              this.lat = parseFloat(item.lat);
+              this.lng = parseFloat(item.long);
+              marker = [this.data.device_id, item.lat, item.long];
+              this.markers.push(marker);
+              let markerString = JSON.stringify(this.markers);
+              this.markersService.SetMarkers(markerString);
+              this.setLeafLetMarkers();
+            })
+          }
+          else {
+            console.log('There are some errors')
+          }
+        })
         let tempObj = this.checkedDevices.find((item) => item.id == this.data.device_id)
         if (!tempObj) {
           this.checkedDevices.push({
@@ -692,9 +822,6 @@ export class PagesComponent implements OnInit {
             id: _id,
           });
         }
-        this.markers.push(marker);
-        let markerString = JSON.stringify(this.markers);
-        this.markersService.SetMarkers(markerString);
         this.AllDevices.push(this.data);
         $('.notificationsUnread').removeClass('d-none')
         this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
@@ -705,9 +832,27 @@ export class PagesComponent implements OnInit {
       if (mapType === "Open Street Maps") {
         this.newPacketParse = new PacketParser(DataTrack);
         this.data = { ...this.newPacketParse };
-        this.lat = parseFloat(this.data.lat);
-        this.lng = parseFloat(this.data.lng);
-        marker = [this.data.device_id, this.data.lat, this.data.lng];
+        // this.data.veh_id
+        this.idArr.push(this.data.veh_id)
+        console.log(this.idArr)
+        this.CurrentStateService.getCurrentState(this.idArr.toString()).subscribe((el: CurrentStateResponse) => {
+          if (el.status) {
+            this.markers = [];
+            console.log(el)
+            el.data.forEach((item) => {
+              this.lat = parseFloat(item.lat);
+              this.lng = parseFloat(item.long);
+              marker = [this.data.device_id, item.lat, item.long];
+              this.markers.push(marker);
+              let markerString = JSON.stringify(this.markers);
+              this.markersService.SetMarkers(markerString);
+              this.setLeafLetMarkers();
+            })
+          }
+          else {
+            console.log('There are some errors')
+          }
+        })
         let tempObj = this.checkedDevices.find((item) => item.id == this.data.device_id)
         if (!tempObj) {
           this.checkedDevices.push({
@@ -715,12 +860,10 @@ export class PagesComponent implements OnInit {
             id: _id,
           });
         }
-        this.markers.push(marker);
-        let markerString = JSON.stringify(this.markers);
-        this.markersService.SetMarkers(markerString);
-        this.setLeafLetMarkers();
         this.AllDevices.push(this.data);
         $('.notificationsUnread').removeClass('d-none')
+        $(".notificationPanel").addClass("d-none");
+        $(".notificationsRead").addClass("d-none");
         this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
         this.AllDeviceDataService.AllDevices.subscribe((data) => {
           this.AllDevices = JSON.parse(data);
@@ -739,6 +882,10 @@ export class PagesComponent implements OnInit {
       let checkedDeviceIndex = this.checkedDevices.findIndex(
         (item) => item === _id
       );
+      $(`[data-device_id=${_id}]`).each((el, index) => {
+        console.log(el, index)
+        $(index).prop('checked', false)
+      })
       this.checkedDevices.splice(checkedDeviceIndex, 1);
       this.AllDevices.splice(index, 1);
       let MarkerIndex = this.markers.findIndex(
@@ -763,12 +910,14 @@ export class PagesComponent implements OnInit {
       }
     }
   }
+  //#endregion
 
   //#region On CheckBox
   onCheck(e, DataTrack: string, _id: any) {
     this.MarkerSettingFunction(e, DataTrack, _id);
   }
   //#endregion
+
   //#region Close Car Details Card
   closeDetails() {
     $(".vehicleCardLeaflet").addClass("d-none");
@@ -779,6 +928,7 @@ export class PagesComponent implements OnInit {
     $(".vehicleCardLeafletMore").toggleClass("d-none");
   }
   //#endregion
+
   //#region Dialog Methods
   openHistoryDialog() {
     if (this.AllDevices.length == 1) {
@@ -825,7 +975,17 @@ export class PagesComponent implements OnInit {
     $(".vehicleCardLeaflet").addClass("d-none");
     $(".vehicleCardLeafletMore").addClass("d-none");
   }
+  closeHistory() {
+    this.RefreshMap()
+    setTimeout(() => {
+      this.setLeafLetMarkers();
+    }, 1000);
+    $(".recordDialogOffset").addClass("d-none");
+    $('.closeHistory').addClass('d-none')
+  }
+  //#endregion
 
+  //#region All GeoFencing Methods
   Draw(fenceData: any) {
     let nest = [];
     let nestArray = [];
@@ -943,28 +1103,35 @@ export class PagesComponent implements OnInit {
     this.closeFencing();
   }
   RemoveFencing() {
-    if (rect) {
-      map.removeLayer(rect);
-    }
-    if (circle) {
-      map.removeLayer(circle);
-    }
-    if (plgn) {
-      map.removeLayer(plgn);
-    }
-    if (marker) {
-      map.removeLayer(marker);
-      $(
-        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
-      ).remove();
-      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
-    }
-    $(".GeoFence").addClass("d-none");
-    if (!rect || !plgn || !circle || !marker) {
-      setTimeout(() => {
-        $(".closeGeoFenceBtn").addClass("d-none");
-      }, 1000);
-    }
+    this.RefreshMap()
+    setTimeout(() => {
+      this.setLeafLetMarkers();
+    }, 1000);
+    setTimeout(() => {
+      $(".closeGeoFenceBtn").addClass("d-none");
+    }, 1000);
+    // if (rect) {
+    //   map.removeLayer(rect);
+    // }
+    // if (circle) {
+    //   map.removeLayer(circle);
+    // }
+    // if (plgn) {
+    //   map.removeLayer(plgn);
+    // }
+    // if (marker) {
+    //   map.removeLayer(marker);
+    //   $(
+    //     ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
+    //   ).remove();
+    //   $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
+    // }
+    // $(".GeoFence").addClass("d-none");
+    // if (!rect || !plgn || !circle || !marker) {
+    //   setTimeout(() => {
+    //     $(".closeGeoFenceBtn").addClass("d-none");
+    //   }, 1000);
+    // }
   }
   GeoFencing() {
     this.GeoFence.geoFence().subscribe((data) => {
@@ -975,39 +1142,6 @@ export class PagesComponent implements OnInit {
   closeFencing() {
     $(".selectionList").addClass("d-none");
   }
-  closeCreateFencing() {
-    this.fenceType = "Select Fence Type";
-    $(".fenceType").val("Select Fence Type");
-    map.off();
-    this.RefreshMap();
-    setTimeout(() => {
-      this.setLeafLetMarkers();
-    }, 1000);
-
-    $(".createFence").addClass("d-none");
-    if (this.rectangle) {
-      map.removeLayer(this.rectangle);
-      $(
-        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
-      ).remove();
-      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
-    }
-    if (this.newCircle) {
-      map.removeLayer(this.newCircle);
-      $(
-        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
-      ).remove();
-      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
-    }
-    if (this.polygon) {
-      map.removeLayer(this.polygon);
-      $(
-        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
-      ).remove();
-      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
-    }
-  }
-
   onInputChange = (e) => {
     this.fenceType = e.target.value;
     switch (this.fenceType) {
@@ -1036,7 +1170,8 @@ export class PagesComponent implements OnInit {
             this.newCircle = L.circle(...this.circleMarkers, radius);
             this.circleRadius = radius;
             this.newCircle.addTo(map);
-          } else {
+          }
+          else {
             return null;
           }
         });
@@ -1157,6 +1292,38 @@ export class PagesComponent implements OnInit {
       // $('.googleMap').attr('ng-reflect-drawing-manager', "[object Object]")
     } else if (mapType === "Open Street Maps") {
       $(".createFence").removeClass("d-none");
+    }
+  }
+  closeCreateFencing() {
+    this.fenceType = "Select Fence Type";
+    $(".fenceType").val("Select Fence Type");
+    map.off();
+    this.RefreshMap();
+    setTimeout(() => {
+      this.setLeafLetMarkers();
+    }, 1000);
+
+    $(".createFence").addClass("d-none");
+    if (this.rectangle) {
+      map.removeLayer(this.rectangle);
+      $(
+        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
+      ).remove();
+      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
+    }
+    if (this.newCircle) {
+      map.removeLayer(this.newCircle);
+      $(
+        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
+      ).remove();
+      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
+    }
+    if (this.polygon) {
+      map.removeLayer(this.polygon);
+      $(
+        ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
+      ).remove();
+      $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
     }
   }
   sendCircle() {
@@ -1287,37 +1454,37 @@ export class PagesComponent implements OnInit {
       this.Toast.error("Please Draw a Rectangle first", "Coundn't save");
     }
   }
+  //#endregion
+
+  //#region Alarm Metods
   fetchNotifications() {
+
     let alarmsData = {
       deviceID: this.AllDevices[this.AllDevices.length - 1].device_id,
       clusterID: this.AllDevices[this.AllDevices.length - 1].cluster_id,
       vehicleID: this.AllDevices[this.AllDevices.length - 1].veh_id
     }
     this.Alarms.getNotifications(alarmsData).subscribe((res) => {
-      $('.notificationsUnread').removeClass('d-none')
       if (!res.status) {
         this.Toast.error(res.message, "Error Showing Notifications");
       } else {
         console.log(res.data)
         this.notifications = res.data;
         $('.notificationsUnread').removeClass('d-none')
+        this.readNotifications();
       }
+
     });
-    this.Alarms.getNotifications(alarmsData).subscribe((res) => {
-      $('.notificationsUnread').removeClass('d-none')
-      if (!res.status) {
-        this.Toast.error(res.message, "Error Showing Notifications");
-      } else {
-        this.notifications = res.data;
-        $('.notificationsUnread').removeClass('d-none')
-      }
-    });
-    this.toggleNotifications();
   }
-  toggleNotifications() {
-    $(".notificationPanel").toggleClass("d-none");
-    $(".notificationsUnread").toggleClass("d-none");
-    $(".notificationsRead").toggleClass("d-none");
+  readNotifications() {
+    $(".notificationsUnread").addClass("d-none");
+    $(".notificationPanel").removeClass("d-none");
+    $(".notificationsRead").removeClass("d-none");
+  }
+  unReadNotifications() {
+    $(".notificationsUnread").removeClass("d-none");
+    $(".notificationPanel").addClass("d-none");
+    $(".notificationsRead").addClass("d-none");
   }
   //#endregion
 }
@@ -1338,6 +1505,8 @@ export class historyDialogComponent implements OnInit {
   setTime: any;
   interval: number = 500;
   loading: boolean = false;
+  formValid: boolean = false;
+  dateValid: boolean = false;
   public form: FormGroup;
   constructor(
     public dialog: MatDialog,
@@ -1350,12 +1519,12 @@ export class historyDialogComponent implements OnInit {
     this.speed = e.target.checked;
   }
   onSubmit() {
-    this.loading = true;
     let History_type = $("#historyType").val();
     let dateStart = $("#de_start").val().toLocaleString().replace("T", " ");
     let dateEnd = $("#de_end").val().toLocaleString().replace("T", " ");
     let speed = this.speed;
     let veh_reg_no = reg_no;
+    console.log(Date.parse(dateStart), Date.parse(dateEnd))
     // var data = {
     //   veh_reg_no: "G1C-2424",
     //   History_type: "Replay",
@@ -1363,49 +1532,73 @@ export class historyDialogComponent implements OnInit {
     //   de_end: "2021-04-15 00:00:00.000",
     //   speed: false,
     // };
-    var data = {
-      veh_reg_no: veh_reg_no,
-      History_type: History_type,
-      de_start: dateStart,
-      de_end: dateEnd,
-      speed: speed,
-    };
-    this.historyService.DeviceHistory(data).subscribe((data) => {
-      this.historyDataService.setNewMarkers(JSON.stringify(data.data.History));
-      if (data.status) {
-        Historydata = data.data.History;
-        if (data.data.History.length) {
-          data.data.History.forEach((el, i) => {
-            this.markerData.push([
-              parseFloat(el.Latitude),
-              parseFloat(el.Longitude),
-            ]);
-            this.lat = parseFloat(el.Latitude);
-            this.lng = parseFloat(el.Longitude);
-          });
-          this.Toast.success(data.data.ErrorMessage, data.message);
-          map.setView([this.lat, this.lng], 10);
-          L.polyline(this.markerData).addTo(map);
-          this.dialog.closeAll();
-          if (mapType == "Google Maps") {
-            $(".googleMapRecord").removeClass("d-none");
-          } else {
-            $(".recordDialogOffset").removeClass("d-none");
-          }
-          $(".vehicleCard").addClass("d-none");
-          $(".vehicleCardMore").addClass("d-none");
-          $(".vehicleCardLeaflet").addClass("d-none");
-          $(".vehicleCardLeafletMore").addClass("d-none");
-        } else {
-          this.Toast.error(data.data.ErrorMessage, data.message);
-        }
-      } else {
-        this.Toast.error(
-          "We cannot proceed to your request now please check your network connection",
-          "Error Drawing Route"
-        );
+    if (History_type && dateStart && dateEnd && speed && veh_reg_no) {
+      if (Date.parse(dateStart) > Date.parse(dateEnd)) {
+        this.dateValid = false;
+        this.Toast.error('Start Date cannot be bigger than End Date')
       }
-    });
+      if (Date.parse(dateStart) < Date.parse(dateEnd)) {
+        this.dateValid = true;
+        this.formValid = true;
+      }
+      if (this.dateValid) {
+        if (this.formValid) {
+          this.loading = true;
+          var data = {
+            veh_reg_no: veh_reg_no,
+            History_type: History_type,
+            de_start: dateStart,
+            de_end: dateEnd,
+            speed: speed,
+          };
+          this.historyService.DeviceHistory(data).subscribe((data) => {
+            this.historyDataService.setNewMarkers(JSON.stringify(data.data.History));
+            if (data.status) {
+              Historydata = data.data.History;
+              if (data.data.History.length) {
+                data.data.History.forEach((el, i) => {
+                  this.markerData.push([
+                    parseFloat(el.Latitude),
+                    parseFloat(el.Longitude),
+                  ]);
+                  this.lat = parseFloat(el.Latitude);
+                  this.lng = parseFloat(el.Longitude);
+                });
+                this.Toast.success(data.data.ErrorMessage, data.message);
+                map.setView([this.lat, this.lng], 10);
+                L.polyline(this.markerData).addTo(map);
+                this.dialog.closeAll();
+                if (mapType == "Google Maps") {
+                  $(".googleMapRecord").removeClass("d-none");
+                  $('.closeHistoryGoogle').removeClass('d-none')
+                } else {
+                  $(".recordDialogOffset").removeClass("d-none");
+                  $('.closeHistory').removeClass('d-none')
+                }
+                $(".vehicleCard").addClass("d-none");
+                $(".vehicleCardMore").addClass("d-none");
+                $(".vehicleCardLeaflet").addClass("d-none");
+                $(".vehicleCardLeafletMore").addClass("d-none");
+              } else {
+                this.Toast.error(data.data.ErrorMessage, data.message);
+                this.loading = false;
+              }
+            } else {
+              this.Toast.error(
+                "We cannot proceed to your request now please check your network connection",
+                "Error Drawing Route"
+              );
+            }
+          });
+        }
+        else {
+          this.Toast.error('Please fillout all the fields')
+        }
+      }
+    }
+    else {
+      this.Toast.error('Please Fill out all the fields')
+    }
   }
 }
 @Component({
@@ -1446,11 +1639,11 @@ export class ControlDialogComponent {
 export class ResetOdometerDialogComponent {
   constructor(public dialog: MatDialog) { }
   onOdometerReset() {
-    this.dialog.closeAll();
+    // this.dialog.closeAll();
     this.dialog.open(OdometerResetSuccessDialogComponent);
   }
   closeResetOdometer() {
-    this.dialog.closeAll();
+    // this.dialog.closeAll();
     this.dialog.open(ControlDialogComponent);
   }
 }
@@ -1515,7 +1708,6 @@ export class PictureChannelDialogComponent {
     this.dialog.open(ControlDialogComponent);
   }
 }
-
 @Component({
   selector: "app-picture-taken-dialog",
   templateUrl: "./Dialogs/PictureTakeSuccessDialog.html",

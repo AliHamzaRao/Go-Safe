@@ -1,7 +1,7 @@
 <div class="row no-gutters min-h-fullscreen bg-white">
   <div
     class="col-md-6 col-lg-7 col-xl-8 d-none d-md-block bg-img"
-    style="background-image: url(../../assets/images/loginleftimage.png)"
+    style="background-image: url(./assets/images/loginleftimage.png)"
     data-overlay="5"
   >
     <div class="row h-100 pl-50">
@@ -19,14 +19,10 @@
       </div>
     </div>
   </div>
-
   <div class="col-md-6 col-lg-5 col-xl-4 align-self-center">
     <div class="px-80 py-30">
       <h1 class="text-center">
-        <img
-          src={{img}}
-          alt="..."
-        />
+        <img src="{{ img }}" alt="..." />
       </h1>
       <br />
       <p class="text-center">Sign into your account</p>
@@ -69,16 +65,8 @@
           <div class="text-center">
             <button
               [disabled]="loading"
-              class="
-                btn
-                btn-bold
-                btn-theme
-                btn-round
-                btn-lg
-                btn-w-xl
-                btn-theme-login
-                btn-theme-lg
-              "
+              [class.cursor-not-allowed]="loading"
+              class="btn btn-bold btn-theme btn-round btn-lg btn-w-xl btn-theme-login btn-theme-lg"
             >
               <span
                 *ngIf="loading"

@@ -34,7 +34,7 @@ $material-icons-font-path: "~material-icons/iconfont/";
   height: 48px;
   padding: 0px !important;
   cursor: pointer;
-  min-width: calc(100% / 3) !important;
+  min-width: calc(100% / 2) !important;
   text-align: center;
   display: inline-flex;
   justify-content: center;
@@ -50,6 +50,10 @@ $material-icons-font-path: "~material-icons/iconfont/";
   color: #18497d !important;
   background-color: rgb(251, 182, 42) !important;
 }
+.mat-tab-label[aria-selected="true"] {
+  color: #18497d !important;
+  background-color: rgb(251, 182, 42) !important;
+}
 .mat-tab-labels {
   justify-content: space-evenly;
   background-color: #18497d;
@@ -61,9 +65,15 @@ $material-icons-font-path: "~material-icons/iconfont/";
   width: 30%;
 }
 
+.mat-tab-body-content {
+  max-height: 68.8vh !important;
+}
+.mat-tab-body-content::-webkit-scrollbar {
+  display: none;
+}
 .mat-expansion-panel-body {
   padding: 0 !important;
-  height: 30vh !important;
+  min-height: fit-content !important;
   max-height: 40vh !important;
   overflow-y: scroll;
 }
@@ -161,6 +171,7 @@ $material-icons-font-path: "~material-icons/iconfont/";
 .cursor-default {
   cursor: default;
 }
+
 .cursor-e-resize {
   cursor: e-resize;
 }

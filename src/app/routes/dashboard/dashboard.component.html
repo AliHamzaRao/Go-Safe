@@ -19,10 +19,10 @@
       </span>
       <button
         type="button"
-        class="showMoreButton btn btn-sm"
-        (click)="toggleInfo()"
+        class="closeBtn btn btn-sm"
+        (click)="closeDetails()"
       >
-        Show More
+        Close
       </button>
     </div>
     <div
@@ -74,6 +74,23 @@
         </div>
       </div>
     </div>
+    <div
+      class="col-md-12 p-0"
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 5px 0px;
+      "
+    >
+      <button
+        type="button"
+        class="showMoreButton btn btn-sm"
+        (click)="toggleInfo()"
+      >
+        Show More
+      </button>
+    </div>
   </div>
 </div>
 <div class="vehicleCardMore col-md-12 m-0 row d-none rounded">
@@ -91,10 +108,10 @@
       /></span>
       <button
         type="button"
-        class="showLessButton btn btn-sm"
-        (click)="toggleInfo()"
+        class="closeBtnLess btn btn-sm"
+        (click)="closeDetails()"
       >
-        Show Less
+        Close
       </button>
     </div>
     <div class="col-md-12 row m-0">
@@ -401,6 +418,23 @@
         </div>
       </div>
     </div>
+    <div
+      class="col-md-12"
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 5px;
+      "
+    >
+      <button
+        type="button"
+        class="showLessButton btn btn-sm"
+        (click)="toggleInfo()"
+      >
+        Show Less
+      </button>
+    </div>
   </div>
 </div>
 
@@ -418,8 +452,8 @@
     <agm-map
       style="height: 89vh !important"
       class="rounded googleMap"
-      [latitude]="latitude"
-      [longitude]="longitude"
+      [latitude]="lat"
+      [longitude]="lng"
       [mapTypeId]="googleMapType"
       [fullscreenControl]="true"
       [mapTypeControl]="true"
@@ -538,7 +572,18 @@
   class="closeGeoFenceBtnGoogle d-none"
   (click)="RemoveFencing()"
 >
-  Close Geo Fencing Google
+  Close Geo Fencing
+</button>
+
+<button
+  *ngIf="mapType === 'Google Maps'"
+  style="position: absolute; right: 15px; top: 10px"
+  mat-flat-button
+  color="primary"
+  class="closeHistoryGoogle d-none"
+  (click)="CloseHistory()"
+>
+  Close Geo Fencing
 </button>
 
 <div class="createFenceGoogleMap rounded shadow d-none">
@@ -596,7 +641,12 @@
     </div>
     <div class="col-12 p-0 m-0 confirmationBoxGoogle">
       <span>
-        <button class="fenceCancelBtnGoogle">Cancel</button>
+        <button
+          class="fenceCancelBtnGoogle"
+          (click)="closeCreateFencingGoogle()"
+        >
+          Cancel
+        </button>
         <button
           class="fenceDoneBtnGoogle"
           *ngIf="fenceType === 'Circle'"
@@ -724,7 +774,7 @@
       class="card-body row m-0 p-2 rounded"
       style="
         background-color: #f6f6f6 !important;
-        background-image: url('../../../../assets/images/map.png');
+        background-image: url('./assets/images/map.png');
 
         background-size: 51%;
         background-repeat: no-repeat;

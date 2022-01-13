@@ -24,8 +24,8 @@ var Historydata = [];
 export class DashboardComponent implements OnInit {
   public settings: Settings;
   map: any;
-  lat = 0;
-  lng = 0;
+  lat = 31.4884152;
+  lng = 74.3704655;
   zoom = 3;
   googleMapType = "roadmap";
   AllDevices: any = [];
@@ -144,8 +144,8 @@ export class DashboardComponent implements OnInit {
       this.geoFenceData = { ...this.geoFence };
       if (this.geoFence.fenceParam.length) {
         this.geoFence.fenceParam.forEach((item) => {
-          this.latitude = item.lat;
-          this.longitude = item.lng;
+          this.lat = item.lat;
+          this.lng = item.lng;
         });
       }
     });
@@ -463,14 +463,6 @@ export class DashboardComponent implements OnInit {
       } else {
         $(".vehicleCard").removeClass("d-none");
         $(".vehicleCardMore").addClass("d-none");
-        if (
-          $(".vehicleCard").is(":visible") ||
-          $(".vehicleCardMore").is(":visible")
-        ) {
-          setTimeout(() => {
-            this.closeDetails();
-          }, 10000);
-        }
       }
     } else {
       this.Toast.info(
@@ -491,13 +483,28 @@ export class DashboardComponent implements OnInit {
     $(".vehicleCardMore").addClass("d-none");
   }
   //#endregion
-
+  CloseHistory() {
+    $(".googleMapRecord").addClass("d-none");
+    $('.closeHistoryGoogle').addClass('d-none')
+    this.Router.navigateByUrl('/asset-trip-trip', { skipLocationChange: true }).then(() => {
+      this.Router.navigate(['/']);
+      $(".gmnoprint").addClass("d-none");
+    })
+  }
   draw() {
     $(".shapeSelect").toggleClass("d-none");
   }
   closeCreateFencingGoogle() {
+    $('.createFenceGoogleMap').addClass('d-none')
     this.Router.navigateByUrl('/asset-trip-trip', { skipLocationChange: true }).then(() => {
       this.Router.navigate(['/']);
+      $(".gmnoprint").addClass("d-none");
     });
+  }
+  RemoveFencing() {
+    this.Router.navigateByUrl('/asset-trip-trip', { skipLocationChange: true }).then(() => {
+      this.Router.navigate(['/']);
+      $(".gmnoprint").addClass("d-none");
+    })
   }
 }
