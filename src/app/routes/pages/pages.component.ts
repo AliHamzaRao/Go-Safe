@@ -256,18 +256,18 @@ export class PagesComponent implements OnInit {
             object ?
               object.veh_status == "Idle"
                 ? $(this).html(
-                  `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="../../../assets/icons/YellowArrow.png" alt=${object.veh_status}>`
+                  `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="./assets/icons/YellowArrow.png" alt=${object.veh_status}>`
                 )
                 : object.veh_status == "Moving"
                   ? $(this).html(
-                    `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="../../../assets/icons/YellowArrow.png" alt=${object.veh_status}>`
+                    `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="./assets/icons/YellowArrow.png" alt=${object.veh_status}>`
                   )
                   : object.veh_status == "Parked"
                     ? $(this).html(
-                      `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="../../../assets/icons/RedArrow.png" alt=${object.veh_status}>`
+                      `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="./assets/icons/RedArrow.png" alt=${object.veh_status}>`
                     )
                     : $(this).html(
-                      `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="../../../assets/icons/Disconected.png" alt=${object.veh_status}>`
+                      `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="./assets/icons/Disconected.png" alt=${object.veh_status}>`
                     )
               : null
 
@@ -467,17 +467,17 @@ export class PagesComponent implements OnInit {
             object ?
               object.veh_status == "Idle"
                 ? $(this).html(
-                  `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="../../../assets/icons/YellowArrow.png" alt=${object.veh_status}>`
+                  `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="./assets/icons/YellowArrow.png" alt=${object.veh_status}>`
                 )
                 : object.veh_status == "Moving"
                   ? $(this).html(
-                    `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="../../../assets/icons/YellowArrow.png" alt=${object.veh_status}>`
+                    `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="./assets/icons/YellowArrow.png" alt=${object.veh_status}>`
                   )
                   : object.veh_status == "Parked"
                     ? $(this).html(
-                      `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="../../../assets/icons/RedArrow.png" alt=${object.veh_status}>`
+                      `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="./assets/icons/RedArrow.png" alt=${object.veh_status}>`
                     ) : $(this).html(
-                      `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="../../../assets/icons/Disconected.png" alt=${object.veh_status}>`
+                      `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="./assets/icons/Disconected.png" alt=${object.veh_status}>`
                     )
               : null
           });
