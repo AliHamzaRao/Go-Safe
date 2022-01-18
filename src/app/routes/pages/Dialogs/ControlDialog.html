@@ -1,82 +1,125 @@
-<h2 mat-dialog-title class="dialogTitle">Control</h2>
+<h2 mat-dialog-title class="dialogTitle">{{commandType?commandType:'Test'}}</h2>
 <div class="m-0 p-0 dialogContent" mat-dialog-content>
-    <mat-accordion>
-        <mat-expansion-panel class="ParentCheckBox">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    Commands
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-        </mat-expansion-panel>
-        <mat-expansion-panel class="ParentCheckBox">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    Settings
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div class="row m-0 p-0">
-                <div class="col-md-12 p-0 m-0 settingType row mb-2 border-bottom">
-                    <div class="col-md-11">
-                        <h4 style="color: #18497D;" class="m-0">Change APN</h4>
-                        <p class="text-muted m-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste delectus
-                        </p>
-                    </div>
-                    <button mat-button class="col-md-1 m-0 p-0" style="color: rgb(29, 184, 140);display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    min-width: max-content  !important;
-                    line-height:  normal !important;
-                    padding: 0px !important;
-                ">
-                        <mat-icon style="font-size: 20px;">send</mat-icon>
-                        <p class="m-0 p-0">
-                            Send
-                        </p>
-                    </button>
-                </div>
-                <div class="col-md-12 p-0 m-0 settingType row mb-2 border-bottom">
-                    <div class="col-md-11">
-                        <h4 style="color: #18497D;" class="m-0">Reset Odometer</h4>
-                        <p class="text-muted m-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste delectus
-                        </p>
-                    </div>
-                    <button mat-button class="col-md-1 m-0 p-0" style="color: rgb(29, 184, 140);display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    min-width: max-content  !important;
-                    line-height:  normal !important;
-                    padding: 0px !important;
-                " (click)="resetOdometer()">
-                        <mat-icon style="font-size: 20px;">send</mat-icon>
-                        <p class="m-0 p-0">
-                            Send
-                        </p>
-                    </button>
-                </div>
-                <div class="col-md-12 p-0 m-0 settingType row mb-2 border-bottom">
-                    <div class="col-md-11">
-                        <h4 style="color: #18497D;" class="m-0">Take Picture</h4>
-                        <p class="text-muted m-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste delectus
-                        </p>
-                    </div>
-                    <button mat-button class="col-md-1 m-0 p-0" style="color: rgb(29, 184, 140);display: flex;
-                    flex-direction: column;
-                    justify-content: center;
-                    align-items: center;
-                    min-width: max-content  !important;
-                    line-height:  normal !important;
-                    padding: 0px !important;
-                " (click)="takePicture()">
-                        <mat-icon style="font-size: 20px;">send</mat-icon>
-                        <p class="m-0 p-0">
-                            Send
-                        </p>
-                    </button>
-                </div>
-                <!-- <div class="col-md-12 m-0 p-0 settingType row"></div> -->
-            </div>
-        </mat-expansion-panel>
-    </mat-accordion>
+  <!-- Alarm Reset Content -->
+  <span class="alarmResetDialog" *ngIf="commandType =='Alarm Reset'">
+    <h3 class="m-0">Select Request Channel</h3>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton">Cancel</button> &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Alarm Reset Content -->
+  <!-- Take Picture Content -->
+  <span class="takePictureDialog" *ngIf="commandType =='Take Picture'">
+    <span>
+      <h4>Select Camera Channel</h4>
+      <mat-radio-group color="primary" (change)="camChannelChange($event)">
+        <mat-radio-button class="camChannelRadio" value="1"
+          ><mat-icon>camera_alt</mat-icon>1</mat-radio-button
+        >
+        <mat-divider></mat-divider>
+        <mat-radio-button class="camChannelRadio" value="2"
+          ><mat-icon>camera_alt</mat-icon>2</mat-radio-button
+        >
+        <mat-divider></mat-divider>
+        <mat-radio-button class="camChannelRadio" value="3"
+          ><mat-icon>camera_alt</mat-icon>3</mat-radio-button
+        >
+        <mat-divider></mat-divider>
+        <mat-radio-button class="camChannelRadio" value="4"
+          ><mat-icon>camera_alt</mat-icon>4</mat-radio-button
+        >
+        <mat-divider></mat-divider>
+        <mat-radio-button class="camChannelRadio" value="5"
+          ><mat-icon>camera_alt</mat-icon>5</mat-radio-button
+        >
+        <mat-divider></mat-divider>
+        <mat-radio-button class="camChannelRadio" value="6"
+          ><mat-icon>camera_alt</mat-icon>6</mat-radio-button
+        >
+        <mat-divider></mat-divider>
+        <mat-radio-button class="camChannelRadio" value="7"
+          ><mat-icon>camera_alt</mat-icon>7</mat-radio-button
+        >
+        <mat-divider></mat-divider>
+        <mat-radio-button class="camChannelRadio" value="8"
+          ><mat-icon>camera_alt</mat-icon>8</mat-radio-button
+        >
+        <mat-divider></mat-divider>
+        <mat-radio-button class="camChannelRadio" value="9"
+          ><mat-icon>camera_alt</mat-icon>9</mat-radio-button
+        >
+        <mat-divider></mat-divider>
+        <mat-radio-button class="camChannelRadio" value="10"
+          ><mat-icon>camera_alt</mat-icon>10</mat-radio-button
+        >
+        <mat-divider></mat-divider>
+      </mat-radio-group>
+    </span>
+    <span>
+      <h4>Select Picture Quality</h4>
+      <mat-radio-group color="primary" (change)="picQualityChange($event)">
+        <mat-radio-button value="High">High</mat-radio-button>
+        <mat-divider></mat-divider>
+        <mat-radio-button value="Medium">Medium</mat-radio-button>
+        <mat-divider></mat-divider>
+        <mat-radio-button value="Low">Low</mat-radio-button>
+      </mat-radio-group>
+    </span>
+    <mat-divider></mat-divider>
+    <span>
+      <h4 class="m-0">Select Request Channel</h4>
+      <mat-radio-group
+        aria-label="Select an option"
+        color="primary"
+        style="font-size: 15px; font-weight: 200"
+        (change)="ChannelChange($event)"
+      >
+        <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+        <br />
+        <mat-radio-button value="SMS">SMS</mat-radio-button>
+      </mat-radio-group>
+    </span>
+    <br />
+    <span style="align-self: center">
+      <button mat-button class="CommandCancelButton">Cancel</button> &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Take Picture Content -->
+  <!-- Alarm Reset Content -->
+  <span class="alarmResetDialog" *ngIf="commandType =='Canbus Data Upload'">
+    <h3 class="m-0">Select Request Channel</h3>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton">Cancel</button> &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Alarm Reset Content -->
 </div>
