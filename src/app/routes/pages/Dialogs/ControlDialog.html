@@ -115,11 +115,255 @@
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
     <span>
-      <button mat-button class="CommandCancelButton">Cancel</button> &nbsp;
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
       </button>
     </span>
   </span>
   <!-- Alarm Reset Content -->
+  <!-- Device Reboot Content -->
+  <span class="alarmResetDialog" *ngIf="commandType =='Device Reboot'">
+    <h3 class="m-0">Select Request Channel</h3>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Device Reboot Content -->
+  <!-- Output2 on Content -->
+  <span class="alarmResetDialog" *ngIf="commandType =='Output2 on'">
+    <h3 class="m-0">Select Request Channel</h3>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Output2 on Content -->
+  <!-- Output2 off Content -->
+  <span class="alarmResetDialog" *ngIf="commandType =='Output2 off'">
+    <h3 class="m-0">Select Request Channel</h3>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Output2 off Content -->
+  <!-- Output3 on Content -->
+  <span class="alarmResetDialog" *ngIf="commandType =='Output3 on'">
+    <h3 class="m-0">Select Request Channel</h3>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Output3 on Content -->
+  <!-- Output3 off Content -->
+  <span class="alarmResetDialog" *ngIf="commandType =='Output3 off'">
+    <h3 class="m-0">Select Request Channel</h3>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Output3 off Content -->
+  <!-- Output1(Imb) On Content -->
+  <span class="alarmResetDialog" *ngIf="commandType =='Output1(Imb) On'">
+    <h3 class="m-0">Select Request Channel</h3>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Output1(Imb) On Content -->
+  <!-- Output1(Imb) Off Content -->
+  <span class="alarmResetDialog" *ngIf="commandType =='Output1(Imb) Off'">
+    <h3 class="m-0">Select Request Channel</h3>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Output1(Imb) Off Content -->
+  <!-- Location Content -->
+  <span class="alarmResetDialog" *ngIf="commandType =='Location'">
+    <h3 class="m-0">Select Request Channel</h3>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Location Content -->
+  <!-- Voice Monitor Content -->
+  <span class="alarmResetDialog" *ngIf="commandType =='Voice Monitor'">
+    <!-- <span class="alarmResetDialog"> -->
+    <h3 class="m-0">Enter Phone Number:</h3>
+    <input
+      type="text"
+      placeholder="Enter Phone Number"
+      style="
+        background: transparent;
+        outline: none;
+        border: none;
+        border-bottom: 1px solid black;
+        text-align: center;
+        padding: 5px 15px;
+        color: black;
+        font-size: 13px;
+        margin-bottom: 10px;
+      "
+      (change)="numberChange($event)"
+      [value]="phoneNumber?phoneNumber:''"
+      oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')"
+    />
+
+    <h4 class="m-0">Select Request Channel</h4>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Voice Monitor Content -->
+
+  <!-- Default Modal -->
+  <span *ngIf="!commandType">Test Dialog</span>
+  <!-- Default Modal -->
 </div>

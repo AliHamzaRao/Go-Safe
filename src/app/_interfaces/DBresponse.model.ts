@@ -139,6 +139,29 @@ export class Command {
   p_dev_id: number;
   channel: string;
 }
+export class SettingsResponse {
+  code: number;
+  status: boolean;
+  message: string;
+  data: Setting[];
+}
+export class Setting {
+  check_status: boolean;
+  fb_id: number;
+  p_cmd_id: number;
+  Name: string;
+  p_cell_no: string;
+  p_IpAddress: string;
+  p_tcp_port: string;
+  url: string;
+  apn: string;
+  user_name: string;
+  pwd: string;
+  mileage: string;
+  cmd_type: string;
+  p_dev_id: string;
+  channel: string;
+}
 export class commandPostResponse {
   _object: {
     Message: any

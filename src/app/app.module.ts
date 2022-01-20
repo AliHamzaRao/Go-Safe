@@ -22,7 +22,7 @@ import { PipesModule } from './theme/pipes/pipes.module';
 import { AppRoutingModule } from './app.routing';
 
 import { AppComponent } from './app.component';
-import { AllControlsDialogComponent, AssetTripDialogComponent, ControlDialogComponent, historyDialogComponent, PagesComponent } from 'src/app/routes/pages/pages.component';
+import { AllControlsDialogComponent, AssetTripDialogComponent, ControlDialogComponent, historyDialogComponent, PagesComponent, AllSettingsDialogComponent, SettingDialogComponent } from 'src/app/routes/pages/pages.component';
 import { NotFoundComponent } from './routes/pages/errors/not-found/not-found.component';
 import { ErrorComponent } from './routes/pages/errors/error/error.component';
 import { AppSettings } from './_core/settings/app.settings';
@@ -97,7 +97,9 @@ import { AgmDrawingModule } from "@agm/drawing"
     AssetTripDialogComponent,
     historyDialogComponent,
     ControlDialogComponent,
-    AllControlsDialogComponent
+    AllControlsDialogComponent,
+    AllSettingsDialogComponent,
+    SettingDialogComponent
   ],
 
   providers: [

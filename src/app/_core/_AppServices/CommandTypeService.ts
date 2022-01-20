@@ -7,8 +7,13 @@ import { BehaviorSubject } from 'rxjs';
 export class CommandTypeService {
     private newCommand = new BehaviorSubject('');
     currnetCommand = this.newCommand.asObservable();
+    private newCommandId = new BehaviorSubject(null);
+    currentCommandId = this.newCommandId.asObservable();
     constructor() { }
-    setCommand(value: string) {
-        this.newCommand.next(value)
+    setCommand(command: string) {
+        this.newCommand.next(command)
+    }
+    setCommandId(id: number) {
+        this.newCommandId.next(id)
     }
 }

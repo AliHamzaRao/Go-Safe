@@ -25,10 +25,12 @@ import { Vehicles } from "src/app/_interfaces/vehicle.model";
 import { dashboardService } from "src/app/_core/_AppServices/dashboard.service";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
 import { CurrentStateService } from '../../_core/_AppServices/CurrentStateService';
-import { CurrentStateResponse, Command } from '../../_interfaces/DBresponse.model';
+import { CurrentStateResponse, Command, Setting } from '../../_interfaces/DBresponse.model';
 import { CommandsService } from '../../_core/_AppServices/CommandsService';
 import { CommandTypeService } from '../../_core/_AppServices/CommandTypeService';
 import { ThisReceiver, ThrowStmt } from "@angular/compiler";
+import { SettingsService } from '../../_core/_AppServices/SettingsService';
+import { SettingTypeService } from '../../_core/_AppServices/SettingTypeService';
 // Global Variables
 declare var L;
 var map;
@@ -946,7 +948,7 @@ export class PagesComponent implements OnInit {
   openAssetTripDialog() {
     this.dialog.open(AssetTripDialogComponent);
   }
-  openControlDialog() {
+  openAllControlsDialog() {
     if (this.AllDevices.length == 1) {
       if (
         $(".vehicleCardMore").is(":visible") ||
@@ -961,6 +963,29 @@ export class PagesComponent implements OnInit {
       } else {
         device_id = this.AllDevices[0].device_id;
         this.dialog.open(AllControlsDialogComponent);
+      }
+    } else if (this.AllDevices.length > 1) {
+      this.Toast.error("Please Select only One Device", "Error showing Dialog");
+    } else {
+      this.Toast.error("Please Select a Device", "Error Showing Dialog");
+    }
+    return null;
+  }
+  openAllSettingsDialog() {
+    if (this.AllDevices.length == 1) {
+      if (
+        $(".vehicleCardMore").is(":visible") ||
+        $(".vehicleCard").is(":visible") ||
+        $(".vehicleCardLeafletMore").is(":visible") ||
+        $(".vehicleCardLeaflet").is(":visible")
+      ) {
+        this.Toast.error(
+          "Please Close Details to proceed",
+          "Error showing Dialog"
+        );
+      } else {
+        device_id = this.AllDevices[0].device_id;
+        this.dialog.open(AllSettingsDialogComponent);
       }
     } else if (this.AllDevices.length > 1) {
       this.Toast.error("Please Select only One Device", "Error showing Dialog");
@@ -1640,9 +1665,10 @@ export class AllControlsDialogComponent implements OnInit {
       }
     })
   }
-  OpenCommandDialog(e, name): void {
+  OpenCommandDialog(name, id): void {
     console.log(name);
     this.CommandTypeService.setCommand(name)
+    this.CommandTypeService.setCommandId(id)
     setTimeout(() => {
       this.dialog.open(ControlDialogComponent)
     }, 400)
@@ -1657,17 +1683,33 @@ export class AllControlsDialogComponent implements OnInit {
     "../pages/Dialogs/ControlDialog.scss",]
 })
 export class ControlDialogComponent implements OnInit {
+
   commandType: string;
+  commandId: number;
   channel: string;
   picQualtity: string;
   camChannel: string;
+  phoneNumber: string;
   constructor(public CommandTypeService: CommandTypeService, public CommandsService: CommandsService, public toast: ToastrService, public dialog: MatDialog) { }
   ngOnInit(): void {
-    this.CommandTypeService.currnetCommand.subscribe(val => this.commandType = val)
+    this.CommandTypeService.currnetCommand.subscribe(command => this.commandType = command)
+    this.CommandTypeService.currentCommandId.subscribe(id => this.commandId = id)
   }
   ChannelChange(e) {
     console.log(e)
     this.channel = e.value;
+  }
+  camChannelChange(e) {
+    console.log(e.value)
+    this.camChannel = e.value
+  }
+  picQualityChange(e) {
+    console.log(e.value)
+    this.picQualtity = e.value;
+  }
+  numberChange(e) {
+    console.log(e.target.value);
+    this.phoneNumber = e.target.value;
   }
   //#region Send Request
   sendRequest() {
@@ -1676,7 +1718,7 @@ export class ControlDialogComponent implements OnInit {
         let data = {
           check_status: false,
           fb_id: 1,
-          p_cmd_id: 1,
+          p_cmd_id: this.commandId,
           Name: this.commandType,
           _picQ: "",
           camera_channel: "",
@@ -1693,7 +1735,11 @@ export class ControlDialogComponent implements OnInit {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              console.log(newRes, "New Response")
+              if (newRes._object.Message == "") {
+                this.toast.success(`${this.commandType} command successfully executed`, "Success")
+                this.dialog.closeAll();
+                this.dialog.open(AllControlsDialogComponent)
+              }
             })
           }
         })
@@ -1707,7 +1753,7 @@ export class ControlDialogComponent implements OnInit {
         let data = {
           check_status: false,
           fb_id: 1,
-          p_cmd_id: 5,
+          p_cmd_id: this.commandId,
           Name: this.commandType,
           _picQ: this.picQualtity,
           camera_channel: this.camChannel,
@@ -1723,6 +1769,7 @@ export class ControlDialogComponent implements OnInit {
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
               if (newRes._object.Message == "") {
+                this.toast.success(`${this.commandType} command successfully executed`, "Success")
                 this.dialog.closeAll();
                 this.dialog.open(AllControlsDialogComponent)
               }
@@ -1744,7 +1791,7 @@ export class ControlDialogComponent implements OnInit {
         let data = {
           check_status: false,
           fb_id: 1,
-          p_cmd_id: 8,
+          p_cmd_id: this.commandId,
           Name: this.commandType,
           _picQ: "",
           camera_channel: "",
@@ -1761,7 +1808,326 @@ export class ControlDialogComponent implements OnInit {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              console.log(newRes, "New Response")
+              if (newRes._object.Message == "") {
+                this.toast.success(`${this.commandType} command successfully executed`, "Success")
+                this.dialog.closeAll();
+                this.dialog.open(AllControlsDialogComponent)
+              }
+            })
+          }
+        })
+      }
+      else {
+        this.toast.error("Please select request channel", "Couldn't send Request")
+      }
+    }
+    if (this.commandType == "Device Reboot") {
+      if (this.channel) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.commandId,
+          Name: this.commandType,
+          _picQ: "",
+          camera_channel: "",
+          p_cell_no: "",
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        this.CommandsService.SendCommand(data).subscribe(res => {
+          // console.log(typeof res._object.Message)
+          if (typeof res._object.Message == "string") {
+            this.toast.error(res._object.Message)
+          }
+          else {
+            data.check_status = true;
+            data.fb_id = res._object.Message;
+            this.CommandsService.SendCommand(data).subscribe(newRes => {
+              if (newRes._object.Message == "") {
+                this.toast.success(`${this.commandType} command successfully executed`, "Success")
+                this.dialog.closeAll();
+                this.dialog.open(AllControlsDialogComponent)
+              }
+            })
+          }
+        })
+      }
+      else {
+        this.toast.error("Please select request channel", "Couldn't send Request")
+      }
+    }
+    if (this.commandType == "Output2 on") {
+      if (this.channel) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.commandId,
+          Name: this.commandType,
+          _picQ: "",
+          camera_channel: "",
+          p_cell_no: "",
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        this.CommandsService.SendCommand(data).subscribe(res => {
+          // console.log(typeof res._object.Message)
+          if (typeof res._object.Message == "string") {
+            this.toast.error(res._object.Message)
+          }
+          else {
+            data.check_status = true;
+            data.fb_id = res._object.Message;
+            this.CommandsService.SendCommand(data).subscribe(newRes => {
+              if (newRes._object.Message == "") {
+                this.toast.success(`${this.commandType} command successfully executed`, "Success")
+                this.dialog.closeAll();
+                this.dialog.open(AllControlsDialogComponent)
+              }
+            })
+          }
+        })
+      }
+      else {
+        this.toast.error("Please select request channel", "Couldn't send Request")
+      }
+    }
+    if (this.commandType == "Output2 off") {
+      if (this.channel) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.commandId,
+          Name: this.commandType,
+          _picQ: "",
+          camera_channel: "",
+          p_cell_no: "",
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        this.CommandsService.SendCommand(data).subscribe(res => {
+          // console.log(typeof res._object.Message)
+          if (typeof res._object.Message == "string") {
+            this.toast.error(res._object.Message)
+          }
+          else {
+            data.check_status = true;
+            data.fb_id = res._object.Message;
+            this.CommandsService.SendCommand(data).subscribe(newRes => {
+              if (newRes._object.Message == "") {
+                this.toast.success(`${this.commandType} command successfully executed`, "Success")
+                this.dialog.closeAll();
+                this.dialog.open(AllControlsDialogComponent)
+              }
+            })
+          }
+        })
+      }
+      else {
+        this.toast.error("Please select request channel", "Couldn't send Request")
+      }
+    }
+    if (this.commandType == "Output3 on") {
+      if (this.channel) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.commandId,
+          Name: this.commandType,
+          _picQ: "",
+          camera_channel: "",
+          p_cell_no: "",
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        this.CommandsService.SendCommand(data).subscribe(res => {
+          // console.log(typeof res._object.Message)
+          if (typeof res._object.Message == "string") {
+            this.toast.error(res._object.Message)
+          }
+          else {
+            data.check_status = true;
+            data.fb_id = res._object.Message;
+            this.CommandsService.SendCommand(data).subscribe(newRes => {
+              if (newRes._object.Message == "") {
+                this.toast.success(`${this.commandType} command successfully executed`, "Success")
+                this.dialog.closeAll();
+                this.dialog.open(AllControlsDialogComponent)
+              }
+            })
+          }
+        })
+      }
+      else {
+        this.toast.error("Please select request channel", "Couldn't send Request")
+      }
+    }
+    if (this.commandType == "Output3 off") {
+      if (this.channel) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.commandId,
+          Name: this.commandType,
+          _picQ: "",
+          camera_channel: "",
+          p_cell_no: "",
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        this.CommandsService.SendCommand(data).subscribe(res => {
+          // console.log(typeof res._object.Message)
+          if (typeof res._object.Message == "string") {
+            this.toast.error(res._object.Message)
+          }
+          else {
+            data.check_status = true;
+            data.fb_id = res._object.Message;
+            this.CommandsService.SendCommand(data).subscribe(newRes => {
+              if (newRes._object.Message == "") {
+                this.toast.success(`${this.commandType} command successfully executed`, "Success")
+                this.dialog.closeAll();
+                this.dialog.open(AllControlsDialogComponent)
+              }
+            })
+          }
+        })
+      }
+      else {
+        this.toast.error("Please select request channel", "Couldn't send Request")
+      }
+    }
+    if (this.commandType == "Output1(Imb) On") {
+      if (this.channel) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.commandId,
+          Name: this.commandType,
+          _picQ: "",
+          camera_channel: "",
+          p_cell_no: "",
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        this.CommandsService.SendCommand(data).subscribe(res => {
+          // console.log(typeof res._object.Message)
+          if (typeof res._object.Message == "string") {
+            this.toast.error(res._object.Message)
+          }
+          else {
+            data.check_status = true;
+            data.fb_id = res._object.Message;
+            this.CommandsService.SendCommand(data).subscribe(newRes => {
+              if (newRes._object.Message == "") {
+                this.toast.success(`${this.commandType} command successfully executed`, "Success")
+                this.dialog.closeAll();
+                this.dialog.open(AllControlsDialogComponent)
+              }
+            })
+          }
+        })
+      }
+      else {
+        this.toast.error("Please select request channel", "Couldn't send Request")
+      }
+    }
+    if (this.commandType == "Output1(Imb) Off") {
+      if (this.channel) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.commandId,
+          Name: this.commandType,
+          _picQ: "",
+          camera_channel: "",
+          p_cell_no: "",
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        this.CommandsService.SendCommand(data).subscribe(res => {
+          // console.log(typeof res._object.Message)
+          if (typeof res._object.Message == "string") {
+            this.toast.error(res._object.Message)
+          }
+          else {
+            data.check_status = true;
+            data.fb_id = res._object.Message;
+            this.CommandsService.SendCommand(data).subscribe(newRes => {
+              if (newRes._object.Message == "") {
+                this.toast.success(`${this.commandType} command successfully executed`, "Success")
+                this.dialog.closeAll();
+                this.dialog.open(AllControlsDialogComponent)
+              }
+            })
+          }
+        })
+      }
+      else {
+        this.toast.error("Please select request channel", "Couldn't send Request")
+      }
+    }
+    if (this.commandType == "Location") {
+      if (this.channel) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.commandId,
+          Name: this.commandType,
+          _picQ: "",
+          camera_channel: "",
+          p_cell_no: "",
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        this.CommandsService.SendCommand(data).subscribe(res => {
+          // console.log(typeof res._object.Message)
+          if (typeof res._object.Message == "string") {
+            this.toast.error(res._object.Message)
+          }
+          else {
+            data.check_status = true;
+            data.fb_id = res._object.Message;
+            this.CommandsService.SendCommand(data).subscribe(newRes => {
+              if (newRes._object.Message == "") {
+                this.toast.success(`${this.commandType} command successfully executed`, "Success")
+                this.dialog.closeAll();
+                this.dialog.open(AllControlsDialogComponent)
+              }
+            })
+          }
+        })
+      }
+      else {
+        this.toast.error("Please select request channel", "Couldn't send Request")
+      }
+    }
+    if (this.commandType == "Voice Monitor") {
+      if (this.channel && this.phoneNumber) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.commandId,
+          Name: this.commandType,
+          _picQ: "",
+          camera_channel: "",
+          p_cell_no: this.phoneNumber,
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        this.CommandsService.SendCommand(data).subscribe(res => {
+          // console.log(typeof res._object.Message)
+          if (typeof res._object.Message == "string") {
+            this.toast.error(res._object.Message)
+          }
+          else {
+            data.check_status = true;
+            data.fb_id = res._object.Message;
+            this.CommandsService.SendCommand(data).subscribe(newRes => {
+              if (newRes._object.Message == "") {
+                this.toast.success(`${this.commandType} command successfully executed`, "Success")
+                this.dialog.closeAll();
+                this.dialog.open(AllControlsDialogComponent)
+              }
             })
           }
         })
@@ -1772,16 +2138,455 @@ export class ControlDialogComponent implements OnInit {
     }
   }
   //#endregion
-
-  //#region Take Picture
-  camChannelChange(e) {
-    console.log(e.value)
-    this.camChannel = e.value
+  cancelRequest() {
+    this.dialog.closeAll();
+    this.dialog.open(AllControlsDialogComponent)
   }
-  picQualityChange(e) {
-    console.log(e.value)
-    this.picQualtity = e.value;
+}
+
+@Component({
+  selector: 'app-all-settings-dialog',
+  templateUrl: './Dialogs/AllSettingsDialog.html',
+  styleUrls: [
+    "../pages/pages.component.scss",
+    "../pages/Dialogs/ControlDialog.scss",]
+})
+export class AllSettingsDialogComponent implements OnInit {
+  AllSettings: Setting[] = [{
+    check_status: false,
+    fb_id: 0,
+    p_cmd_id: 0,
+    Name: "",
+    p_cell_no: '',
+    p_IpAddress: "",
+    p_tcp_port: "",
+    url: "",
+    apn: "",
+    user_name: "",
+    pwd: "",
+    mileage: "",
+    cmd_type: "",
+    p_dev_id: "",
+    channel: ""
+  }]
+  constructor(public SettingsService: SettingsService, public SettingTypeService: SettingTypeService, public dialog: MatDialog) { }
+  ngOnInit(): void {
+    this.SettingsService.GetSettings().subscribe(settings => this.AllSettings = settings.data)
+  }
+  OpenSettingDialog(name, id) {
+    this.SettingTypeService.setSetting(name);
+    this.SettingTypeService.setSettingId(id)
+    this.dialog.open(SettingDialogComponent)
+  }
+}
+@Component({
+  selector: 'app-settings-dialog',
+  templateUrl: './Dialogs/SettingsDialog.html',
+  styleUrls: [
+    "../pages/pages.component.scss",
+    "../pages/Dialogs/ControlDialog.scss",]
+})
+export class SettingDialogComponent implements OnInit {
+  settingName: string;
+  settingId: number;
+  channel: string;
+  phoneNumber: string;
+  ipAddress: string;
+  port: string;
+  url: string;
+  apn: string;
+  username: string;
+  password: string;
+  inputType: string = "text";
+  mileage: string;
+  textCommand: string;
+  hidden: boolean = true;
+  constructor(public SettingsService: SettingsService, public SettingTypeService: SettingTypeService, public dialog: MatDialog, public toast: ToastrService) { }
+  ngOnInit(): void {
+    this.SettingTypeService.currnetSetting.subscribe(setting => this.settingName = setting)
+    this.SettingTypeService.currentSettingId.subscribe(id => this.settingId = id)
+  }
+
+  ChannelChange(e) {
+    console.log(e)
+    this.channel = e.value;
+  }
+  numberChange(e) {
+    console.log(e.target.value);
+    this.phoneNumber = e.target.value;
+  }
+  togglePassword() {
+    debugger;
+    this.hidden = !this.hidden;
+  }
+  //#region Send Request
+  sendRequest() {
+    if (this.settingName == 'Set Message Center Number') {
+      let data = {
+        check_status: false,
+        fb_id: 1,
+        p_cmd_id: this.settingId,
+        Name: this.settingName,
+        p_cell_no: this.phoneNumber,
+        p_IpAddress: "",
+        p_tcp_port: "",
+        url: "",
+        apn: "",
+        user_name: "",
+        pwd: "",
+        mileage: "",
+        cmd_type: "",
+        p_dev_id: device_id,
+        channel: this.channel
+      }
+      if (this.channel && this.phoneNumber) {
+        this.SettingsService.SendSettings(data).subscribe(res => {
+          if (typeof parseInt(res._object.Message) != "number") {
+            this.toast.error(res._object.Message)
+          }
+          else {
+            data.check_status = true;
+            data.fb_id = res._object.Message;
+            this.SettingsService.SendSettings(data).subscribe(newRes => {
+              if (newRes._object.Message == "") {
+                this.toast.success(`${this.settingName} command successfully executed`, "Success")
+                this.dialog.closeAll();
+                this.dialog.open(AllSettingsDialogComponent)
+              }
+            })
+          }
+        })
+      }
+      else {
+        this.toast.error('Please Fill the Form', "Couldn't Request")
+      }
+    }
+    if (this.settingName == 'Reset to Factory Default') {
+      let data = {
+        check_status: false,
+        fb_id: 1,
+        p_cmd_id: this.settingId,
+        Name: this.settingName,
+        p_cell_no: '',
+        p_IpAddress: "",
+        p_tcp_port: "",
+        url: "",
+        apn: "",
+        user_name: "",
+        pwd: "",
+        mileage: "",
+        cmd_type: "",
+        p_dev_id: device_id,
+        channel: this.channel
+      }
+      if (this.channel) {
+        this.SettingsService.SendSettings(data).subscribe(res => {
+          if (typeof parseInt(res._object.Message) != "number") {
+            this.toast.error(res._object.Message)
+          }
+          else {
+            data.check_status = true;
+            data.fb_id = res._object.Message;
+            this.SettingsService.SendSettings(data).subscribe(newRes => {
+              if (newRes._object.Message == "") {
+                this.toast.success(`${this.settingName} command successfully executed`, "Success")
+                this.dialog.closeAll();
+                this.dialog.open(AllSettingsDialogComponent)
+              }
+            })
+          }
+        })
+      }
+      else {
+        this.toast.error('Please Fill the Form', "Couldn't Request")
+      }
+    }
+    if (this.settingName == 'Change IP') {
+      this.ipAddress = $('.ipAddressInput').val().toString();
+      this.port = $('.portInput').val().toString();
+      if (this.ipAddress && this.port) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.settingId,
+          Name: this.settingName,
+          p_cell_no: '',
+          p_IpAddress: this.ipAddress,
+          p_tcp_port: this.port,
+          url: "",
+          apn: "",
+          user_name: "",
+          pwd: "",
+          mileage: "",
+          cmd_type: "",
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        if (this.channel) {
+          this.SettingsService.SendSettings(data).subscribe(res => {
+            if (typeof parseInt(res._object.Message) != "number") {
+              this.toast.error(res._object.Message)
+            }
+            else {
+              data.check_status = true;
+              data.fb_id = res._object.Message;
+              this.SettingsService.SendSettings(data).subscribe(newRes => {
+                if (newRes._object.Message == "") {
+                  this.toast.success(`${this.settingName} command successfully executed`, "Success")
+                  this.dialog.closeAll();
+                  this.dialog.open(AllSettingsDialogComponent)
+                }
+              })
+            }
+          })
+        }
+        else {
+          this.toast.error('Please Fill the Form', "Couldn't Request")
+        }
+      }
+      else {
+        this.toast.error("Please Enter IP and PORT")
+      }
+    }
+    if (this.settingName == 'Change Domain') {
+      this.url = $('.urlInput').val().toString().toLowerCase();
+      this.port = $('.portInput').val().toString();
+      if (this.url && this.port) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.settingId,
+          Name: this.settingName,
+          p_cell_no: '',
+          p_IpAddress: '',
+          p_tcp_port: this.port,
+          url: this.url,
+          apn: "",
+          user_name: "",
+          pwd: "",
+          mileage: "",
+          cmd_type: "",
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        if (this.channel) {
+          this.SettingsService.SendSettings(data).subscribe(res => {
+            if (typeof parseInt(res._object.Message) != "number") {
+              this.toast.error(res._object.Message)
+            }
+            else {
+              data.check_status = true;
+              data.fb_id = res._object.Message;
+              this.SettingsService.SendSettings(data).subscribe(newRes => {
+                if (newRes._object.Message == "") {
+                  this.toast.success(`${this.settingName} command successfully executed`, "Success")
+                  this.dialog.closeAll();
+                  this.dialog.open(AllSettingsDialogComponent)
+                }
+              })
+            }
+          })
+        }
+        else {
+          this.toast.error('Please Fill the Form', "Couldn't Request")
+        }
+      }
+      else {
+        this.toast.error("Please Enter URL and PORT")
+      }
+    }
+    if (this.settingName == 'Change APN') {
+      this.apn = $('.apnInput').val().toString();
+      if (this.apn) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.settingId,
+          Name: this.settingName,
+          p_cell_no: '',
+          p_IpAddress: '',
+          p_tcp_port: '',
+          url: '',
+          apn: this.apn,
+          user_name: "",
+          pwd: "",
+          mileage: "",
+          cmd_type: "",
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        if (this.channel) {
+          this.SettingsService.SendSettings(data).subscribe(res => {
+            if (typeof parseInt(res._object.Message) != "number") {
+              this.toast.error(res._object.Message)
+            }
+            else {
+              data.check_status = true;
+              data.fb_id = res._object.Message;
+              this.SettingsService.SendSettings(data).subscribe(newRes => {
+                if (newRes._object.Message == "") {
+                  this.toast.success(`${this.settingName} command successfully executed`, "Success")
+                  this.dialog.closeAll();
+                  this.dialog.open(AllSettingsDialogComponent)
+                }
+              })
+            }
+          })
+        }
+        else {
+          this.toast.error('Please Fill the Form', "Couldn't Request")
+        }
+      }
+      else {
+        this.toast.error("Please Enter APN")
+      }
+    }
+    if (this.settingName == 'Change APN User name and Password') {
+      // this.apn = $('.apnInput').val().toString();
+      this.username = $('.usernameInput').val().toString();
+      this.password = $('.passwordInput').val().toString();
+      if (this.username && this.password) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.settingId,
+          Name: this.settingName,
+          p_cell_no: '',
+          p_IpAddress: '',
+          p_tcp_port: '',
+          url: '',
+          apn: '',
+          user_name: this.username,
+          pwd: this.password,
+          mileage: "",
+          cmd_type: "",
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        if (this.channel) {
+          this.SettingsService.SendSettings(data).subscribe(res => {
+            if (typeof parseInt(res._object.Message) != "number") {
+              this.toast.error(res._object.Message)
+            }
+            else {
+              data.check_status = true;
+              data.fb_id = res._object.Message;
+              this.SettingsService.SendSettings(data).subscribe(newRes => {
+                if (newRes._object.Message == "") {
+                  this.toast.success(`${this.settingName} command successfully executed`, "Success")
+                  this.dialog.closeAll();
+                  this.dialog.open(AllSettingsDialogComponent)
+                }
+              })
+            }
+          })
+        }
+        else {
+          this.toast.error('Please Fill the Form', "Couldn't Request")
+        }
+      }
+      else {
+        this.toast.error("Please Enter Username and Password")
+      }
+    }
+    if (this.settingName == 'Reset Odometer') {
+      this.mileage = $('.MileageInput').val().toString();
+      if (this.mileage) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.settingId,
+          Name: this.settingName,
+          p_cell_no: '',
+          p_IpAddress: '',
+          p_tcp_port: '',
+          url: '',
+          apn: '',
+          user_name: '',
+          pwd: '',
+          mileage: this.mileage,
+          cmd_type: "",
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        if (this.channel) {
+          this.SettingsService.SendSettings(data).subscribe(res => {
+            if (typeof parseInt(res._object.Message) != "number") {
+              this.toast.error(res._object.Message)
+            }
+            else {
+              data.check_status = true;
+              data.fb_id = res._object.Message;
+              this.SettingsService.SendSettings(data).subscribe(newRes => {
+                if (newRes._object.Message == "") {
+                  this.toast.success(`${this.settingName} command successfully executed`, "Success")
+                  this.dialog.closeAll();
+                  this.dialog.open(AllSettingsDialogComponent)
+                }
+              })
+            }
+          })
+        }
+        else {
+          this.toast.error('Please Fill the Form', "Couldn't Request")
+        }
+      }
+      else {
+        this.toast.error("Please Enter Milage to Reset the Odometer")
+      }
+    }
+    if (this.settingName == 'Text Command(6600,7700,GS Series)') {
+      this.textCommand = $('.textCommandInput').val().toString();
+      if (this.textCommand) {
+        let data = {
+          check_status: false,
+          fb_id: 1,
+          p_cmd_id: this.settingId,
+          Name: this.settingName,
+          p_cell_no: '',
+          p_IpAddress: '',
+          p_tcp_port: '',
+          url: '',
+          apn: '',
+          user_name: '',
+          pwd: '',
+          mileage: '',
+          cmd_type: this.textCommand,
+          p_dev_id: device_id,
+          channel: this.channel
+        }
+        if (this.channel) {
+          this.SettingsService.SendSettings(data).subscribe(res => {
+            if (typeof parseInt(res._object.Message) != "number") {
+              this.toast.error(res._object.Message)
+            }
+            else {
+              data.check_status = true;
+              data.fb_id = res._object.Message;
+              this.SettingsService.SendSettings(data).subscribe(newRes => {
+                if (newRes._object.Message == "") {
+                  this.toast.success(`${this.settingName} command successfully executed`, "Success")
+                  this.dialog.closeAll();
+                  this.dialog.open(AllSettingsDialogComponent)
+                }
+              })
+            }
+          })
+        }
+        else {
+          this.toast.error('Please Fill the Form', "Couldn't Request")
+        }
+      }
+      else {
+        this.toast.error("Please Enter Milage to Reset the Odometer")
+      }
+    }
   }
   //#endregion
+  cancelRequest() {
+    this.dialog.closeAll();
+    this.dialog.open(AllSettingsDialogComponent)
+  }
+
 }
 //#endregion

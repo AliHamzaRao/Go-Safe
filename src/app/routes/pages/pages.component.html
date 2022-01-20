@@ -221,7 +221,7 @@ perfectScrollbar
             <button
               mat-button
               class="userPanelKeys"
-              (click)="openControlDialog()"
+              (click)="openAllControlsDialog()"
             >
               <img
                 src="../../../assets/icons/Control-white.png"
@@ -230,13 +230,13 @@ perfectScrollbar
               <br />
               <span class="13px ​!important"> Control</span>
             </button>
-            <button mat-button class="userPanelKeys">
+            <button mat-button class="userPanelKeys"(click)="openAllSettingsDialog()">
               <img
                 src="../../../assets/icons/Setting-White.png"
                 style="margin-left: 8px; height: 30px; margin-bottom: -20px"
               />
               <br />
-              <span class="13px !important">Settings</span>
+              <span class="13px !important" >Settings</span>
             </button>
             <button
               mat-button
