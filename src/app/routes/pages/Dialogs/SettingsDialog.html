@@ -1,0 +1,390 @@
+<h2 mat-dialog-title class="dialogTitle">{{settingName?settingName:'Test'}}</h2>
+<div class="m-0 p-0 dialogContent" mat-dialog-content>
+  <!-- Set Message Center Number Content -->
+  <span
+    class="alarmResetDialog"
+    *ngIf="settingName =='Set Message Center Number'"
+  >
+    <h3 class="m-0">Enter Phone Number:</h3>
+    <input
+      type="text"
+      placeholder="Enter Phone Number"
+      style="
+        background: transparent;
+        outline: none;
+        border: none;
+        border-bottom: 1px solid black;
+        text-align: center;
+        padding: 5px 15px;
+        color: black;
+        font-size: 13px;
+        margin-bottom: 10px;
+      "
+      (change)="numberChange($event)"
+      [value]="phoneNumber?phoneNumber:''"
+      oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')"
+    />
+
+    <h4 class="m-0">Select Request Channel</h4>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Set Message Center Number Content -->
+  <!-- Reset to Factory Default Content -->
+  <span
+    class="alarmResetDialog"
+    *ngIf="settingName =='Reset to Factory Default'"
+  >
+    <h3 class="m-0">Select Request Channel</h3>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Reset to Factory Default Content -->
+  <!-- Change IP Content -->
+  <span class="alarmResetDialog" *ngIf="settingName =='Change IP'">
+    <h4 class="m-0">Enter IP Address and Port:</h4>
+    <span>
+      <input
+        type="text"
+        class="ipAddressInput"
+        placeholder="Please enter IP Address"
+        style="
+          background: transparent;
+          outline: none;
+          border: 1px solid black;
+          text-align: center;
+          padding: 5px 15px;
+          color: black;
+          font-size: 13px;
+          margin-bottom: 10px;
+        "
+      />
+      &nbsp;:
+      <input
+        type="text"
+        class="portInput"
+        placeholder="PORT"
+        style="
+          background: transparent;
+          outline: none;
+          border: 1px solid black;
+          text-align: center;
+          padding: 5px 15px;
+          color: black;
+          font-size: 13px;
+          margin-bottom: 10px;
+          width: 60px;
+        "
+      />
+    </span>
+    <!-- oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$3')" -->
+    <h4 class="m-0">Select Request Channel</h4>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Change IP Content -->
+  <!-- Change Domian Content -->
+  <span class="alarmResetDialog" *ngIf="settingName =='Change Domain'">
+    <h4 class="m-0">Enter new URL and Port:</h4>
+    <span>
+      <input
+        type="url"
+        class="urlInput"
+        placeholder="Please Enter URL"
+        style="
+          background: transparent;
+          outline: none;
+          border: 1px solid black;
+          text-align: center;
+          padding: 5px 15px;
+          color: black;
+          font-size: 13px;
+          margin-bottom: 10px;
+        "
+      />
+      &nbsp;:
+      <input
+        type="text"
+        class="portInput"
+        placeholder="PORT"
+        style="
+          background: transparent;
+          outline: none;
+          border: 1px solid black;
+          text-align: center;
+          padding: 5px 15px;
+          color: black;
+          font-size: 13px;
+          margin-bottom: 10px;
+          width: 60px;
+        "
+      />
+    </span>
+    <h4 class="m-0">Select Request Channel</h4>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Change Domian Content -->
+  <!-- Change APN Content -->
+  <span class="alarmResetDialog" *ngIf="settingName =='Change APN'">
+    <h4 class="m-0">Enter APN:</h4>
+    <input
+      type="text"
+      class="apnInput"
+      placeholder="Please Enter new APN"
+      style="
+        background: transparent;
+        outline: none;
+        border: 1px solid black;
+        text-align: center;
+        padding: 5px 15px;
+        color: black;
+        font-size: 13px;
+        margin-bottom: 10px;
+      "
+    />
+    <h4 class="m-0">Select Request Channel</h4>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Change APN Content -->
+  <!-- Change APN Username and Password Content -->
+  <span
+    class="alarmResetDialog"
+    *ngIf="settingName =='Change APN User name and Password'"
+  >
+    <h4 class="m-0">Enter Username and Password:</h4>
+    <span>
+      <input
+        type="text"
+        class="usernameInput"
+        placeholder="Please enter Username"
+        style="
+          background: transparent;
+          outline: none;
+          border: 1px solid black;
+          text-align: center;
+          padding: 5px 15px;
+          color: black;
+          font-size: 13px;
+          margin-bottom: 10px;
+        "
+      />
+      <br />
+      <input
+        [type]="hidden?'password':'text'"
+        class="passwordInput"
+        placeholder="Please enter Password"
+        style="
+          background: transparent;
+          outline: none;
+          border: 1px solid black;
+          text-align: center;
+          padding: 5px 15px;
+          color: black;
+          font-size: 13px;
+          margin-bottom: 10px;
+        "
+      />
+      &nbsp;
+      <button mat-icon-button (click)="togglePassword()">
+        <mat-icon *ngIf="hidden">visibility</mat-icon
+        ><mat-icon *ngIf="!hidden">visibility_off</mat-icon>
+      </button>
+    </span>
+    <h4 class="m-0">Select Request Channel</h4>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Change APN Username and Password Content -->
+
+  <!-- Reset Odometer Content -->
+  <span class="alarmResetDialog" *ngIf="settingName =='Reset Odometer'">
+    <h4 class="m-0">Enter Mileage:</h4>
+    <input
+      type="text"
+      class="mileageInput"
+      placeholder="Mileage"
+      style="
+        background: transparent;
+        outline: none;
+        border: 1px solid black;
+        text-align: center;
+        padding: 5px 15px;
+        color: black;
+        font-size: 13px;
+        margin-bottom: 10px;
+      "
+      oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')"
+    />
+    km
+    <h4 class="m-0">Select Request Channel</h4>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Reset Odometer Content -->
+  <!-- Reset Odometer Content -->
+  <span
+    class="alarmResetDialog"
+    *ngIf="settingName =='Text Command(6600,7700,GS Series)'"
+    ><span>
+      <h4 class="m-0">Enter Command:</h4>
+      <textarea
+        class="textCommandInput"
+        placeholder="Enter Command"
+        rows="5"
+        style="
+          background: transparent;
+          outline: none;
+          border: 1px solid black;
+          text-align: center;
+          padding: 5px 15px;
+          color: black;
+          font-size: 13px;
+          margin-bottom: 10px;
+        "
+      >
+      </textarea>
+    </span>
+    <h4 class="m-0">Select Request Channel</h4>
+    <mat-radio-group
+      aria-label="Select an option"
+      color="primary"
+      style="font-size: 15px; font-weight: 200"
+      (change)="ChannelChange($event)"
+    >
+      <mat-radio-button value="GPRS">GPRS</mat-radio-button>
+      <br />
+      <mat-radio-button value="SMS">SMS</mat-radio-button>
+    </mat-radio-group>
+    <span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
+      <button mat-button class="CommandSendButton" (click)="sendRequest()">
+        Send
+      </button>
+    </span>
+  </span>
+  <!-- Reset Odometer Content -->
+</div>

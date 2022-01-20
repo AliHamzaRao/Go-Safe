@@ -22,7 +22,7 @@ import { PipesModule } from './theme/pipes/pipes.module';
 import { AppRoutingModule } from './app.routing';
 
 import { AppComponent } from './app.component';
-import { AssetTripDialogComponent, ControlDialogComponent, historyDialogComponent, OdometerResetSuccessDialogComponent, PagesComponent, PictureChannelDialogComponent, PictureTakenDialogComponent, ResetOdometerDialogComponent, SendTakePictureDialogComponent } from 'src/app/routes/pages/pages.component';
+import { AllControlsDialogComponent, AssetTripDialogComponent, ControlDialogComponent, historyDialogComponent, PagesComponent, AllSettingsDialogComponent, SettingDialogComponent } from 'src/app/routes/pages/pages.component';
 import { NotFoundComponent } from './routes/pages/errors/not-found/not-found.component';
 import { ErrorComponent } from './routes/pages/errors/error/error.component';
 import { AppSettings } from './_core/settings/app.settings';
@@ -99,11 +99,9 @@ import { MatIconModule } from '@angular/material/icon';
     AssetTripDialogComponent,
     historyDialogComponent,
     ControlDialogComponent,
-    ResetOdometerDialogComponent,
-    OdometerResetSuccessDialogComponent,
-    SendTakePictureDialogComponent,
-    PictureChannelDialogComponent,
-    PictureTakenDialogComponent
+    AllControlsDialogComponent,
+    AllSettingsDialogComponent,
+    SettingDialogComponent
   ],
 
   providers: [

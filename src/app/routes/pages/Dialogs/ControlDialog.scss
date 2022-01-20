@@ -14,7 +14,6 @@
 }
 
 .dialogContent {
-  padding: 0px !important;
   width: 50vw !important;
 }
 
@@ -29,4 +28,39 @@
   height: max-content !important;
   max-height: 40vh !important;
   overflow-y: scroll;
+}
+.settingType {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 0px !important;
+}
+.alarmResetDialog {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.CommandSendButton {
+  background-color: rgb(29, 184, 140) !important;
+  color: white !important;
+  font-size: 20px;
+  padding: 5px 30px;
+}
+
+.CommandCancelButton {
+  background-color: rgb(197, 24, 62) !important;
+  color: white !important;
+  font-size: 20px;
+  padding: 5px 30px;
+}
+
+.takePictureDialog {
+  display: flex;
+  flex-direction: column;
+  // align-items: center;
+}
+.camChannelRadio {
+  display: flex;
+  align-items: center;
 }

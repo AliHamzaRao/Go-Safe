@@ -16,6 +16,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { DashboardModule } from '../dashboard/dashboard.module';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatRadioModule } from '@angular/material/radio';
 
 export const routes = [
   { path: '', component: PagesComponent, pathMatch: 'full' }
@@ -24,21 +26,22 @@ export const routes = [
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(routes),
+    MatToolbarModule,
+    MatIconModule,
     FormsModule,
     NgxChartsModule,
     PerfectScrollbarModule,
     AgmCoreModule,
     MatTreeModule,
-    MatIconModule,
     MatButtonModule,
     MatTabsModule,
-    // MatExpansionModule,
     MatDividerModule,
     MatDialogModule,
     MatDatepickerModule,
     MatInputModule,
+    MatRadioModule,
     DashboardModule,
+    RouterModule.forChild(routes),
   ],
   declarations: [
     // historyRecordDialogComponent,
