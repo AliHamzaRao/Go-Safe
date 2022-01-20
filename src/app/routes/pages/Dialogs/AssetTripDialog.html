@@ -1,81 +1,118 @@
 <h2 mat-dialog-title class="dialogTitle">Asset Trips</h2>
 <div class="m-0 p-0 row dialogContent">
-    <div class="col-md-7 m-0 p-0">
-        <form class="row m-0 p-0" style="padding: 10px !important">
-            <div class="col-md-12 m-0 p-0 row" style="
+  <div class="col-md-7 m-0 p-0">
+    <form class="row m-0 p-0" style="padding: 10px !important">
+      <div
+        class="col-md-12 m-0 p-0 row"
+        style="
           display: flex;
           justify-content: center;
           align-items: center;
           margin-bottom: 25px !important;
-        ">
-                <div class="col-md-3">
-                    <label>Period Type</label>
-                </div>
-                <div class="col-md-9">
-                    <select class="historyInput">
-                        <option value="View Type" selected disabled>Select Period</option>
-                        <option value="Monthly">Monthly</option>
-                        <option value="Weekly">Weekly</option>
-                        <option value="Daily">Daily</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-12 m-0 p-0 row" style="
+        "
+      >
+        <div class="col-md-3">
+          <label>Period Type</label>
+        </div>
+        <div class="col-md-9">
+          <select class="historyInput">
+            <option value="View Type" selected disabled>Select Period</option>
+            <option value="Monthly">Monthly</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Daily">Daily</option>
+          </select>
+        </div>
+      </div>
+      <div
+        class="col-md-12 m-0 p-0 row"
+        style="
           display: flex;
           justify-content: center;
           align-items: center;
           margin-bottom: 25px !important;
-        ">
-                <div class="col-md-3">
-                    <label>Date</label>
-                </div>
-                <div class="col-md-9 row m-0">
-                    <div class="col-md-4 p-0 m-0" style="margin-right: 58px !important">
-                        <input type="date" class="historyInputDate" placeholder="Start Date" />
-                    </div>
-                    <div class="col-md-4 p-0 m-0">
-                        <input type="date" class="historyInputDate" placeholder="End Date" />
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 m-0 p-0 row" style="
+        "
+      >
+        <div class="col-md-3">
+          <label>Date</label>
+        </div>
+        <div class="col-md-9 row m-0">
+          <div class="col-md-4 p-0 m-0" style="margin-right: 58px !important">
+            <input
+              type="date"
+              class="historyInputDate"
+              placeholder="Start Date"
+            />
+          </div>
+          <div class="col-md-4 p-0 m-0">
+            <input
+              type="date"
+              class="historyInputDate"
+              placeholder="End Date"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="col-md-12 m-0 p-0 row"
+        style="
           display: flex;
           justify-content: center;
           align-items: center;
           margin-bottom: 25px !important;
-        ">
-                <div class="col-md-3">
-                    <label>Time</label>
-                </div>
-                <div class="col-md-9 row m-0">
-                    <div class="col-md-4 p-0 m-0" style="margin-right: 58px !important">
-                        <input type="time" class="historyInputDate" placeholder="Start Time" />
-                    </div>
-                    <div class="col-md-4 p-0 m-0">
-                        <input type="time" class="historyInputDate" placeholder="End Time" />
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-12 m-0 p-0 row" style="display: flex; justify-content: center; align-items: center">
-                <div class="col-md-3">
-                    <button routerLink="asset-trip-report" mat-button style="
+        "
+      >
+        <div class="col-md-3">
+          <label>Time</label>
+        </div>
+        <div class="col-md-9 row m-0">
+          <div class="col-md-4 p-0 m-0" style="margin-right: 58px !important">
+            <input
+              type="time"
+              class="historyInputDate"
+              placeholder="Start Time"
+            />
+          </div>
+          <div class="col-md-4 p-0 m-0">
+            <input
+              type="time"
+              class="historyInputDate"
+              placeholder="End Time"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="col-md-12 m-0 p-0 row"
+        style="display: flex; justify-content: center; align-items: center"
+      >
+        <div class="col-md-3">
+          <button
+            routerLink="asset-trip-report"
+            mat-button
+            style="
               border: none;
               outline: none;
               color: white;
               background: rgb(29, 184, 140) !important;
               border-radius: 20px !important;
-              padding: 0px 18px;" type="button">
-                        Show Report
-                    </button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div class="col-md-5 m-0 p-0" style="
+              padding: 0px 18px;
+            "
+            type="button"
+          >
+            Show Report
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div
+    class="col-md-5 m-0 p-0"
+    style="
       overflow: hidden !important;
-      background-image: url('../../../assets/images/loginleftimage.png');
+      background-image: url('./assets/images/loginleftimage.png');
       background-size: cover;
       background-position: center;
       height: 33.7vh;
-    "></div>
+    "
+  ></div>
 </div>

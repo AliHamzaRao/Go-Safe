@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
   }
   async ngOnInit() {
     this.img = localStorage.getItem('CompanyLogo');
-    this.img = this.img ? `data:image/png;base64,${this.img}` : '../../../assets/logos/logo 1-01.svg';
+    this.img = this.img ? `data:image/png;base64,${this.img}` : './assets/logos/logo 1-01.svg';
     this.loading = true;
     await this.companyInfoService.getCompanyInfo().subscribe(data => {
       this.CompInfo = data;
