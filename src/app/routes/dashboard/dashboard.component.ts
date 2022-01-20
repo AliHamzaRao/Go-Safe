@@ -50,7 +50,7 @@ export class DashboardComponent implements OnInit {
   rectangle: any;
   circle: any;
   iconUrl: string =
-    "../../../assets/img/vendor/leaflet/new-icon/marker-icon.png";
+    "./assets/img/vendor/leaflet/new-icon/marker-icon.png";
   FenceParam: any;
   fenceName: any;
   countryName: any;
