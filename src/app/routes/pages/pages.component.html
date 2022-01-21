@@ -230,13 +230,17 @@ perfectScrollbar
               <br />
               <span class="13px ​!important"> Control</span>
             </button>
-            <button mat-button class="userPanelKeys"(click)="openAllSettingsDialog()">
+            <button
+              mat-button
+              class="userPanelKeys"
+              (click)="openAllSettingsDialog()"
+            >
               <img
                 src="../../../assets/icons/Setting-White.png"
                 style="margin-left: 8px; height: 30px; margin-bottom: -20px"
               />
               <br />
-              <span class="13px !important" >Settings</span>
+              <span class="13px !important">Settings</span>
             </button>
             <button
               mat-button
@@ -267,7 +271,10 @@ perfectScrollbar
                   <span style="font-size: small !important">Grouped</span>
                 </ng-template>
                 <mat-accordion>
-                  <span *ngFor="let item of OnlineGroups; let i = index">
+                  <span
+                    (ngIf)="(OnlineGroups.length)"
+                    *ngFor="let item of OnlineGroups; let i = index"
+                  >
                     <mat-expansion-panel>
                       <mat-expansion-panel-header class="nestedPanelHeader">
                         <mat-panel-title>
@@ -343,6 +350,7 @@ perfectScrollbar
                       </div>
                     </mat-expansion-panel>
                   </span>
+                  <span ngElse> No Data Found </span>
                 </mat-accordion>
                 <!-- <input type="text" placeholder="Search" class="SearchInput" /> -->
                 <!-- <span>
@@ -436,6 +444,7 @@ perfectScrollbar
                   >
                 </ng-template>
                 <div
+                  (ngIf)="(onlineDevices.length)"
                   class="m-0 singleDevice border-bottom"
                   *ngFor="let item of onlineDevices; let i = index"
                 >
@@ -499,6 +508,8 @@ perfectScrollbar
                     />
                   </div>
                 </div>
+
+                <span ngElse> No Data Found </span>
               </mat-tab>
               <!-- <mat-tab>
                 <ng-template mat-tab-label>

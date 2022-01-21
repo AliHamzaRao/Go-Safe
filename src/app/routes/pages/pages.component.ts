@@ -25,10 +25,9 @@ import { Vehicles } from "src/app/_interfaces/vehicle.model";
 import { dashboardService } from "src/app/_core/_AppServices/dashboard.service";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
 import { CurrentStateService } from '../../_core/_AppServices/CurrentStateService';
-import { CurrentStateResponse, Command, Setting } from '../../_interfaces/DBresponse.model';
+import { CurrentStateResponse, Command, Setting, Alarm } from '../../_interfaces/DBresponse.model';
 import { CommandsService } from '../../_core/_AppServices/CommandsService';
 import { CommandTypeService } from '../../_core/_AppServices/CommandTypeService';
-import { ThisReceiver, ThrowStmt } from "@angular/compiler";
 import { SettingsService } from '../../_core/_AppServices/SettingsService';
 import { SettingTypeService } from '../../_core/_AppServices/SettingTypeService';
 // Global Variables
@@ -74,7 +73,7 @@ export class PagesComponent implements OnInit {
   currentState: number = 0;
   setTime: any;
   marker: any;
-  notifications: any = [];
+  notifications: Alarm[] = [];
   geoFences: any;
   fenceType: any;
   rectMarkers: any[] = [];
