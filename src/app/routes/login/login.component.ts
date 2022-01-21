@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, DebugEventListener, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { emailValidator } from '../../theme/utils/app-validators';
 import { AppSettings } from '../../_core/settings/app.settings';
 import { Settings } from '../../_core/settings/app.settings.model';
 import { userService } from 'src/app/_core/_AppServices/user.service';

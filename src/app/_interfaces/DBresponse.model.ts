@@ -15,7 +15,33 @@ export class AlarmsResponse {
   code: number;
   status: boolean;
   message: string;
-  data: any[];
+  data: Alarm[];
+}
+export class Alarm {
+  Alarm_Detail: string;
+  GPS: string;
+  GPS_Time: Date;
+  ID: number;
+  Location: string;
+  Mode: string;
+  Rec_Time: string;
+  Speed: number;
+  alarm: string;
+  alm_id: number;
+  device_id: string;
+  dir_angle: number;
+  gps_datetime: string;
+  lat: number;
+  lng: number;
+  loc_status: string;
+  packet_no: string;
+  popup: string;
+  rec_datetime: string;
+  ref_dist: number;
+  sms: string;
+  veh_id: number;
+  veh_reg_no: string;
+  veh_status: string;
 }
 export class History {
   public GPSDateTime: string;
