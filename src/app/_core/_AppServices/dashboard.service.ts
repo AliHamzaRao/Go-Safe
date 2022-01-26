@@ -22,11 +22,16 @@ export class dashboardService {
   }
   GetVehiclesTree(): Observable<VehicleResponse> {
     var url = this.userSer.getApiUrl();
-    var list = this.http.get<VehicleResponse>(url + "/api/VehicleTree/list/", { 'headers': this.headers }).pipe(
-      catchError(error => {
-        this.router.navigate(['/500']);
-        return of(null);
-      }));
-    return list;
+    if (url.length) {
+      var list = this.http.get<VehicleResponse>(url + "/api/VehicleTree/list/", { 'headers': this.headers }).pipe(
+        catchError(error => {
+          this.router.navigate(['/500']);
+          return of(null);
+        }));
+      return list;
+    }
+    else {
+      this.router.navigateByUrl('/login')
+    }
   }
 }

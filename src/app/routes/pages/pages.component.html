@@ -25,10 +25,7 @@ perfectScrollbar
     >G</a
   >
   <a class="logo" routerLink="/" (click)="closeSubMenus()">
-    <img
-      src="data:image/png;base64,{{ logo }}"
-      alt=""
-      style="width: 200px !important"
+    <img src="{{ logo }}" alt="" style="width: 200px !important"
   /></a>
   <div fxLayout="row" fxLayoutAlign="space-between" class="w-100">
     <div fxLayout="row" style="align-items: center">
@@ -278,7 +275,7 @@ perfectScrollbar
                     <mat-expansion-panel>
                       <mat-expansion-panel-header class="nestedPanelHeader">
                         <mat-panel-title>
-                          <input type="checkbox" style="margin-right: 10px" />
+                          <!-- <input type="checkbox" style="margin-right: 10px" /> -->
                           {{ item.grp_name }} ({{ item.OnlineDevice.length }})
                         </mat-panel-title>
                       </mat-expansion-panel-header>
@@ -620,10 +617,10 @@ perfectScrollbar
                                 class="nestedPanelHeader"
                               >
                                 <mat-panel-title>
-                                  <input
+                                  <!-- <input
                                     type="checkbox"
                                     style="margin-right: 10px"
-                                  />
+                                  /> -->
                                   {{ t1.grp_name }} ({{ t1.SubMenu.length }})
                                 </mat-panel-title>
                               </mat-expansion-panel-header>
@@ -678,10 +675,10 @@ perfectScrollbar
                                       class="MorenestedPanelHeader"
                                     >
                                       <mat-panel-title>
-                                        <input
+                                        <!-- <input
                                           type="checkbox"
                                           style="margin-right: 10px"
-                                        />
+                                        /> -->
                                         {{ t2.grp_name }} ({{
                                           t2.SubMenu.length
                                         }})
@@ -745,10 +742,10 @@ perfectScrollbar
                                             class="nestedPanelHeader"
                                           >
                                             <mat-panel-title>
-                                              <input
+                                              <!-- <input
                                                 type="checkbox"
                                                 style="margin-right: 10px"
-                                              />
+                                              /> -->
                                               {{ t3.grp_name }} ({{
                                                 t3.SubMenu.length
                                               }})

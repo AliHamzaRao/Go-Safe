@@ -20,7 +20,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatRadioModule } from '@angular/material/radio';
 
 export const routes = [
-  { path: '', component: PagesComponent, pathMatch: 'full' }
+  { path: '', component: PagesComponent, pathMatch: 'full' },
+  { path: '/vehicles', component: PagesComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
