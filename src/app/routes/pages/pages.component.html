@@ -30,9 +30,15 @@ perfectScrollbar
   <div fxLayout="row" fxLayoutAlign="space-between" class="w-100">
     <div fxLayout="row" style="align-items: center">
       <button mat-button class="mat-hover" routerLink="">Live Tacking</button>
-      <button mat-button class="mat-hover" routerLink="vehicles">
+      <button
+        mat-button
+        class="mat-hover"
+        routerLink="vehicles"
+        *ngIf="!showGrouped"
+      >
         Vehicles
       </button>
+      <button mat-button class="mat-hover" *ngIf="showGrouped">Vehicles</button>
       <button mat-button [matMenuTriggerFor]="GeoFenceMenu" class="mat-hover">
         Geofence <mat-icon>keyboard_arrow_down </mat-icon>
       </button>
@@ -267,7 +273,7 @@ perfectScrollbar
                   />
                   <span style="font-size: small !important">Grouped</span>
                 </ng-template>
-                <mat-accordion>
+                <!-- <mat-accordion> -->
                   <span
                     (ngIf)="(OnlineGroups.length)"
                     *ngFor="let item of OnlineGroups; let i = index"
@@ -348,7 +354,7 @@ perfectScrollbar
                     </mat-expansion-panel>
                   </span>
                   <span ngElse> No Data Found </span>
-                </mat-accordion>
+                <!-- </mat-accordion> -->
                 <!-- <input type="text" placeholder="Search" class="SearchInput" /> -->
                 <!-- <span>
                   <div
@@ -532,7 +538,7 @@ perfectScrollbar
                   />
                   <span style="font-size: small !important">Grouped</span>
                 </ng-template>
-                <mat-accordion>
+                <!-- <mat-accordion> -->
                   <!-- <mat-expansion-panel style="margin-bottom: 0.6rem" class="ParentCheckBox">
                       <mat-expansion-panel-header>
                       <mat-panel-title>
@@ -573,7 +579,7 @@ perfectScrollbar
                   <span *ngFor="let item of TREE_DATA; let i = index">
                     <span *ngIf="item.grp_name === 'Assets'">
                       <span *ngIf="item.SubMenu.length">
-                        <mat-accordion>
+                        <!-- <mat-accordion> -->
                           <span *ngFor="let t1 of item.SubMenu; let j = index">
                             <div
                               class="m-0 singleDevice border-bottom"
@@ -759,12 +765,12 @@ perfectScrollbar
                               </span>
                             </mat-expansion-panel>
                           </span>
-                        </mat-accordion>
+                        <!-- </mat-accordion> -->
                       </span>
                     </span>
                   </span>
                   <!-- </mat-expansion-panel> -->
-                </mat-accordion>
+                <!-- </mat-accordion> -->
                 <span> </span>
               </mat-tab>
               <mat-tab>
@@ -798,7 +804,7 @@ perfectScrollbar
                       overflow: hidden;
                       text-overflow: ellipsis;
                     "
-                    >{{ item.veh_reg_no }}
+                    >Device {{ item.veh_reg_no }}
                   </span>
                   <p
                     class="speedCheck text-center"

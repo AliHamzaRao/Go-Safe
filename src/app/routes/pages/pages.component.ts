@@ -151,17 +151,21 @@ export class PagesComponent implements OnInit {
   }
   //#region OnInit
   ngOnInit() {
+    $('.notificationsUnread').addClass('d-none')
+    $(".notificationPanel").addClass("d-none");
+    $(".notificationsRead").addClass("d-none")
     // this.dialog.open(ControlDialogComponent)
     dataArr = [];
     this.offlineDevices = [];
     this.onlineDevices = []
     this.childArray = [];
     this.OnlineGroups = [];
+    this.markers = []
     if (window.location.pathname == "/vehicles") {
       this.showGrouped = true;
     }
     this.logo = localStorage.CompanyLogo ? 'data:image/png;base64,' + localStorage.getItem("CompanyLogo") : '../../../assets/logos/logo 1-01.svg';
-    this.username = localStorage.getItem("username") || 'Test';
+    this.username = localStorage.getItem("username") || null;
     this.mapTypeService.newMap.subscribe((data) => {
       mapType = data;
       this.currentMap = mapType;
@@ -320,9 +324,11 @@ export class PagesComponent implements OnInit {
   //#region TabChangeEvent
   tabChanged(e) {
     if (this.checkedDevices.length) {
-      this.checkedDevices.forEach((item) => {
-        $(`[data-device_id= ${item.id}]`).prop('checked', true)
-      })
+      setTimeout(() => {
+        this.checkedDevices.forEach((item) => {
+          $(`[data-device_id= ${item.id}]`).prop('checked', true)
+        })
+      }, 1000);
     }
   }
   //#endregion
@@ -742,6 +748,8 @@ export class PagesComponent implements OnInit {
             parseFloat(this.markers[index][2]),
           ]);
         });
+        this.lat = this.markers[this.markers.length - 1][1]
+        this.lng = this.markers[this.markers.length - 1][2]
         map.setView([this.lat, this.lng], 12);
         currentMarker.addTo(map);
         this.AllMarkers.push(currentMarker);
@@ -798,20 +806,9 @@ export class PagesComponent implements OnInit {
         this.data = { ...this.newPacketParse };
         // this.data.veh_id
         this.idArr.push(this.data.veh_id)
-        this.CurrentStateService.getCurrentState(this.data.veh_id).subscribe((el: CurrentStateResponse) => {
-          if (el.status) {
-            this.markers = [];
-            el.data.forEach((item) => {
-              this.lat = parseFloat(item.lat);
-              this.lng = parseFloat(item.long);
-              marker = [this.data.device_id, item.lat, item.long];
-              this.markers.push(marker);
-              let markerString = JSON.stringify(this.markers);
-              this.markersService.SetMarkers(markerString);
-              this.setLeafLetMarkers();
-            })
-          }
-        })
+        this.lat = parseFloat(this.data.lat);
+        this.lng = parseFloat(this.data.lng);
+        marker = [this.data.device_id, this.data.lat, this.data.lng];
         let tempObj = this.checkedDevices.find((item) => item.id == this.data.device_id)
         if (!tempObj) {
           this.checkedDevices.push({
@@ -819,32 +816,51 @@ export class PagesComponent implements OnInit {
             id: _id,
           });
         }
+        this.markers.push(marker);
+        let markerString = JSON.stringify(this.markers);
+        this.markersService.SetMarkers(markerString);
         this.AllDevices.push(this.data);
         $('.notificationsUnread').removeClass('d-none')
         this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
         this.AllDeviceDataService.AllDevices.subscribe((data) => {
           this.AllDevices = JSON.parse(data);
         });
+        // this.CurrentStateService.getCurrentState(this.data.veh_id).subscribe((el: CurrentStateResponse) => {
+        //   if (el.status) {
+        //     this.markers = [];
+        //     el.data.forEach((item) => {
+        //       this.lat = parseFloat(item.lat);
+        //       this.lng = parseFloat(item.long);
+        //       marker = [this.data.device_id, item.lat, item.long];
+        //       this.markers.push(marker);
+        //       let markerString = JSON.stringify(this.markers);
+        //       this.markersService.SetMarkers(markerString);
+        //       this.setLeafLetMarkers();
+        //     })
+        //   }
+        // })
+        // let tempObj = this.checkedDevices.find((item) => item.id == this.data.device_id)
+        // if (!tempObj) {
+        //   this.checkedDevices.push({
+        //     event: e,
+        //     id: _id,
+        //   });
+        // }
+        // this.AllDevices.push(this.data);
+        // $('.notificationsUnread').removeClass('d-none')
+        // this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
+        // this.AllDeviceDataService.AllDevices.subscribe((data) => {
+        //   this.AllDevices = JSON.parse(data);
+        // });
       }
       if (mapType === "Open Street Maps") {
         this.newPacketParse = new PacketParser(DataTrack);
         this.data = { ...this.newPacketParse };
         // this.data.veh_id
         this.idArr.push(this.data.veh_id)
-        this.CurrentStateService.getCurrentState(this.data.veh_id).subscribe((el: CurrentStateResponse) => {
-          if (el.status) {
-            this.markers = [];
-            el.data.forEach((item) => {
-              this.lat = parseFloat(item.lat);
-              this.lng = parseFloat(item.long);
-              marker = [this.data.device_id, item.lat, item.long];
-              this.markers.push(marker);
-              let markerString = JSON.stringify(this.markers);
-              this.markersService.SetMarkers(markerString);
-              this.setLeafLetMarkers();
-            })
-          }
-        })
+        this.lat = parseFloat(this.data.lat);
+        this.lng = parseFloat(this.data.lng);
+        marker = [this.data.device_id, this.data.lat, this.data.lng];
         let tempObj = this.checkedDevices.find((item) => item.id == this.data.device_id)
         if (!tempObj) {
           this.checkedDevices.push({
@@ -852,6 +868,10 @@ export class PagesComponent implements OnInit {
             id: _id,
           });
         }
+        this.markers.push(marker);
+        let markerString = JSON.stringify(this.markers);
+        this.markersService.SetMarkers(markerString);
+        this.setLeafLetMarkers();
         this.AllDevices.push(this.data);
         $('.notificationsUnread').removeClass('d-none')
         $(".notificationPanel").addClass("d-none");
@@ -861,6 +881,36 @@ export class PagesComponent implements OnInit {
           this.AllDevices = JSON.parse(data);
         });
       }
+      //   this.CurrentStateService.getCurrentState(this.data.veh_id).subscribe((el: CurrentStateResponse) => {
+      //     if (el.status) {
+      //       this.markers = [];
+      //       el.data.forEach((item) => {
+      //         this.lat = parseFloat(item.lat);
+      //         this.lng = parseFloat(item.long);
+      //         marker = [this.data.device_id, item.lat, item.long];
+      //         this.markers.push(marker);
+      //         let markerString = JSON.stringify(this.markers);
+      //         this.markersService.SetMarkers(markerString);
+      //         this.setLeafLetMarkers();
+      //       })
+      //     }
+      //   })
+      //   let tempObj = this.checkedDevices.find((item) => item.id == this.data.device_id)
+      //   if (!tempObj) {
+      //     this.checkedDevices.push({
+      //       event: e,
+      //       id: _id,
+      //     });
+      //   }
+      //   this.AllDevices.push(this.data);
+      //   $('.notificationsUnread').removeClass('d-none')
+      //   $(".notificationPanel").addClass("d-none");
+      //   $(".notificationsRead").addClass("d-none");
+      //   this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
+      //   this.AllDeviceDataService.AllDevices.subscribe((data) => {
+      //     this.AllDevices = JSON.parse(data);
+      //   });
+      // }
     } else {
       if (this.AllDevices.length === 0) {
         $('.notificationsUnread').addClass('d-none')
@@ -1567,6 +1617,10 @@ export class historyDialogComponent implements OnInit {
   onCheck(e) {
     this.speed = e.target.checked;
   }
+
+  closeDialog() {
+    this.dialog.closeAll();
+  }
   onSubmit() {
     let History_type = $("#historyType").val();
     let dateStart = $("#de_start").val().toLocaleString().replace("T", " ");
@@ -1694,7 +1748,9 @@ export class AllControlsDialogComponent implements OnInit {
         this.AllCommands = res.data
       }
     })
+
   }
+
   OpenCommandDialog(name, id): void {
     console.log(name);
     this.CommandTypeService.setCommand(name)
@@ -1702,6 +1758,8 @@ export class AllControlsDialogComponent implements OnInit {
     setTimeout(() => {
       this.dialog.open(ControlDialogComponent)
     }, 400)
+  } closeDialog() {
+    this.dialog.closeAll();
   }
 }
 
@@ -2240,6 +2298,9 @@ export class AllSettingsDialogComponent implements OnInit {
     this.SettingTypeService.setSetting(name);
     this.SettingTypeService.setSettingId(id)
     this.dialog.open(SettingDialogComponent)
+  }
+  closeDialog() {
+    this.dialog.closeAll();
   }
 }
 @Component({

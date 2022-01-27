@@ -94,7 +94,10 @@
     </span>
     <br />
     <span style="align-self: center">
-      <button mat-button class="CommandCancelButton">Cancel</button> &nbsp;
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
       </button>
