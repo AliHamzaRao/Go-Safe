@@ -91,7 +91,7 @@ export class PagesComponent implements OnInit {
   checkedDevices: any[] = [];
   AllMarkers: any[] = [];
   childArray: Vehicles[] = [];
-  showGrouped: boolean = false;
+  isVehicles: boolean = false;
   onlineDevices: PacketParser[] = [];
   offlineDevices: PacketParser[] = [];
   AllVehicles: PacketParser[] = [];
@@ -162,7 +162,7 @@ export class PagesComponent implements OnInit {
     this.OnlineGroups = [];
     this.markers = []
     if (window.location.pathname == "/vehicles") {
-      this.showGrouped = true;
+      this.isVehicles = true;
     }
     this.logo = localStorage.CompanyLogo ? 'data:image/png;base64,' + localStorage.getItem("CompanyLogo") : '../../../assets/logos/logo 1-01.svg';
     this.username = localStorage.getItem("username") || null;
@@ -1220,6 +1220,8 @@ export class PagesComponent implements OnInit {
     // }
   }
   GeoFencing() {
+    $(".createFence").addClass("d-none");
+    $(".createFenceGoogleMap").addClass("d-none");
     this.GeoFence.geoFence().subscribe((data) => {
       this.geoFences = data.data;
     });
@@ -1232,49 +1234,94 @@ export class PagesComponent implements OnInit {
     this.fenceType = e.target.value;
     switch (this.fenceType) {
       case "Circle":
+        this.RefreshMap()
         let thismarker: any;
-        map.on("click", (e) => {
-          if (this.circleMarkers.length < 1) {
-            let radius = $(".radius").val();
-            let data: any[] = e.latlng;
-            let newData = { ...data };
-            this.circleMarkers.push([
-              parseFloat(newData["lat"]),
-              parseFloat(newData["lng"]),
-            ]);
-            thismarker = L.marker(e.latlng)
-              .bindPopup(`<strong>Double click to remove marker</strong>`, {
-                maxWidth: 500,
-              })
-              .on("dblclick", () => {
-                map.removeLayer(this.newCircle);
-                map.removeLayer(thismarker);
-                this.circleMarkers = [];
-              });
-            thismarker.addTo(map);
-            map.setView(e.latlng, 13);
-            this.newCircle = L.circle(...this.circleMarkers, radius);
-            this.circleRadius = radius;
-            this.newCircle.addTo(map);
-          }
-          else {
-            return null;
-          }
-        });
+        setTimeout(() => {
+          map.on("click", (e) => {
+            if (this.circleMarkers.length < 1) {
+              let radius = $(".radius").val();
+              let data: any[] = e.latlng;
+              let newData = { ...data };
+              this.circleMarkers.push([
+                parseFloat(newData["lat"]),
+                parseFloat(newData["lng"]),
+              ]);
+              thismarker = L.marker(e.latlng)
+                .bindPopup(`<strong>Double click to remove marker</strong>`, {
+                  maxWidth: 500,
+                })
+                .on("dblclick", () => {
+                  map.removeLayer(this.newCircle);
+                  map.removeLayer(thismarker);
+                  this.circleMarkers = [];
+                });
+              thismarker.addTo(map);
+              map.setView(e.latlng, 13);
+              this.newCircle = L.circle(...this.circleMarkers, radius);
+              this.circleRadius = radius;
+              this.newCircle.addTo(map);
+            }
+            else {
+              return null;
+            }
+          });
+        }, 300)
         break;
       case "Rectangle":
-        map.on("click", (e) => {
-          let thismarker;
-          if (this.rectMarkers.length == 2) {
-            this.Toast.clear()
-            this.Toast.error(
-              "Cannot add more than two point for a rectangle. Remove one of the markers First",
-              "Error Drawing Rectangle "
-            );
-          } else {
+        setTimeout(() => {
+          this.RefreshMap()
+          map.on("click", (e) => {
+            let thismarker;
+            if (this.rectMarkers.length == 2) {
+              this.Toast.clear()
+              this.Toast.error(
+                "Cannot add more than two point for a rectangle. Remove one of the markers First",
+                "Error Drawing Rectangle "
+              );
+            } else {
+              let data: any[] = e.latlng;
+              let newData = { ...data };
+              this.rectMarkers.push([
+                parseFloat(newData["lat"]),
+                parseFloat(newData["lng"]),
+              ]);
+              thismarker = L.marker(e.latlng)
+                .bindPopup(`<strong>Double click to remove marker</strong>`, {
+                  maxWidth: 500,
+                })
+                .on("dblclick", (event) => {
+                  let removedata: any[] = event.latlng;
+                  let newDataremove = { ...removedata };
+                  let tempArr = [
+                    parseFloat(newDataremove["lat"]),
+                    parseFloat(newDataremove["lng"]),
+                  ];
+                  let index = this.rectMarkers.findIndex(
+                    (item: any[]) =>
+                      item[0] == tempArr[0] && item[1] == tempArr[1]
+                  );
+                  this.rectMarkers.splice(index, 1);
+                  // }
+                  map.removeLayer(event.target);
+                  if (this.rectangle) {
+                    map.removeLayer(this.rectangle);
+                  }
+                });
+              thismarker.addTo(map);
+              map.setView(e.latlng, 10);
+            }
+          });
+        }, 300)
+        break;
+      case "Polygon":
+        this.RefreshMap()
+        setTimeout(() => {
+
+          map.on("click", (e) => {
+            let thismarker;
             let data: any[] = e.latlng;
             let newData = { ...data };
-            this.rectMarkers.push([
+            this.polyMarkers.push([
               parseFloat(newData["lat"]),
               parseFloat(newData["lng"]),
             ]);
@@ -1283,62 +1330,27 @@ export class PagesComponent implements OnInit {
                 maxWidth: 500,
               })
               .on("dblclick", (event) => {
-                let removedata: any[] = event.latlng;
-                let newDataremove = { ...removedata };
+                map.removeLayer(thismarker);
+                let data: any[] = event.latlng;
+                let newData = { ...data };
                 let tempArr = [
-                  parseFloat(newDataremove["lat"]),
-                  parseFloat(newDataremove["lng"]),
+                  parseFloat(newData["lat"]),
+                  parseFloat(newData["lng"]),
                 ];
-                let index = this.rectMarkers.findIndex(
-                  (item: any[]) =>
-                    item[0] == tempArr[0] && item[1] == tempArr[1]
+                let index = this.polyMarkers.findIndex(
+                  (item: any[]) => item[0] == tempArr[0] && item[1] == tempArr[1]
                 );
-                this.rectMarkers.splice(index, 1);
-                // }
+
+                this.polyMarkers.splice(index, 1);
                 map.removeLayer(event.target);
-                if (this.rectangle) {
-                  map.removeLayer(this.rectangle);
+                if (this.polygon) {
+                  map.removeLayer(this.polygon);
                 }
               });
             thismarker.addTo(map);
             map.setView(e.latlng, 10);
-          }
-        });
-        break;
-      case "Polygon":
-        map.on("click", (e) => {
-          let thismarker;
-          let data: any[] = e.latlng;
-          let newData = { ...data };
-          this.polyMarkers.push([
-            parseFloat(newData["lat"]),
-            parseFloat(newData["lng"]),
-          ]);
-          thismarker = L.marker(e.latlng)
-            .bindPopup(`<strong>Double click to remove marker</strong>`, {
-              maxWidth: 500,
-            })
-            .on("dblclick", (event) => {
-              map.removeLayer(thismarker);
-              let data: any[] = event.latlng;
-              let newData = { ...data };
-              let tempArr = [
-                parseFloat(newData["lat"]),
-                parseFloat(newData["lng"]),
-              ];
-              let index = this.polyMarkers.findIndex(
-                (item: any[]) => item[0] == tempArr[0] && item[1] == tempArr[1]
-              );
-
-              this.polyMarkers.splice(index, 1);
-              map.removeLayer(event.target);
-              if (this.polygon) {
-                map.removeLayer(this.polygon);
-              }
-            });
-          thismarker.addTo(map);
-          map.setView(e.latlng, 10);
-        });
+          });
+        }, 300)
       default:
         map.on("click", () => {
           return null;
@@ -1375,11 +1387,13 @@ export class PagesComponent implements OnInit {
     }
   }
   CreateFencing() {
+    this.closeFencing()
     if (mapType === "Google Maps") {
       $(".createFenceGoogleMap").removeClass("d-none");
       $(".gmnoprint").removeClass("d-none");
       // $('.googleMap').attr('ng-reflect-drawing-manager', "[object Object]")
     } else if (mapType === "Open Street Maps") {
+      this.RefreshMap();
       $(".createFence").removeClass("d-none");
     }
   }
@@ -1393,6 +1407,7 @@ export class PagesComponent implements OnInit {
     }, 1000);
 
     $(".createFence").addClass("d-none");
+    $(".createFenceGoogleMap").addClass("d-none");
     if (this.rectangle) {
       map.removeLayer(this.rectangle);
       $(
