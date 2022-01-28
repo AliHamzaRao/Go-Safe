@@ -164,7 +164,7 @@ export class PagesComponent implements OnInit {
     if (window.location.pathname == "/vehicles") {
       this.isVehicles = true;
     }
-    this.logo = localStorage.CompanyLogo ? 'data:image/png;base64,' + localStorage.getItem("CompanyLogo") : '../../../assets/logos/logo 1-01.svg';
+    this.logo = localStorage.CompanyLogo ? 'data:image/png;base64,' + localStorage.getItem("CompanyLogo") : './assets/logos/logo 1-01.svg';
     this.username = localStorage.getItem("username") || null;
     this.mapTypeService.newMap.subscribe((data) => {
       mapType = data;
@@ -1195,7 +1195,7 @@ export class PagesComponent implements OnInit {
     }, 1000);
     setTimeout(() => {
       $(".closeGeoFenceBtn").addClass("d-none");
-    }, 1000);
+    }, 10);
     // if (rect) {
     //   map.removeLayer(rect);
     // }
