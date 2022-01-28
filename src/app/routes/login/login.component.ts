@@ -1,19 +1,24 @@
-import { AfterViewInit, Component, DebugEventListener, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { AppSettings } from '../../_core/settings/app.settings';
-import { Settings } from '../../_core/settings/app.settings.model';
-import { userService } from 'src/app/_core/_AppServices/user.service';
-import { ToastrService } from 'ngx-toastr';
-import { AuthService } from 'src/app/_core/_AppServices/auth.service';
-import { CompanyInfoService } from 'src/app/_core/_AppServices/companyInfoService';
-import { Root } from 'src/app/_interfaces/DBresponse.model';
-import { CompanyImageService } from 'src/app/_core/_AppServices/companyImgService';
-const SECRET_KEY = 'secret_key';
+import {
+  AfterViewInit,
+  Component,
+  DebugEventListener,
+  OnInit,
+} from "@angular/core";
+import { Router } from "@angular/router";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
+import { AppSettings } from "../../_core/settings/app.settings";
+import { Settings } from "../../_core/settings/app.settings.model";
+import { userService } from "src/app/_core/_AppServices/user.service";
+import { ToastrService } from "ngx-toastr";
+import { AuthService } from "src/app/_core/_AppServices/auth.service";
+import { CompanyInfoService } from "src/app/_core/_AppServices/companyInfoService";
+import { Root } from "src/app/_interfaces/DBresponse.model";
+import { CompanyImageService } from "src/app/_core/_AppServices/companyImgService";
+const SECRET_KEY = "secret_key";
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: "app-login",
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.css"],
 })
 export class LoginComponent implements OnInit {
   public form: FormGroup;
@@ -28,13 +33,22 @@ export class LoginComponent implements OnInit {
   ApiInfosubmitted = false;
   img: string;
   currentYear: number = new Date().getFullYear();
-  constructor(public appSettings: AppSettings, public fb: FormBuilder, public router: Router, public _userManagement: userService, private toastr: ToastrService, private authService: AuthService, public companyInfoService: CompanyInfoService, public companyImageService: CompanyImageService) {
+  constructor(
+    public appSettings: AppSettings,
+    public fb: FormBuilder,
+    public router: Router,
+    public _userManagement: userService,
+    private toastr: ToastrService,
+    private authService: AuthService,
+    public companyInfoService: CompanyInfoService,
+    public companyImageService: CompanyImageService
+  ) {
     this.settings = this.appSettings.settings;
     this.settings.loadingSpinner = false;
     this.um = this._userManagement;
     this.form = this.fb.group({
-      'username': [null, Validators.compose([Validators.required])],
-      'password': [null, Validators.compose([Validators.required])]
+      username: [null, Validators.compose([Validators.required])],
+      password: [null, Validators.compose([Validators.required])],
     });
     // this.apiInfoForm = this.fb.group({
     //   ipaddress: [this.um.getIpAddress(), Validators.compose([Validators.required])],
@@ -46,16 +60,16 @@ export class LoginComponent implements OnInit {
     this.img = localStorage.getItem('CompanyLogo');
     this.img = this.img ? `data:image/png;base64,${this.img}` : './assets/logos/logo 1-01.svg';
     this.loading = true;
-    await this.companyInfoService.getCompanyInfo().subscribe(data => {
+    await this.companyInfoService.getCompanyInfo().subscribe((data) => {
       this.CompInfo = data;
       this.loading = false;
-    })
-    // this.settings.loadingSpinner = false; 
+    });
+    // this.settings.loadingSpinner = false;
     this.isEligible();
   }
   isEligible() {
     if (this.authService.isAuthenticated()) {
-      this.router.navigateByUrl('/');
+      this.router.navigateByUrl("/");
     }
   }
   showSuccess(msg, title) {
@@ -67,44 +81,91 @@ export class LoginComponent implements OnInit {
   showWarning(msg, title) {
     this.toastr.warning(msg, title);
   }
-  get apiinfo() { return this.apiInfoForm.controls; }
-  async onSubmit(values: { username: string, password: string }) {
-    this.loginStatus = false;
-    this.loading = true;
-    let cmpCode = values.username.split("_");
-    let Api = this.CompInfo.network_config.find((item: any) => item.cmp_code === cmpCode[0])
-    var apiInfoJson = {
-      IpAddress: Api.address,
-      Port: Api.port,
-      connectAutomatically: true
-    }
-    await this.companyImageService.getImg(Api.cmp_image).subscribe(data => {
-      localStorage.setItem('CompanyLogo', data.src)
-    })
-    await localStorage.setItem('apiinfo', JSON.stringify(apiInfoJson));
-    await this.um.login(values).subscribe(
-      (res: any) => {
-        console.log(res)
-        this.tokenStorage = res.access_token;
-        this.loading = false;
-        this.showSuccess("success", "Login successfully");
-        this.authService.setUsername(res.usr_name);
-        this.authService.setToken(res.access_token);
-        this.router.navigateByUrl('/');
-      },
-      err => {
-        this.showError("", "User Name or Password is wrong!");
-        if (err.status === 400) {
-          // this.notifyService.showSuccess('', 'User name or password is incorect');
-          // alert("User name or password is incorect")
-        } else if (err.status === 500) {
-          alert('Something went wrong');
+  get apiinfo() {
+    return this.apiInfoForm.controls;
+  }
+  async onSubmit(values: { username: string; password: string }) {
+    if (values.username) {
+      if (values.password) {
+        this.loginStatus = false;
+        this.loading = true;
+        if (values.username.includes("_")) {
+          let cmpCode = values.username.split("_");
+          console.log(cmpCode);
+          let Api = this.CompInfo.network_config.find(
+            (item: any) => item.cmp_code === cmpCode[0]
+          );
+          if (Api) {
+            if (Api.address && Api.port) {
+              var apiInfoJson = {
+                IpAddress: Api.address,
+                Port: Api.port,
+                connectAutomatically: true,
+              };
+              await this.companyImageService
+                .getImg(Api.cmp_image)
+                .subscribe((data) => {
+                  localStorage.setItem("CompanyLogo", data.src);
+                });
+              await localStorage.setItem(
+                "apiinfo",
+                JSON.stringify(apiInfoJson)
+              );
+
+              await this.um.login(values).subscribe(
+                (res: any) => {
+                  console.log(res);
+                  if (res.access_token) {
+                    this.tokenStorage = res.access_token;
+                    this.loading = false;
+                    this.toastr.clear()
+                    this.showSuccess("success", "Login successfully");
+                    this.authService.setUsername(res.usr_name);
+                    this.authService.setToken(res.access_token);
+                    this.router.navigateByUrl("/");
+                  } else {
+                    this.loading = false;
+                    this.toastr.clear()
+                    this.showError("User Name or Password is wrong!", "");
+                  }
+                },
+                (err) => {
+                  this.showError("", "User Name or Password is wrong!");
+                  if (err.status === 400) {
+                    // this.notifyService.showSuccess('', 'User name or password is incorect');
+                    // alert("User name or password is incorect")
+                  } else if (err.status === 500) {
+                    alert("Something went wrong");
+                  } else {
+                  }
+                  this.loading = false;
+                }
+              );
+              this.router.navigateByUrl("");
+            } else {
+              this.toastr.clear()
+              this.showError("Please Enter Valid Credentials", "");
+            }
+          } else {
+            this.toastr.clear()
+            this.showError("Please Enter Valid Username or Password", "");
+            this.loading = false;
+          }
         } else {
+          this.toastr.clear()
+          this.showError("Please Enter Valid Username or Password", "");
+          this.loading = false;
         }
+      } else {
+        this.toastr.clear()
+        this.showError("Please Enter Password", "");
         this.loading = false;
       }
-    );
-    this.router.navigateByUrl('');
+    } else {
+      this.toastr.clear()
+      this.showError("Please Enter Username", "");
+      this.loading = false;
+    }
   }
   // onApiInfoSubmit() {
   //   var apiInfoJson = {

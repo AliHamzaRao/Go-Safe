@@ -18,6 +18,7 @@ export const routes: Routes = [
         children: [
             { path: '', loadChildren: () => import('./routes/dashboard/dashboard.module').then(m => m.DashboardModule) },
             { path: 'asset-trip-report', data: { breadcrumb: 'Asset Trip Report' }, loadChildren: () => import('./routes/Assets/asset-trip-report/asset-trip-report.module').then(m => m.AssetTripReportModule) },
+            // { path: 'vehicles', data: { breadcrumb: 'Vehicles' }, loadChildren: () => import('./routes/dashboard/dashboard.module').then(m => m.DashboardModule) },
         ],
     }, {
         path: 'vehicles',

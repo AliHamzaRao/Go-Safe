@@ -61,7 +61,10 @@
             ],
             "allowedCommonJsDependencies": [
               "leaflet-map",
-              "dragula"
+              "dragula",
+              "jspdf-autotable",
+              "raf",
+              "core-js"
             ]
           },
           "configurations": {
