@@ -358,6 +358,10 @@
   width: 60%;
   left: 23%;
 }
+.nav-link-active {
+  color: #fbb62a !important;
+  text-decoration: underline;
+}
 .recordDialogOffset button {
   height: 50px !important;
   width: calc(80% / 6) !important;
