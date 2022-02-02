@@ -39,8 +39,8 @@ var mapType;
 var rect;
 var circle;
 var plgn;
-var marker;
 var polyline;
+var marker;
 var device_id;
 var Historydata = [];
 var dataArr: PacketParser[] = [];
@@ -53,6 +53,7 @@ var dataArr: PacketParser[] = [];
 export class PagesComponent implements OnInit {
   //#region Properties
   public settings: Settings;
+  location:string = window.location.pathname
   username: string;
   logo: string;
   lat = 31.4884152;
@@ -97,6 +98,8 @@ export class PagesComponent implements OnInit {
   AllVehicles: PacketParser[] = [];
   OnlineGroups: any[] = [];
   idArr: number[] = []
+  SearchedDevicesOnline: PacketParser[] = []
+  SearchedDevicesOffline: PacketParser[] = []
   historyInfo: any = {
     GPSDateTime: "test",
     Speed: "0",
@@ -176,139 +179,27 @@ export class PagesComponent implements OnInit {
       map.off();
       this.RefreshMap()
     }
-
     setInterval(() => {
-      dataArr = [];
-      this.offlineDevices = [];
-      this.onlineDevices = []
-      this.childArray = [];
-      this.OnlineGroups = [];
       $('.notificationsUnread').addClass('d-none')
       $(".notificationPanel").addClass("d-none");
-      $(".notificationsRead").addClass("d-none");
-      this.dashboardService.GetVehiclesTree().subscribe((data) => {
-        this.TREE_DATA = data.data;
-        this.TREE_DATA[1].SubMenu.forEach((menu: Vehicles) => {
-          let dataTrack;
-          let parsed;
-          if (menu.grp_name == null && menu.SubMenu.length == 0) {
-            this.childArray.push(menu)
-            dataTrack = menu.datatrack;
-            parsed = dataTrack ? new PacketParser(dataTrack) : null
-            parsed ? dataArr.push({ ...parsed }) : null;
-          }
-          else if (menu.grp_name != null && menu.SubMenu.length > 0) {
-            menu.SubMenu.forEach((item: Vehicles) => {
-              if (item.grp_name == null && item.SubMenu.length == 0) {
-                this.childArray.push(item)
-                dataTrack = item.datatrack
-                parsed = dataTrack ? new PacketParser(dataTrack) : null
-                parsed ? dataArr.push({ ...parsed }) : null;
-              }
-              else if (item.grp_name != null && item.SubMenu.length != 0) {
-                item.SubMenu.forEach((moreItem: Vehicles) => {
-                  this.childArray.push(moreItem)
-                  dataTrack = moreItem.datatrack
-                  parsed = dataTrack ? new PacketParser(dataTrack) : null
-                  parsed ? dataArr.push({ ...parsed }) : null;
-                })
-              }
-            })
-          }
-        });
+      $(".notificationsRead").addClass("d-none")
+      this.getVehTree()
+      if (this.checkedDevices.length !== 0) {
+        this.AllMarkers.forEach((thismarker) => {
+          map.removeLayer(thismarker)
+        })
+        this.markers = []
+        this.setLeafLetMarkers();
         setTimeout(() => {
-          this.AllVehicles = dataArr;
-          if (dataArr.length) {
-            dataArr.forEach((item: PacketParser) => {
-              if (item.Online == '1') {
-                let obj = this.TREE_DATA[1].SubMenu.find((data: Vehicles) => data.grp_id.toString() == item.group_id)
-                let nest = obj.SubMenu.find((value: Vehicles) => value.device_id == item.device_id)
-                obj.OnlineDevice = [];
-                if (nest) {
+          this.checkedDevices.forEach((item) => {
+            let tempObj = this.AllVehicles.find((Data: PacketParser) => Data.device_id == item.id)
+            $(`[data-device_id= ${item.id}]`).prop('checked', true)
+            this.MarkerSettingFunction(item.event, tempObj.dataTrack, item.id)
+          })
+        }, 100);
+      }
+    }, 60000);
 
-                  if (nest['device_id'] == item.device_id) {
-                    obj.OnlineDevice.push(item)
-                    // this.OnlineGroups.push(obj)
-                    if (this.OnlineGroups.length) {
-                      this.OnlineGroups.forEach((tempGP: Vehicles) => {
-                        if (tempGP.grp_name !== obj.grp_name) {
-                          this.OnlineGroups.push(obj)
-                        }
-                      })
-                    }
-                    else {
-                      this.OnlineGroups.push(obj)
-                    }
-                  }
-                  this.onlineDevices.push(item)
-                }
-              }
-              else if (item.Online == '0') {
-                this.offlineDevices.push(item)
-              }
-            })
-          }
-          $(".speedCheck").each(function () {
-            var vehicle = $(this).attr("data-idforspeed");
-            var obj = dataArr.find(
-              (item: PacketParser) => item.device_id == vehicle
-            );
-
-            obj ? $(this).html(`${obj.speed} <br> kph`) : null;
-          });
-          $(".veh_status").each(function () {
-            var device = $(this).attr("device-id-vrn");
-            var object = dataArr.find(
-              (item: PacketParser) => item.device_id == device
-            );
-            object ?
-              object.veh_status == "Idle"
-                ? $(this).html(
-                  `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="../../../assets/icons/YellowArrow.png" alt=${object.veh_status}>`
-                )
-                : object.veh_status == "Moving"
-                  ? $(this).html(
-                    `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="../../../assets/icons/YellowArrow.png" alt=${object.veh_status}>`
-                  )
-                  : object.veh_status == "Parked"
-                    ? $(this).html(
-                      `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="../../../assets/icons/RedArrow.png" alt=${object.veh_status}>`
-                    )
-                    : $(this).html(
-                      `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="../../../assets/icons/Disconected.png" alt=${object.veh_status}>`
-                    )
-              : null
-
-          });
-          if (this.checkedDevices.length) {
-            this.markers = [];
-            setTimeout(() => {
-              this.checkedDevices.forEach((item) => {
-                this.AllMarkers.forEach((CM) => {
-                  map.removeLayer(CM);
-                  $(
-                    ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
-                  ).remove();
-                  $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
-                });
-                let obj = this.childArray.find((data: Vehicles) => data.device_id == item.id);
-                this.MarkerSettingFunction(
-                  item.event,
-                  obj.datatrack,
-                  obj.device_id
-                );
-                $(`[data-device_id=${item.id}]`).each(() => {
-                  $(this).prop('checked', true)
-                })
-                // $(`#${item.id}`).prop("checked", true);
-              }, 5000);
-              this.checkedDevices = [];
-              this.AllMarkers = [];
-            });
-          }
-        }, 3000);
-      });
-    }, 300000);
     this.currentMap = mapType;
     if (window.innerWidth <= 768) {
       this.settings.menu = "vertical";
@@ -328,7 +219,16 @@ export class PagesComponent implements OnInit {
         this.checkedDevices.forEach((item) => {
           $(`[data-device_id= ${item.id}]`).prop('checked', true)
         })
-      }, 1000);
+      });
+    }
+  }
+  expandedPanel(e) {
+    if (this.checkedDevices.length) {
+      setTimeout(() => {
+        this.checkedDevices.forEach((item) => {
+          $(`[data-device_id= ${item.id}]`).prop('checked', true)
+        })
+      });
     }
   }
   //#endregion
@@ -379,7 +279,18 @@ export class PagesComponent implements OnInit {
     }
   }
   //#endregion
-
+  SearchQueryChangeOnline($event) {
+    console.log($event.target.value)
+    let query = $event.target.value
+    this.SearchedDevicesOnline = this.onlineDevices.filter((item: PacketParser) => item.veh_reg_no.includes(query))
+    console.log(this.SearchedDevicesOnline);
+  }
+  SearchQueryChangeOffline($event) {
+    console.log($event.target.value)
+    let query = $event.target.value
+    this.SearchedDevicesOffline = this.offlineDevices.filter((item: PacketParser) => item.veh_reg_no.includes(query))
+    console.log(this.SearchedDevicesOffline);
+  }
   //#region Get Veh Data
   getVehTree() {
     dataArr = [];
@@ -387,6 +298,9 @@ export class PagesComponent implements OnInit {
     this.onlineDevices = []
     this.childArray = [];
     this.OnlineGroups = [];
+    $('.notificationsUnread').addClass('d-none')
+    $(".notificationPanel").addClass("d-none");
+    $(".notificationsRead").addClass("d-none");
     try {
       // // this.route.data.subscribe((data) => {
       // //   data["model"].data.forEach((item: any, index: any) => {
@@ -488,7 +402,7 @@ export class PagesComponent implements OnInit {
                     )
               : null
           });
-        }, 3000);
+        });
       });
     } catch (err) {
       console.error(err, "Custom Error");
@@ -720,6 +634,7 @@ export class PagesComponent implements OnInit {
     $(".vehicleCardLeaflet").addClass("d-none");
     $(".vehicleCardLeafletMore").addClass("d-none");
   }
+
   draw() {
     polyline = L.polyline([
       this.markerData[0],
@@ -734,27 +649,29 @@ export class PagesComponent implements OnInit {
 
   //#region SetLeafLet Markers
   setLeafLetMarkers() {
-    this.markers.forEach((element: any, index: string | number) => {
-      if ((this.markers[index][1] === "0", this.markers[index][2] === "0")) {
-        return false;
-      } else {
-        let currentMarker = new L.marker([
-          this.markers[index][1],
-          this.markers[index][2],
-        ]).on("click", () => {
-          this.getMarkerInfo([
-            this.markers[index][0],
-            parseFloat(this.markers[index][1]),
-            parseFloat(this.markers[index][2]),
-          ]);
-        });
-        this.lat = this.markers[this.markers.length - 1][1]
-        this.lng = this.markers[this.markers.length - 1][2]
-        map.setView([this.lat, this.lng], 12);
-        currentMarker.addTo(map);
-        this.AllMarkers.push(currentMarker);
-      }
-    });
+    this.markers.length ?
+      this.markers.forEach((element: any, index: string | number) => {
+        if ((this.markers[index][1] === "0", this.markers[index][2] === "0")) {
+          this.Toast.error('Cannot display marker having 0 coordinates', 'Error Marking Location')
+          return false;
+        } else {
+          let currentMarker = new L.marker([
+            this.markers[index][1],
+            this.markers[index][2],
+          ]).on("click", () => {
+            this.getMarkerInfo([
+              this.markers[index][0],
+              parseFloat(this.markers[index][1]),
+              parseFloat(this.markers[index][2]),
+            ]);
+          });
+          this.lat = this.markers[this.markers.length - 1][1]
+          this.lng = this.markers[this.markers.length - 1][2]
+          map.setView([this.lat, this.lng], 12);
+          currentMarker.addTo(map);
+          this.AllMarkers.push(currentMarker);
+        }
+      }) : this.RefreshMap();
   }
   //#endregion
 
@@ -820,6 +737,7 @@ export class PagesComponent implements OnInit {
         let markerString = JSON.stringify(this.markers);
         this.markersService.SetMarkers(markerString);
         this.AllDevices.push(this.data);
+        this.setLeafLetMarkers();
         $('.notificationsUnread').removeClass('d-none')
         this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
         this.AllDeviceDataService.AllDevices.subscribe((data) => {
@@ -835,7 +753,6 @@ export class PagesComponent implements OnInit {
         //       this.markers.push(marker);
         //       let markerString = JSON.stringify(this.markers);
         //       this.markersService.SetMarkers(markerString);
-        //       this.setLeafLetMarkers();
         //     })
         //   }
         // })
@@ -913,6 +830,7 @@ export class PagesComponent implements OnInit {
       // }
     } else {
       if (this.AllDevices.length === 0) {
+        console.log(this.AllDevices)
         $('.notificationsUnread').addClass('d-none')
         $(".notificationPanel").addClass("d-none");
         $(".notificationsRead").addClass("d-none");
@@ -2355,7 +2273,6 @@ export class SettingDialogComponent implements OnInit {
     this.phoneNumber = e.target.value;
   }
   togglePassword() {
-    debugger;
     this.hidden = !this.hidden;
   }
   //#region Send Request

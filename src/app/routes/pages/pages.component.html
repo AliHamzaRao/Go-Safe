@@ -29,16 +29,31 @@ perfectScrollbar
   /></a>
   <div fxLayout="row" fxLayoutAlign="space-between" class="w-100">
     <div fxLayout="row" style="align-items: center">
-      <button mat-button class="mat-hover" routerLink="">Live Tacking</button>
+      <button
+        mat-button
+        class="mat-hover"
+        routerLink=""
+        [class.nav-link-active]="location == '/'"
+      >
+        Live Tacking
+      </button>
       <button
         mat-button
         class="mat-hover"
         routerLink="vehicles"
         *ngIf="!isVehicles"
+        [class.nav-link-active]="location == '/vehicles'"
       >
         Vehicles
       </button>
-      <button mat-button class="mat-hover" *ngIf="isVehicles">Vehicles</button>
+      <button
+        mat-button
+        class="mat-hover"
+        *ngIf="isVehicles"
+        [class.nav-link-active]="location == '/vehicles'"
+      >
+        Vehicles
+      </button>
       <button mat-button [matMenuTriggerFor]="GeoFenceMenu" class="mat-hover">
         Geofence <mat-icon>keyboard_arrow_down </mat-icon>
       </button>
@@ -259,6 +274,20 @@ perfectScrollbar
               <span class="13px ​!important"> History </span>
             </button>
           </div>
+          <input
+            [type]="'search'"
+            placeholder="Search Accross Vehicle(s)"
+            class="SearchInput"
+            *ngIf="!isVehicles"
+            (change)="SearchQueryChangeOnline($event)"
+          />
+          <input
+            type="search"
+            placeholder="Search"
+            class="SearchInput"
+            *ngIf="isVehicles"
+            (change)="SearchQueryChangeOffline($event)"
+          />
           <div class="vehicleList">
             <mat-tab-group
               (selectedTabChange)="tabChanged($event)"
@@ -355,7 +384,6 @@ perfectScrollbar
                 </span>
                 <span ngElse> No Data Found </span>
                 <!-- </mat-accordion> -->
-                <!-- <input type="text" placeholder="Search" class="SearchInput" /> -->
                 <!-- <span>
                   <div
                     class="m-0 singleDevice border-bottom"
@@ -618,7 +646,10 @@ perfectScrollbar
                             [attr.device-Id-Vrn]="t1.device_id"
                           ></div>
                         </div>
-                        <mat-expansion-panel *ngIf="t1.SubMenu.length">
+                        <mat-expansion-panel
+                          *ngIf="t1.SubMenu.length"
+                          (opened)="expandedPanel($event)"
+                        >
                           <mat-expansion-panel-header class="nestedPanelHeader">
                             <mat-panel-title>
                               <!-- <input
