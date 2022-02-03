@@ -275,20 +275,19 @@ perfectScrollbar
             </button>
           </div>
           <input
-            [type]="'search'"
-            placeholder="Search Accross Vehicle(s)"
+            type="text"
+            placeholder="Search Across Vehicle(s)"
             class="SearchInput"
-            *ngIf="!isVehicles"
-            (change)="SearchQueryChangeOnline($event)"
+            (keyup)="SearchQueryChange($event)"
           />
-          <input
-            type="search"
-            placeholder="Search"
-            class="SearchInput"
-            *ngIf="isVehicles"
-            (change)="SearchQueryChangeOffline($event)"
-          />
-          <div class="vehicleList">
+
+          <div
+            class="vehicleList"
+            *ngIf="
+              SearchedDevices.length === 0 ||
+              SearchedDevices.length === AllVehicles.length
+            "
+          >
             <mat-tab-group
               (selectedTabChange)="tabChanged($event)"
               [disablePagination]="true"
@@ -863,6 +862,77 @@ perfectScrollbar
                 </div>
               </mat-tab>
             </mat-tab-group>
+          </div>
+
+          <div
+            class="vehicleList"
+            *ngIf="SearchedDevices.length"
+            style="height: 87vh !important; overflow-y: scroll"
+          >
+            <div
+              class="m-0 singleDevice border-bottom"
+              *ngFor="let item of SearchedDevices; let i = index"
+            >
+              <input
+                id="{{ item.device_id }}"
+                type="checkbox"
+                [attr.data-dataTrack]="item.dataTrack"
+                [attr.data-device_id]="item.device_id"
+                (change)="onCheck($event, item.dataTrack, item.device_id)"
+              />
+              <mat-icon style="width: 30px !important">drive_eta</mat-icon>
+              <span
+                style="
+                  max-width: 10ch;
+                  width: 10ch;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                "
+                >{{ item.veh_reg_no }}
+              </span>
+              <p
+                class="speedCheck text-center"
+                style="margin: 0px !important"
+                [attr.data-idforspeed]="item.device_id"
+              >
+                {{ item.speed }} <br />
+                kph
+              </p>
+              <div
+                style="width: 30px; height: 30px"
+                [attr.device-Id-Vrn]="item.device_id"
+                *ngIf="item.veh_status == 'Idle'"
+              >
+                <img
+                  style="height: 30px"
+                  src="../../../assets/icons/RedArrow.png"
+                  [alt]="item.veh_status"
+                />
+              </div>
+              <div
+                style="width: 30px; height: 30px"
+                [attr.device-Id-Vrn]="item.device_id"
+                *ngIf="item.veh_status == 'Parked'"
+              >
+                <img
+                  style="height: 30px"
+                  src="../../../assets/icons/YellowArrow.png"
+                  [alt]="item.veh_status"
+                />
+              </div>
+              <div
+                style="width: 30px; height: 30px"
+                [attr.device-Id-Vrn]="item.device_id"
+                *ngIf="item.veh_status == 'Moving'"
+              >
+                <img
+                  style="height: 30px"
+                  src="../../../assets/icons/GreenArrow.png"
+                  [alt]="item.veh_status"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

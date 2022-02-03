@@ -53,7 +53,7 @@ var dataArr: PacketParser[] = [];
 export class PagesComponent implements OnInit {
   //#region Properties
   public settings: Settings;
-  location:string = window.location.pathname
+  location: string = window.location.pathname
   username: string;
   logo: string;
   lat = 31.4884152;
@@ -98,8 +98,7 @@ export class PagesComponent implements OnInit {
   AllVehicles: PacketParser[] = [];
   OnlineGroups: any[] = [];
   idArr: number[] = []
-  SearchedDevicesOnline: PacketParser[] = []
-  SearchedDevicesOffline: PacketParser[] = []
+  SearchedDevices: PacketParser[] = []
   historyInfo: any = {
     GPSDateTime: "test",
     Speed: "0",
@@ -163,7 +162,9 @@ export class PagesComponent implements OnInit {
     this.onlineDevices = []
     this.childArray = [];
     this.OnlineGroups = [];
-    this.markers = []
+    this.markers = [];
+    this.AllDevices = [];
+    this.AllVehicles = [];
     if (window.location.pathname == "/vehicles") {
       this.isVehicles = true;
     }
@@ -198,7 +199,7 @@ export class PagesComponent implements OnInit {
           })
         }, 100);
       }
-    }, 60000);
+    }, 300000);
 
     this.currentMap = mapType;
     if (window.innerWidth <= 768) {
@@ -279,17 +280,20 @@ export class PagesComponent implements OnInit {
     }
   }
   //#endregion
-  SearchQueryChangeOnline($event) {
-    console.log($event.target.value)
-    let query = $event.target.value
-    this.SearchedDevicesOnline = this.onlineDevices.filter((item: PacketParser) => item.veh_reg_no.includes(query))
-    console.log(this.SearchedDevicesOnline);
-  }
-  SearchQueryChangeOffline($event) {
-    console.log($event.target.value)
-    let query = $event.target.value
-    this.SearchedDevicesOffline = this.offlineDevices.filter((item: PacketParser) => item.veh_reg_no.includes(query))
-    console.log(this.SearchedDevicesOffline);
+  SearchQueryChange($event) {
+    let query: string = $event.target.value
+    if (query.length) {
+      this.SearchedDevices = this.AllVehicles.filter((item: PacketParser) => item.veh_reg_no.includes(query.toUpperCase()))
+    }
+    else {
+      this.SearchedDevices = []
+    }
+    if (!this.SearchedDevices.length) {
+      console.log(query.toUpperCase())
+      this.Toast.clear()
+      this.Toast.error('No devices found')
+
+    }
   }
   //#region Get Veh Data
   getVehTree() {
@@ -298,6 +302,8 @@ export class PagesComponent implements OnInit {
     this.onlineDevices = []
     this.childArray = [];
     this.OnlineGroups = [];
+    this.AllDevices = [];
+    this.AllVehicles = [];
     $('.notificationsUnread').addClass('d-none')
     $(".notificationPanel").addClass("d-none");
     $(".notificationsRead").addClass("d-none");
@@ -828,9 +834,9 @@ export class PagesComponent implements OnInit {
       //     this.AllDevices = JSON.parse(data);
       //   });
       // }
-    } else {
-      if (this.AllDevices.length === 0) {
-        console.log(this.AllDevices)
+    }
+    else {
+      if (this.AllDevices.length < 1) {
         $('.notificationsUnread').addClass('d-none')
         $(".notificationPanel").addClass("d-none");
         $(".notificationsRead").addClass("d-none");
@@ -933,14 +939,17 @@ export class PagesComponent implements OnInit {
           "Please Close Details to proceed",
           "Error showing Dialog"
         );
-      } else {
+      }
+      else {
         device_id = this.AllDevices[0].device_id;
         this.dialog.open(AllControlsDialogComponent);
       }
-    } else if (this.AllDevices.length > 1) {
+    }
+    else if (this.AllDevices.length > 1) {
       this.Toast.clear()
       this.Toast.error("Please Select only One Device", "Error showing Dialog");
-    } else {
+    }
+    else {
       this.Toast.clear()
       this.Toast.error("Please Select a Device", "Error Showing Dialog");
     }
