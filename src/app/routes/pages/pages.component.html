@@ -306,7 +306,7 @@ perfectScrollbar
                   (ngIf)="(OnlineGroups.length)"
                   *ngFor="let item of OnlineGroups; let i = index"
                 >
-                  <mat-expansion-panel>
+                  <mat-expansion-panel style="margin-bottom: 3px">
                     <mat-expansion-panel-header class="nestedPanelHeader">
                       <mat-panel-title>
                         <!-- <input type="checkbox" style="margin-right: 10px" /> -->
@@ -697,7 +697,7 @@ perfectScrollbar
                                   [attr.device-Id-Vrn]="t2.device_id"
                                 ></div>
                               </div>
-                              <mat-expansion-panel>
+                              <mat-expansion-panel style="margin-bottom:3px !important;">
                                 <mat-expansion-panel-header
                                   *ngIf="t2.grp_name"
                                   class="MorenestedPanelHeader"
