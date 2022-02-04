@@ -185,20 +185,21 @@ export class PagesComponent implements OnInit {
       $(".notificationPanel").addClass("d-none");
       $(".notificationsRead").addClass("d-none")
       this.getVehTree()
-      if (this.checkedDevices.length !== 0) {
-        this.AllMarkers.forEach((thismarker) => {
-          map.removeLayer(thismarker)
-        })
-        this.markers = []
-        this.setLeafLetMarkers();
-        setTimeout(() => {
-          this.checkedDevices.forEach((item) => {
-            let tempObj = this.AllVehicles.find((Data: PacketParser) => Data.device_id == item.id)
-            $(`[data-device_id= ${item.id}]`).prop('checked', true)
-            this.MarkerSettingFunction(item.event, tempObj.dataTrack, item.id)
-          })
-        }, 100);
-      }
+      // if (this.checkedDevices.length !== 0) {
+      //   this.AllMarkers.forEach((thismarker) => {
+      //     map.removeLayer(thismarker)
+      //   })
+      //   this.markers = []
+      //   this.setLeafLetMarkers();
+      //   setTimeout(() => {
+      //     this.checkedDevices.forEach((item) => {
+      //       debugger;
+      //       let tempObj = dataArr.find((Data: PacketParser) => Data.device_id == item.id)
+      //       $(`[data-device_id= ${item.id}]`).prop('checked', true)
+      //       this.MarkerSettingFunction(item.event, tempObj.dataTrack, item.id)
+      //     })
+      //   }, 100);
+      // }
     }, 300000);
 
     this.currentMap = mapType;
@@ -289,7 +290,6 @@ export class PagesComponent implements OnInit {
       this.SearchedDevices = []
     }
     if (!this.SearchedDevices.length) {
-      console.log(query.toUpperCase())
       this.Toast.clear()
       this.Toast.error('No devices found')
 
@@ -308,15 +308,15 @@ export class PagesComponent implements OnInit {
     $(".notificationPanel").addClass("d-none");
     $(".notificationsRead").addClass("d-none");
     try {
-      // // this.route.data.subscribe((data) => {
-      // //   data["model"].data.forEach((item: any, index: any) => {
-      // //     this.TREE_DATA.push(item);
-      // //   });
-      // //   this.TREE_DATA[1].SubMenu.sort(
-      // //     (a: { grp_name: number }, b: { grp_name: number }) =>
-      // //       a.grp_name > b.grp_name ? 1 : b.grp_name > a.grp_name ? -1 : 0
-      // //   );
-      // // });
+      // this.route.data.subscribe((data) => {
+      //   data["model"].data.forEach((item: any, index: any) => {
+      //     this.TREE_DATA.push(item);
+      //   });
+      //   this.TREE_DATA[1].SubMenu.sort(
+      //     (a: { grp_name: number }, b: { grp_name: number }) =>
+      //       a.grp_name > b.grp_name ? 1 : b.grp_name > a.grp_name ? -1 : 0
+      //   );
+      // });
       this.dashboardService.GetVehiclesTree().subscribe((data) => {
         if (data.status) {
           this.TREE_DATA = data.data;
@@ -379,6 +379,21 @@ export class PagesComponent implements OnInit {
               }
             })
           }
+          if (this.checkedDevices.length !== 0) {
+            this.AllMarkers.forEach((thismarker) => {
+              map.removeLayer(thismarker)
+            })
+            this.markers = []
+            this.setLeafLetMarkers();
+            setTimeout(() => {
+              this.checkedDevices.forEach((item) => {
+                debugger;
+                let tempObj = dataArr.find((Data: PacketParser) => Data.device_id == item.id)
+                $(`[data-device_id= ${item.id}]`).prop('checked', true)
+                this.MarkerSettingFunction(item.event, tempObj.dataTrack, item.id)
+              })
+            }, 100);
+          }
           $(".speedCheck").each(function () {
             var vehicle = $(this).attr("data-idforspeed");
             var obj = dataArr.find(
@@ -394,17 +409,17 @@ export class PagesComponent implements OnInit {
             object ?
               object.veh_status == "Idle"
                 ? $(this).html(
-                  `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="./assets/icons/YellowArrow.png" alt=${object.veh_status}>`
+                  `<img style="height:30px;"  src="../../../assets/icons/YellowArrow.png" alt=${object.veh_status}>`
                 )
                 : object.veh_status == "Moving"
                   ? $(this).html(
-                    `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="./assets/icons/YellowArrow.png" alt=${object.veh_status}>`
+                    `<img style="height:30px;"  src="../../../assets/icons/YellowArrow.png" alt=${object.veh_status}>`
                   )
                   : object.veh_status == "Parked"
                     ? $(this).html(
-                      `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="./assets/icons/RedArrow.png" alt=${object.veh_status}>`
+                      `<img style="height:30px;"  src="../../../assets/icons/RedArrow.png" alt=${object.veh_status}>`
                     ) : $(this).html(
-                      `<img style="height:30px; transform:rotate(${object.dir_angle}deg)"  src="./assets/icons/Disconected.png" alt=${object.veh_status}>`
+                      `<img style="height:30px;"  src="../../../assets/icons/Disconected.png" alt=${object.veh_status}>`
                     )
               : null
           });
@@ -1683,10 +1698,8 @@ export class AllControlsDialogComponent implements OnInit {
   }]
   constructor(public dialog: MatDialog, public CommandsService: CommandsService, public CommandTypeService: CommandTypeService) { }
   ngOnInit(): void {
-    console.log(device_id)
     this.CommandsService.GetCommands().subscribe(res => {
       if (res.status) {
-        console.log(res.data)
         this.AllCommands = res.data
       }
     })
@@ -1694,7 +1707,6 @@ export class AllControlsDialogComponent implements OnInit {
   }
 
   OpenCommandDialog(name, id): void {
-    console.log(name);
     this.CommandTypeService.setCommand(name)
     this.CommandTypeService.setCommandId(id)
     setTimeout(() => {
@@ -1726,19 +1738,15 @@ export class ControlDialogComponent implements OnInit {
     this.CommandTypeService.currentCommandId.subscribe(id => this.commandId = id)
   }
   ChannelChange(e) {
-    console.log(e)
     this.channel = e.value;
   }
   camChannelChange(e) {
-    console.log(e.value)
     this.camChannel = e.value
   }
   picQualityChange(e) {
-    console.log(e.value)
     this.picQualtity = e.value;
   }
   numberChange(e) {
-    console.log(e.target.value);
     this.phoneNumber = e.target.value;
   }
   //#region Send Request
@@ -1757,7 +1765,6 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          // console.log(typeof res._object.Message)
           if (typeof res._object.Message == "string") {
             this.Toast.clear()
             this.Toast.error(res._object.Message)
@@ -1793,9 +1800,7 @@ export class ControlDialogComponent implements OnInit {
           p_dev_id: device_id,
           channel: this.channel
         }
-        console.log(data)
         this.CommandsService.SendCommand(data).subscribe(res => {
-          // console.log(typeof res._object.Message)
           if (typeof parseInt(res._object.Message) == "number") {
             data.check_status = true;
             data.fb_id = res._object.Message;
@@ -1834,7 +1839,6 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          // console.log(typeof res._object.Message)
           if (typeof res._object.Message == "string") {
             this.Toast.clear()
             this.Toast.error(res._object.Message)
@@ -1871,7 +1875,6 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          // console.log(typeof res._object.Message)
           if (typeof res._object.Message == "string") {
             this.Toast.clear()
             this.Toast.error(res._object.Message)
@@ -1909,7 +1912,6 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          // console.log(typeof res._object.Message)
           if (typeof res._object.Message == "string") {
             this.Toast.clear()
             this.Toast.error(res._object.Message)
@@ -1947,7 +1949,6 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          // console.log(typeof res._object.Message)
           if (typeof res._object.Message == "string") {
             this.Toast.clear()
             this.Toast.error(res._object.Message)
@@ -1985,7 +1986,6 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          // console.log(typeof res._object.Message)
           if (typeof res._object.Message == "string") {
             this.Toast.clear()
             this.Toast.error(res._object.Message)
@@ -2023,7 +2023,6 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          // console.log(typeof res._object.Message)
           if (typeof res._object.Message == "string") {
             this.Toast.clear()
             this.Toast.error(res._object.Message)
@@ -2061,7 +2060,6 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          // console.log(typeof res._object.Message)
           if (typeof res._object.Message == "string") {
             this.Toast.clear()
             this.Toast.error(res._object.Message)
@@ -2099,7 +2097,6 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          // console.log(typeof res._object.Message)
           if (typeof res._object.Message == "string") {
             this.Toast.clear()
             this.Toast.error(res._object.Message)
@@ -2137,7 +2134,6 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          // console.log(typeof res._object.Message)
           if (typeof res._object.Message == "string") {
             this.Toast.clear()
             this.Toast.error(res._object.Message)
@@ -2175,7 +2171,6 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          // console.log(typeof res._object.Message)
           if (typeof res._object.Message == "string") {
             this.Toast.clear()
             this.Toast.error(res._object.Message)
@@ -2274,11 +2269,9 @@ export class SettingDialogComponent implements OnInit {
   }
 
   ChannelChange(e) {
-    console.log(e)
     this.channel = e.value;
   }
   numberChange(e) {
-    console.log(e.target.value);
     this.phoneNumber = e.target.value;
   }
   togglePassword() {
