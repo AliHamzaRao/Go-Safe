@@ -233,7 +233,7 @@
 }
 .userPanelKeys {
   color: white !important;
-  font-size: 10px;
+  font-size: 11px !important;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -280,6 +280,7 @@
   background: #4b89b9 !important;
 }
 .mat-expansion-panel-header-title {
+  font-size: 13px;
   color: white !important;
   width: 100% !important;
 }

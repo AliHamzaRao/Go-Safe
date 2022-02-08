@@ -168,6 +168,12 @@ export class PagesComponent implements OnInit {
     if (window.location.pathname == "/vehicles") {
       this.isVehicles = true;
     }
+    // this.icon = L.icon({
+    //   iconUrl: '',
+    //   iconSize: [38, 95], // size of the icon
+    //   iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+    //   popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+    // });
     this.logo = localStorage.CompanyLogo ? 'data:image/png;base64,' + localStorage.getItem("CompanyLogo") : '../../../assets/logos/logo 1-01.svg';
     this.username = localStorage.getItem("username") || null;
     this.mapTypeService.newMap.subscribe((data) => {
@@ -185,21 +191,6 @@ export class PagesComponent implements OnInit {
       $(".notificationPanel").addClass("d-none");
       $(".notificationsRead").addClass("d-none")
       this.getVehTree()
-      // if (this.checkedDevices.length !== 0) {
-      //   this.AllMarkers.forEach((thismarker) => {
-      //     map.removeLayer(thismarker)
-      //   })
-      //   this.markers = []
-      //   this.setLeafLetMarkers();
-      //   setTimeout(() => {
-      //     this.checkedDevices.forEach((item) => {
-      //       debugger;
-      //       let tempObj = dataArr.find((Data: PacketParser) => Data.device_id == item.id)
-      //       $(`[data-device_id= ${item.id}]`).prop('checked', true)
-      //       this.MarkerSettingFunction(item.event, tempObj.dataTrack, item.id)
-      //     })
-      //   }, 100);
-      // }
     }, 300000);
 
     this.currentMap = mapType;
@@ -215,11 +206,20 @@ export class PagesComponent implements OnInit {
   //#endregion
 
   //#region TabChangeEvent
-  tabChanged(e) {
-    if (this.checkedDevices.length) {
+  tabChanged(e, devices = this.checkedDevices) {
+    if (devices.length) {
       setTimeout(() => {
-        this.checkedDevices.forEach((item) => {
-          $(`[data-device_id= ${item.id}]`).prop('checked', true)
+        devices.forEach((item) => {
+          $(`[data-device_id]`).each((param, el) => {
+            // debugger;
+            console.log(el.id)
+            if (item.id == el.id) {
+              $(el).prop('checked', true)
+            }
+            else {
+              $(el).removeProp('checked')
+            }
+          })
         })
       });
     }
@@ -288,11 +288,6 @@ export class PagesComponent implements OnInit {
     }
     else {
       this.SearchedDevices = []
-    }
-    if (!this.SearchedDevices.length) {
-      this.Toast.clear()
-      this.Toast.error('No devices found')
-
     }
   }
   //#region Get Veh Data
@@ -387,40 +382,52 @@ export class PagesComponent implements OnInit {
             this.setLeafLetMarkers();
             setTimeout(() => {
               this.checkedDevices.forEach((item) => {
-                debugger;
                 let tempObj = dataArr.find((Data: PacketParser) => Data.device_id == item.id)
                 $(`[data-device_id= ${item.id}]`).prop('checked', true)
                 this.MarkerSettingFunction(item.event, tempObj.dataTrack, item.id)
               })
             }, 100);
           }
+          $('.ref-location').each(function () {
+
+            var refLo = $(this).attr('data-refLocation');
+            var obj2 = dataArr.find(
+              (item: PacketParser) => item.device_id == refLo
+            );
+            obj2 ? $(this).html(`${obj2.ref_location}`) : null;
+          })
           $(".speedCheck").each(function () {
             var vehicle = $(this).attr("data-idforspeed");
             var obj = dataArr.find(
               (item: PacketParser) => item.device_id == vehicle
             );
-            obj ? $(this).html(`${obj.speed} <br> kph`) : null;
+            obj ? $(this).html(`${obj.speed} <br><span style="font-size:12px">km/h</span>`) : null;
           });
           $(".veh_status").each(function () {
             var device = $(this).attr("device-id-vrn");
             var object = dataArr.find(
               (item: PacketParser) => item.device_id == device
             );
-            object ?
+            object ? object.veh_status.length && object.alarm_status == '1'
+              ? $(this).html(
+                `<img style="height:30px; transform:rotate(90deg)"  src="../../../assets/icons/RedArrow.png" alt=${object.veh_status}>`
+              ) :
               object.veh_status == "Idle"
                 ? $(this).html(
-                  `<img style="height:30px;"  src="../../../assets/icons/YellowArrow.png" alt=${object.veh_status}>`
+                  `<img style="height:30px;"  src="../../../assets/icons/BlueArrow.png" alt=${object.veh_status}>`
                 )
                 : object.veh_status == "Moving"
                   ? $(this).html(
-                    `<img style="height:30px;"  src="../../../assets/icons/YellowArrow.png" alt=${object.veh_status}>`
+                    `<img style="height:30px; transform:rotate(90deg)"  src="../../../assets/icons/GreenArrow.png" alt=${object.veh_status}>`
                   )
                   : object.veh_status == "Parked"
                     ? $(this).html(
-                      `<img style="height:30px;"  src="../../../assets/icons/RedArrow.png" alt=${object.veh_status}>`
-                    ) : $(this).html(
-                      `<img style="height:30px;"  src="../../../assets/icons/Disconected.png" alt=${object.veh_status}>`
+                      `<img style="height:30px; transform:rotate(90deg)"  src="../../../assets/icons/YellowArrow.png" alt=${object.veh_status}>`
                     )
+                    : object.veh_status == "Offline" ? $(this).html(
+                      `<img style="height:30px; transform:rotate(90deg)"  src="../../../assets/icons/Disconected.png" alt=${object.veh_status}>`
+                    ) : $(this).html(
+                      `<img style="height:30px; transform:rotate(90deg)"  src="../../../assets/icons/Disconected.png" alt=${object.veh_status}>`)
               : null
           });
         });
@@ -547,9 +554,12 @@ export class PagesComponent implements OnInit {
   //#endregion
 
   //#region Load Leaflet Maps
+
   loadLeafLetMap() {
     el = document.getElementById("leaflet-map");
     L.Icon.Default.imagePath = "assets/img/vendor/leaflet/";
+    // debugger;
+    // L.Icon.Default.imagePath = "../../../assets/icons/GreenArrow.png";
     map = L.map(el).setView([this.lat, this.lng], 10);
     L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
       attribution:
@@ -861,11 +871,9 @@ export class PagesComponent implements OnInit {
         (item: { device_id: any }) => item.device_id === _id
       );
       let checkedDeviceIndex = this.checkedDevices.findIndex(
-        (item) => item === _id
+        (item) => item.id === _id
       );
-      $(`[data-device_id=${_id}]`).each((el, index) => {
-        $(index).prop('checked', false)
-      })
+      $(`[data-device_id=${_id}]`).prop('checked', false)
       this.checkedDevices.splice(checkedDeviceIndex, 1);
       this.AllDevices.splice(index, 1);
       let MarkerIndex = this.markers.findIndex(
@@ -1696,16 +1704,39 @@ export class AllControlsDialogComponent implements OnInit {
     p_dev_id: 0,
     _picQ: ""
   }]
-  constructor(public dialog: MatDialog, public CommandsService: CommandsService, public CommandTypeService: CommandTypeService) { }
+  AllSettings: Setting[] = [{
+    check_status: false,
+    fb_id: 0,
+    p_cmd_id: 0,
+    Name: "",
+    p_cell_no: '',
+    p_IpAddress: "",
+    p_tcp_port: "",
+    url: "",
+    apn: "",
+    user_name: "",
+    pwd: "",
+    mileage: "",
+    cmd_type: "",
+    p_dev_id: "",
+    channel: ""
+  }]
+  constructor(public dialog: MatDialog, public CommandsService: CommandsService, public CommandTypeService: CommandTypeService, public SettingsService: SettingsService, public SettingTypeService: SettingTypeService) { }
   ngOnInit(): void {
     this.CommandsService.GetCommands().subscribe(res => {
       if (res.status) {
         this.AllCommands = res.data
       }
     })
+    this.SettingsService.GetSettings().subscribe(settings => this.AllSettings = settings.data)
 
   }
 
+  OpenSettingDialog(name, id): void {
+    this.SettingTypeService.setSetting(name);
+    this.SettingTypeService.setSettingId(id)
+    this.dialog.open(SettingDialogComponent)
+  }
   OpenCommandDialog(name, id): void {
     this.CommandTypeService.setCommand(name)
     this.CommandTypeService.setCommandId(id)

@@ -14,7 +14,10 @@
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
     <span>
-      <button mat-button class="CommandCancelButton">Cancel</button> &nbsp;
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
+      &nbsp;
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
       </button>
