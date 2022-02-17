@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener, ViewChildren, QueryList } from "@angular/core";
+import { Component, OnInit, ViewChild, HostListener, ViewChildren, QueryList, OnDestroy, AfterViewInit } from "@angular/core";
 import { ActivatedRoute, Router, NavigationEnd } from "@angular/router";
 import { PerfectScrollbarDirective } from "ngx-perfect-scrollbar";
 import { AppSettings } from "../../_core/settings/app.settings";
@@ -25,7 +25,7 @@ import { Vehicles } from "src/app/_interfaces/vehicle.model";
 import { dashboardService } from "src/app/_core/_AppServices/dashboard.service";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
 import { CurrentStateService } from '../../_core/_AppServices/CurrentStateService';
-import { CurrentStateResponse, Command, Setting, Alarm } from '../../_interfaces/DBresponse.model';
+import { CurrentStateResponse, Command, Setting, Alarm, GeoFence, Data } from '../../_interfaces/DBresponse.model';
 import { CommandsService } from '../../_core/_AppServices/CommandsService';
 import { CommandTypeService } from '../../_core/_AppServices/CommandTypeService';
 import { SettingsService } from '../../_core/_AppServices/SettingsService';
@@ -75,7 +75,7 @@ export class PagesComponent implements OnInit {
   setTime: any;
   marker: any;
   notifications: Alarm[] = [];
-  geoFences: any;
+  geoFences: GeoFence[];
   fenceType: any;
   rectMarkers: any[] = [];
   polyMarkers: any[] = [];
@@ -93,12 +93,14 @@ export class PagesComponent implements OnInit {
   AllMarkers: any[] = [];
   childArray: Vehicles[] = [];
   isVehicles: boolean = false;
+  isgeofence: boolean = false;
   onlineDevices: PacketParser[] = [];
   offlineDevices: PacketParser[] = [];
   AllVehicles: PacketParser[] = [];
   OnlineGroups: any[] = [];
   idArr: number[] = []
   SearchedDevices: PacketParser[] = []
+  fenceListLoaded: boolean = false;
   historyInfo: any = {
     GPSDateTime: "test",
     Speed: "0",
@@ -169,6 +171,14 @@ export class PagesComponent implements OnInit {
       this.isVehicles = true;
     }
     // this.icon = L.icon({
+    if (window.location.pathname == "/showgeofence") {
+      this.isgeofence = true;
+      this.GeoFencing();
+    }
+      if(window.location.pathname == "/createfence"){
+      this.isgeofence = true;
+      this.CreateFencing()
+      }
     //   iconUrl: '',
     //   iconSize: [38, 95], // size of the icon
     //   iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
@@ -211,7 +221,6 @@ export class PagesComponent implements OnInit {
       setTimeout(() => {
         devices.forEach((item) => {
           $(`[data-device_id]`).each((param, el) => {
-            // debugger;
             console.log(el.id)
             if (item.id == el.id) {
               $(el).prop('checked', true)
@@ -237,7 +246,8 @@ export class PagesComponent implements OnInit {
 
   //#region MapType change Event
   MapType(e) {
-    mapType = e.target.value;
+    mapType = e.target.innerText;
+    this.mapTypeService.SetMap(mapType);
     this.currentMap = mapType;
     this.closeFencing();
     $(".vehicleCard").addClass("d-none");
@@ -245,7 +255,6 @@ export class PagesComponent implements OnInit {
     $(".vehicleCardLeaflet").addClass("d-none");
     $(".vehicleCardLeafletMore").addClass("d-none");
     $(".agm-map-container-inner").addClass("rounded");
-    mapType = $(".mapDropdown").find(":selected").val();
     if (mapType === "Google Maps" && $(".recordDialogOffset").is(":visible")) {
       $(".recordDialogOffset").toggleClass("d-none");
       $(".googleMapRecord").toggleClass("d-none");
@@ -273,7 +282,8 @@ export class PagesComponent implements OnInit {
     }
     if (mapType == "Google Maps") {
       map.off();
-    } else if (mapType == "Open Street Maps") {
+    }
+    if (mapType == "Open Street Maps") {
       this.RefreshMap();
       setTimeout(() => {
         this.setLeafLetMarkers();
@@ -558,7 +568,6 @@ export class PagesComponent implements OnInit {
   loadLeafLetMap() {
     el = document.getElementById("leaflet-map");
     L.Icon.Default.imagePath = "assets/img/vendor/leaflet/";
-    // debugger;
     // L.Icon.Default.imagePath = "../../../assets/icons/GreenArrow.png";
     map = L.map(el).setView([this.lat, this.lng], 10);
     L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
@@ -740,7 +749,7 @@ export class PagesComponent implements OnInit {
   }
   // #endregion
 
-  //#region Marker Settinfs and Sending Method
+  //#region Marker Settings and Sending Method
   MarkerSettingFunction(e, DataTrack: string, _id: any) {
     $(".vehicleCardLeaflet").addClass("d-none");
     $(".vehicleCardLeafletMore").addClass("d-none");
@@ -888,11 +897,13 @@ export class PagesComponent implements OnInit {
           (data) => (this.AllDevices = JSON.parse(data))
         );
       }, 100);
+      if(mapType==="Open Street Maps"){
       map.off();
       this.RefreshMap();
       setTimeout(() => {
         this.setLeafLetMarkers();
       }, 1000);
+    }
       if (!this.AllDevices.length) {
         $(".vehicleCard").addClass("d-none");
       }
@@ -1012,6 +1023,7 @@ export class PagesComponent implements OnInit {
     $(".vehicleCardLeafletMore").addClass("d-none");
   }
   closeHistory() {
+    this.stop();
     this.RefreshMap()
     setTimeout(() => {
       this.setLeafLetMarkers();
@@ -1140,44 +1152,29 @@ export class PagesComponent implements OnInit {
   }
   RemoveFencing() {
     this.RefreshMap()
+    $(".selectionList").removeClass("d-none");
     setTimeout(() => {
       this.setLeafLetMarkers();
     }, 1000);
     setTimeout(() => {
       $(".closeGeoFenceBtn").addClass("d-none");
     }, 1000);
-    // if (rect) {
-    //   map.removeLayer(rect);
-    // }
-    // if (circle) {
-    //   map.removeLayer(circle);
-    // }
-    // if (plgn) {
-    //   map.removeLayer(plgn);
-    // }
-    // if (marker) {
-    //   map.removeLayer(marker);
-    //   $(
-    //     ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
-    //   ).remove();
-    //   $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
-    // }
-    // $(".GeoFence").addClass("d-none");
-    // if (!rect || !plgn || !circle || !marker) {
-    //   setTimeout(() => {
-    //     $(".closeGeoFenceBtn").addClass("d-none");
-    //   }, 1000);
-    // }
   }
   GeoFencing() {
-    $(".createFence").addClass("d-none");
+    this.fenceListLoaded = false;
+    $(".createFence").addClass("d-none"); 
     $(".createFenceGoogleMap").addClass("d-none");
     this.GeoFence.geoFence().subscribe((data) => {
-      this.geoFences = data.data;
+      this.geoFences = data.data.sort();
+      this.fenceListLoaded = true;
     });
     $(".selectionList").removeClass("d-none");
   }
+  geofenceQuery(e){
+    console.log(e.target.value)
+  }
   closeFencing() {
+    this.router.navigate(['/'])
     $(".selectionList").addClass("d-none");
   }
   onInputChange = (e) => {
@@ -1559,6 +1556,7 @@ export class PagesComponent implements OnInit {
   styleUrls: ["../pages/pages.component.scss"],
 })
 export class historyDialogComponent implements OnInit {
+  loading: boolean = false;
   markerData = [];
   response: any;
   history: any;
@@ -1568,7 +1566,6 @@ export class historyDialogComponent implements OnInit {
   currentState: number = 0;
   setTime: any;
   interval: number = 500;
-  loading: boolean = false;
   formValid: boolean = false;
   dateValid: boolean = false;
   public form: FormGroup;
@@ -1692,7 +1689,8 @@ export class AssetTripDialogComponent {
     "../pages/Dialogs/ControlDialog.scss",
   ],
 })
-export class AllControlsDialogComponent implements OnInit {
+export class AllControlsDialogComponent implements OnInit ,AfterViewInit {
+  loading: boolean = true;
   AllCommands: Command[] = [{
     Name: "No data available",
     camera_channel: "",
@@ -1723,15 +1721,29 @@ export class AllControlsDialogComponent implements OnInit {
   }]
   constructor(public dialog: MatDialog, public CommandsService: CommandsService, public CommandTypeService: CommandTypeService, public SettingsService: SettingsService, public SettingTypeService: SettingTypeService) { }
   ngOnInit(): void {
-    this.CommandsService.GetCommands().subscribe(res => {
-      if (res.status) {
-        this.AllCommands = res.data
+    this.loading = true
+  }
+  ngAfterViewInit(): void {
+      
+    this.CommandsService.GetCommands().subscribe(commands => {
+      if (commands.status) {
+      // this.loading= true;
+        this.AllCommands = commands.data;
+        // this.loading= false;
       }
     })
-    this.SettingsService.GetSettings().subscribe(settings => this.AllSettings = settings.data)
-
+    this.SettingsService.GetSettings().subscribe(settings => {
+      if(settings.status){
+      // this.loading= true;
+      this.AllSettings = settings.data;
+    }
+    this.loading= false;
+    })
   }
-
+  ngOnDestroy(){
+    this.AllCommands = [];
+    this.AllSettings = []
+  }
   OpenSettingDialog(name, id): void {
     this.SettingTypeService.setSetting(name);
     this.SettingTypeService.setSettingId(id)
@@ -1796,15 +1808,15 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          if (typeof res._object.Message == "string") {
+          if (isNaN(res._object.Message) ){
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
           }
           else {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.success(`${this.commandType} command successfully executed`, "Success")
                 this.dialog.closeAll();
                 this.dialog.open(AllControlsDialogComponent)
@@ -1832,11 +1844,11 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          if (typeof parseInt(res._object.Message) == "number") {
+          if (isNaN(res._object.Message) ){
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.clear()
                 this.Toast.success(`${this.commandType} command successfully executed`, "Success")
                 this.dialog.closeAll();
@@ -1846,7 +1858,7 @@ export class ControlDialogComponent implements OnInit {
           }
           else {
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
             this.dialog.closeAll();
             this.dialog.open(AllControlsDialogComponent)
           }
@@ -1870,15 +1882,15 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          if (typeof res._object.Message == "string") {
+          if (isNaN(res._object.Message) ){
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
           }
           else {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.clear()
                 this.Toast.success(`${this.commandType} command successfully executed`, "Success")
                 this.dialog.closeAll();
@@ -1906,15 +1918,16 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          if (typeof res._object.Message == "string") {
+          debugger;
+          if (isNaN(res._object.Message) ){
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
           }
           else {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.clear()
                 this.Toast.success(`${this.commandType} command successfully executed`, "Success")
                 this.dialog.closeAll();
@@ -1943,15 +1956,15 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          if (typeof res._object.Message == "string") {
+          if (isNaN(res._object.Message) ){
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
           }
           else {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.clear()
                 this.Toast.success(`${this.commandType} command successfully executed`, "Success")
                 this.dialog.closeAll();
@@ -1980,15 +1993,15 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          if (typeof res._object.Message == "string") {
+          if (isNaN(res._object.Message) ){
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
           }
           else {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.clear()
                 this.Toast.success(`${this.commandType} command successfully executed`, "Success")
                 this.dialog.closeAll();
@@ -2017,15 +2030,15 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          if (typeof res._object.Message == "string") {
+          if (isNaN(res._object.Message) ){
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
           }
           else {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.clear()
                 this.Toast.success(`${this.commandType} command successfully executed`, "Success")
                 this.dialog.closeAll();
@@ -2054,15 +2067,15 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          if (typeof res._object.Message == "string") {
+          if (isNaN(res._object.Message) ){
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
           }
           else {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.clear()
                 this.Toast.success(`${this.commandType} command successfully executed`, "Success")
                 this.dialog.closeAll();
@@ -2091,15 +2104,15 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          if (typeof res._object.Message == "string") {
+          if (isNaN(res._object.Message) ){
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
           }
           else {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.clear()
                 this.Toast.success(`${this.commandType} command successfully executed`, "Success")
                 this.dialog.closeAll();
@@ -2128,15 +2141,15 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          if (typeof res._object.Message == "string") {
+          if (isNaN(res._object.Message) ){
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
           }
           else {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.clear()
                 this.Toast.success(`${this.commandType} command successfully executed`, "Success")
                 this.dialog.closeAll();
@@ -2165,15 +2178,15 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          if (typeof res._object.Message == "string") {
+          if (isNaN(res._object.Message) ){
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
           }
           else {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.clear()
                 this.Toast.success(`${this.commandType} command successfully executed`, "Success")
                 this.dialog.closeAll();
@@ -2202,15 +2215,15 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          if (typeof res._object.Message == "string") {
+          if (isNaN(res._object.Message) ){
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
           }
           else {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.CommandsService.SendCommand(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.clear()
                 this.Toast.success(`${this.commandType} command successfully executed`, "Success")
                 this.dialog.closeAll();
@@ -2330,19 +2343,19 @@ export class SettingDialogComponent implements OnInit {
       }
       if (this.channel && this.phoneNumber) {
         this.SettingsService.SendSettings(data).subscribe(res => {
-          if (typeof parseInt(res._object.Message) != "number") {
+          if (isNaN(res._object.Message) ){
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
           }
           else {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.SettingsService.SendSettings(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.clear()
                 this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                 this.dialog.closeAll();
-                this.dialog.open(AllSettingsDialogComponent)
+                this.dialog.open(AllControlsDialogComponent)
               }
             })
           }
@@ -2373,19 +2386,19 @@ export class SettingDialogComponent implements OnInit {
       }
       if (this.channel) {
         this.SettingsService.SendSettings(data).subscribe(res => {
-          if (typeof parseInt(res._object.Message) != "number") {
+          if (isNaN(res._object.Message) ){
             this.Toast.clear()
-            this.Toast.error(res._object.Message)
+            this.Toast.error(res._object.Message.toString())
           }
           else {
             data.check_status = true;
             data.fb_id = res._object.Message;
             this.SettingsService.SendSettings(data).subscribe(newRes => {
-              if (newRes._object.Message == "") {
+              if (newRes._object.Message.toString() == "") {
                 this.Toast.clear()
                 this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                 this.dialog.closeAll();
-                this.dialog.open(AllSettingsDialogComponent)
+                this.dialog.open(AllControlsDialogComponent)
               }
             })
           }
@@ -2419,19 +2432,19 @@ export class SettingDialogComponent implements OnInit {
         }
         if (this.channel) {
           this.SettingsService.SendSettings(data).subscribe(res => {
-            if (typeof parseInt(res._object.Message) != "number") {
+            if (isNaN(res._object.Message) ){
               this.Toast.clear()
-              this.Toast.error(res._object.Message)
+              this.Toast.error(res._object.Message.toString())
             }
             else {
               data.check_status = true;
               data.fb_id = res._object.Message;
               this.SettingsService.SendSettings(data).subscribe(newRes => {
-                if (newRes._object.Message == "") {
+                if (newRes._object.Message.toString() == "") {
                   this.Toast.clear()
                   this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                   this.dialog.closeAll();
-                  this.dialog.open(AllSettingsDialogComponent)
+                  this.dialog.open(AllControlsDialogComponent)
                 }
               })
             }
@@ -2470,19 +2483,19 @@ export class SettingDialogComponent implements OnInit {
         }
         if (this.channel) {
           this.SettingsService.SendSettings(data).subscribe(res => {
-            if (typeof parseInt(res._object.Message) != "number") {
+            if (isNaN(res._object.Message) ){
               this.Toast.clear()
-              this.Toast.error(res._object.Message)
+              this.Toast.error(res._object.Message.toString())
             }
             else {
               data.check_status = true;
               data.fb_id = res._object.Message;
               this.SettingsService.SendSettings(data).subscribe(newRes => {
-                if (newRes._object.Message == "") {
+                if (newRes._object.Message.toString() == "") {
                   this.Toast.clear()
                   this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                   this.dialog.closeAll();
-                  this.dialog.open(AllSettingsDialogComponent)
+                  this.dialog.open(AllControlsDialogComponent)
                 }
               })
             }
@@ -2520,19 +2533,19 @@ export class SettingDialogComponent implements OnInit {
         }
         if (this.channel) {
           this.SettingsService.SendSettings(data).subscribe(res => {
-            if (typeof parseInt(res._object.Message) != "number") {
+            if (isNaN(res._object.Message) ){
               this.Toast.clear()
-              this.Toast.error(res._object.Message)
+              this.Toast.error(res._object.Message.toString())
             }
             else {
               data.check_status = true;
               data.fb_id = res._object.Message;
               this.SettingsService.SendSettings(data).subscribe(newRes => {
-                if (newRes._object.Message == "") {
+                if (newRes._object.Message.toString() == "") {
                   this.Toast.clear()
                   this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                   this.dialog.closeAll();
-                  this.dialog.open(AllSettingsDialogComponent)
+                  this.dialog.open(AllControlsDialogComponent)
                 }
               })
             }
@@ -2572,19 +2585,19 @@ export class SettingDialogComponent implements OnInit {
         }
         if (this.channel) {
           this.SettingsService.SendSettings(data).subscribe(res => {
-            if (typeof parseInt(res._object.Message) != "number") {
+            if (isNaN(res._object.Message) ){
               this.Toast.clear()
-              this.Toast.error(res._object.Message)
+              this.Toast.error(res._object.Message.toString())
             }
             else {
               data.check_status = true;
               data.fb_id = res._object.Message;
               this.SettingsService.SendSettings(data).subscribe(newRes => {
-                if (newRes._object.Message == "") {
+                if (newRes._object.Message.toString() == "") {
                   this.Toast.clear()
                   this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                   this.dialog.closeAll();
-                  this.dialog.open(AllSettingsDialogComponent)
+                  this.dialog.open(AllControlsDialogComponent)
                 }
               })
             }
@@ -2601,7 +2614,7 @@ export class SettingDialogComponent implements OnInit {
       }
     }
     if (this.settingName == 'Reset Odometer') {
-      this.mileage = $('.MileageInput').val().toString();
+      this.mileage = $('.mileageInput').val().toString();
       if (this.mileage) {
         let data = {
           check_status: false,
@@ -2622,19 +2635,19 @@ export class SettingDialogComponent implements OnInit {
         }
         if (this.channel) {
           this.SettingsService.SendSettings(data).subscribe(res => {
-            if (typeof parseInt(res._object.Message) != "number") {
+            if (isNaN(res._object.Message) ){
               this.Toast.clear()
-              this.Toast.error(res._object.Message)
+              this.Toast.error(res._object.Message.toString())
             }
             else {
               data.check_status = true;
               data.fb_id = res._object.Message;
               this.SettingsService.SendSettings(data).subscribe(newRes => {
-                if (newRes._object.Message == "") {
+                if (newRes._object.Message.toString() == "") {
                   this.Toast.clear()
                   this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                   this.dialog.closeAll();
-                  this.dialog.open(AllSettingsDialogComponent)
+                  this.dialog.open(AllControlsDialogComponent)
                 }
               })
             }
@@ -2672,19 +2685,19 @@ export class SettingDialogComponent implements OnInit {
         }
         if (this.channel) {
           this.SettingsService.SendSettings(data).subscribe(res => {
-            if (typeof parseInt(res._object.Message) != "number") {
+            if (isNaN(res._object.Message) ){
               this.Toast.clear()
-              this.Toast.error(res._object.Message)
+              this.Toast.error(res._object.Message.toString())
             }
             else {
               data.check_status = true;
               data.fb_id = res._object.Message;
               this.SettingsService.SendSettings(data).subscribe(newRes => {
-                if (newRes._object.Message == "") {
+                if (newRes._object.Message.toString() == "") {
                   this.Toast.clear()
                   this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                   this.dialog.closeAll();
-                  this.dialog.open(AllSettingsDialogComponent)
+                  this.dialog.open(AllControlsDialogComponent)
                 }
               })
             }
@@ -2704,7 +2717,7 @@ export class SettingDialogComponent implements OnInit {
   //#endregion
   cancelRequest() {
     this.dialog.closeAll();
-    this.dialog.open(AllSettingsDialogComponent)
+    this.dialog.open(AllControlsDialogComponent)
   }
 
 }

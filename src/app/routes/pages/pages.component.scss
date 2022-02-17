@@ -22,7 +22,6 @@
     }
   }
 }
-
 .inner-sidenav-content {
   position: absolute;
   top: $toolbar-height;
@@ -174,6 +173,10 @@
   background-color: rgb(251, 182, 42) !important;
   color: #283593 !important;
 }
+.mat-child-active{
+  background-color: rgb(251, 182, 42) !important;
+  color: #283593 !important;
+}
 .back-to-top {
   position: fixed;
   width: 40px;
@@ -233,7 +236,7 @@
 }
 .userPanelKeys {
   color: white !important;
-  font-size: 11px !important;
+  font-size: 1.3rem !important;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -263,6 +266,9 @@
   padding: 5px 10px;
   border-radius: 20px;
 }
+.SearchInput::placeholder{
+  font-size: 1.3rem;
+}
 .sideList {
   font-size: 11.9px;
   font-weight: bolder;
@@ -280,7 +286,7 @@
   background: #4b89b9 !important;
 }
 .mat-expansion-panel-header-title {
-  font-size: 13px;
+  font-size: 14px !important;
   color: white !important;
   width: 100% !important;
 }
@@ -310,9 +316,9 @@
   cursor: not-allowed !important;
 }
 .dialogContent {
-  padding: 10px 20px !important;
+  padding: 20px 30px !important;
   background-image: url("../../../assets/images/map.png") !important;
-  background-size: 51% !important;
+  background-size: 50% !important;
   background-repeat: no-repeat !important;
   background-position: center !important;
   background-color: #f6f6f6;
@@ -326,21 +332,25 @@
   box-shadow: 0px 0px 4px 0px #000;
   color: black;
 }
+.historyInput::placeholder{
+  color: grey !important;
+}
 .historyInputDate {
   border: none !important;
   outline: none;
-  border-radius: 20px;
-  width: 80% !important;
+  border-radius: 20px;  
   padding: 5px 10px;
   box-shadow: 0px 0px 4px 0px #000;
   color: black;
 }
 .historyInput:focus {
   outline: none;
+  color: grey !important;
   box-shadow: 0px 0px 5px 2px #2282e9;
 }
 .historyInputDate:focus {
   outline: none;
+  color: grey !important;
   box-shadow: 0px 0px 5px 2px #2282e9;
 }
 .mat-dialog-container {
@@ -463,8 +473,25 @@
   margin: 5px;
 }
 
-//
 
+.selectionList{
+  position: absolute;
+  z-index: 1000;
+  background: white;
+  width: 20%;
+  height: 88vh;
+  margin: 4px;
+  overflow-y: scroll;
+}
+.geofenceQuery{
+  border-radius: 20px;
+  padding: 5px 10px;
+  background: rgba(0,0,0,0.06);
+  height: 38px;
+  border: none;
+  width: 90%;
+  margin-left: 10px;
+}
 .vehicleCardLeaflet {
   position: absolute;
   width: 40%;
