@@ -25,7 +25,7 @@
       oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')"
     />
 
-    <h4 class="m-0">Select Request Channel</h4>
+    <h3 class="m-0">Select Request Channel</h3>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -76,12 +76,13 @@
   <!-- Reset to Factory Default Content -->
   <!-- Change IP Content -->
   <span class="alarmResetDialog" *ngIf="settingName =='Change IP'">
-    <h4 class="m-0">Enter IP Address and Port:</h4>
+    <h3 class="m-0">Enter IP Address and Port:</h3>
     <span>
       <input
         type="text"
         class="ipAddressInput"
         placeholder="Please enter IP Address"
+        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')"
         style="
           background: transparent;
           outline: none;
@@ -98,6 +99,7 @@
         type="text"
         class="portInput"
         placeholder="PORT"
+        oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')"
         style="
           background: transparent;
           outline: none;
@@ -112,7 +114,7 @@
       />
     </span>
     <!-- oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$3')" -->
-    <h4 class="m-0">Select Request Channel</h4>
+    <h3 class="m-0">Select Request Channel</h3>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -136,7 +138,7 @@
   <!-- Change IP Content -->
   <!-- Change Domian Content -->
   <span class="alarmResetDialog" *ngIf="settingName =='Change Domain'">
-    <h4 class="m-0">Enter new URL and Port:</h4>
+    <h3 class="m-0">Enter new URL and Port:</h3>
     <span>
       <input
         type="url"
@@ -171,7 +173,7 @@
         "
       />
     </span>
-    <h4 class="m-0">Select Request Channel</h4>
+    <h3 class="m-0">Select Request Channel</h3>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -195,7 +197,7 @@
   <!-- Change Domian Content -->
   <!-- Change APN Content -->
   <span class="alarmResetDialog" *ngIf="settingName =='Change APN'">
-    <h4 class="m-0">Enter APN:</h4>
+    <h3 class="m-0">Enter APN:</h3>
     <input
       type="text"
       class="apnInput"
@@ -211,7 +213,7 @@
         margin-bottom: 10px;
       "
     />
-    <h4 class="m-0">Select Request Channel</h4>
+    <h3 class="m-0">Select Request Channel</h3>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -238,8 +240,8 @@
     class="alarmResetDialog"
     *ngIf="settingName =='Change APN User name and Password'"
   >
-    <h4 class="m-0">Enter Username and Password:</h4>
-    <span>
+    <h3 class="m-0">Enter Username and Password:</h3>
+    <span style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
       <input
         type="text"
         class="usernameInput"
@@ -252,10 +254,9 @@
           padding: 5px 15px;
           color: black;
           font-size: 13px;
-          margin-bottom: 10px;
         "
       />
-      <br />
+      <span>
       <input
         [type]="hidden?'password':'text'"
         class="passwordInput"
@@ -269,15 +270,16 @@
           color: black;
           font-size: 13px;
           margin-bottom: 10px;
+          margin-left: 4rem;
         "
       />
-      &nbsp;
       <button mat-icon-button (click)="togglePassword()">
         <mat-icon *ngIf="hidden">visibility</mat-icon
         ><mat-icon *ngIf="!hidden">visibility_off</mat-icon>
       </button>
+      </span>
     </span>
-    <h4 class="m-0">Select Request Channel</h4>
+    <h3 class="m-0">Select Request Channel</h3>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -302,8 +304,10 @@
 
   <!-- Reset Odometer Content -->
   <span class="alarmResetDialog" *ngIf="settingName =='Reset Odometer'">
-    <h4 class="m-0">Enter Mileage:</h4>
-    <input
+    <h3 class="m-0">Enter Mileage:</h3>
+    <span>
+
+      <input
       type="text"
       class="mileageInput"
       placeholder="Mileage"
@@ -316,11 +320,12 @@
         color: black;
         font-size: 13px;
         margin-bottom: 10px;
-      "
+        "
       oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')"
-    />
-    km
-    <h4 class="m-0">Select Request Channel</h4>
+      />
+      km
+    </span>
+    <h3 class="m-0">Select Request Channel</h3>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -346,8 +351,9 @@
   <span
     class="alarmResetDialog"
     *ngIf="settingName =='Text Command(6600,7700,GS Series)'"
-    ><span>
-      <h4 class="m-0">Enter Command:</h4>
+    >
+    <!-- <span>
+      <h3 class="m-0">Enter Command:</h3>
       <textarea
         class="textCommandInput"
         placeholder="Enter Command"
@@ -364,8 +370,8 @@
         "
       >
       </textarea>
-    </span>
-    <h4 class="m-0">Select Request Channel</h4>
+    </span> -->
+    <h3 class="m-0">Select Request Channel</h3>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"

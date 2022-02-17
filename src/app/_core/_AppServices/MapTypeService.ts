@@ -10,5 +10,6 @@ export class mapTypeService {
     newMap = this.currentMap.asObservable();
     SetMap(map: string) {
         this.currentMap.next(map);
+        localStorage.setItem('maptype', map)
     }
 }

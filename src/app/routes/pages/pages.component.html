@@ -50,22 +50,82 @@ perfectScrollbar
         mat-button
         class="mat-hover"
         *ngIf="isVehicles"
-        [class.nav-link-active]="location == '/vehicles'"
+        [class.nav-link-active]="isVehicles"
       >
         Vehicles
       </button>
-      <button mat-button [matMenuTriggerFor]="GeoFenceMenu" class="mat-hover">
+      <button mat-button [matMenuTriggerFor]="GeoFenceMenu" 
+      [class.nav-link-active]="isgeofence"
+      class="mat-hover" >
         Geofence <mat-icon>keyboard_arrow_down </mat-icon>
       </button>
       <button mat-button class="mat-hover" [matMenuTriggerFor]="routeMenu">
         Route <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
       <mat-menu #routeMenu="matMenu">
-        <button mat-menu-item>Item 1</button>
-        <button mat-menu-item>Item 2</button>
+        <button mat-menu-item class="mat-child" >Add Route</button>
+        <button mat-menu-item class="mat-child">Check Ruote</button>
       </mat-menu>
-      <div class="form-group">
-        <label for="mapType"></label>
+      <button mat-button class="mat-hover" [matMenuTriggerFor]="mapMenu">
+        {{currentMap}} <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+      
+      <!-- (click)="GeoFencing()"
+
+      (click)="GeoFencing()" -->
+      <mat-menu #GeoFenceMenu="matMenu">
+        <button
+          mat-menu-item
+          class="mat-child border-bottom"
+          *ngIf="location != '/showgeofence'"
+          routerLink="/showgeofence"
+        >
+          Show Fence
+        </button><button
+          mat-menu-item
+          class="mat-child border-bottom"
+          *ngIf="location == '/showgeofence'"
+          [class.mat-child-active]="location == '/showgeofence'"
+        >
+          Show Fence
+        </button>
+        <button
+          mat-menu-item
+          class="mat-child border-bottom"
+          (click)="CreateFencing()"
+          routerLink="/createfence"
+          *ngIf="location != '/createfence'"
+        >
+          Create Fence
+        </button>
+        <button
+          mat-menu-item
+          class="mat-child border-bottom"
+          (click)="CreateFencing()"
+          *ngIf="location == '/createfence'"
+          [class.mat-child-active]="location == '/createfence'"
+        >
+          Create Fence
+        </button>
+      </mat-menu>
+      <mat-menu #mapMenu="matMenu">
+        <button mat-menu-item class="border-bottom" [class.mat-child-active]="currentMap === 'Open Street Maps'" (click)="MapType($event)" value="Open Street Maps">Open Street Maps</button>
+        <button mat-menu-item class="border-bottom" [class.mat-child-active]="currentMap === 'Google Maps'" (click)="MapType($event)" value="Google Maps">Google Maps</button>
+      </mat-menu>
+      <!-- <div class="form-group"> -->
+        <!-- <mat-form-field style="
+        margin-top: 6px;
+        padding: 0px;
+        height: 25px;
+        z-index: 1;">
+          <mat-label>Map Type</mat-label>
+          <mat-select selected="MatOption[1]">
+            <mat-option value="option1">Option 1</mat-option>
+            <mat-option value="option3" selected>Option 3</mat-option>
+          </mat-select>
+        </mat-form-field> -->
+        
+        <!-- <label for="mapType"></label>
         <select
           class="form-control mapDropdown"
           name="mapType"
@@ -76,8 +136,8 @@ perfectScrollbar
           <option disabled value="Google Maps">Select Map</option>
           <option value="Google Maps">Google Maps</option>
           <option value="Open Street Maps" selected>Open Street Maps</option>
-        </select>
-      </div>
+        </select> -->
+      <!-- </div> -->
       <button mat-button class="mat-hover" [matMenuTriggerFor]="reportsMenu">
         Reports <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
@@ -159,22 +219,6 @@ perfectScrollbar
           Alarm Audit Report
         </button>
       </mat-menu>
-      <mat-menu #GeoFenceMenu="matMenu">
-        <button
-          mat-menu-item
-          class="mat-child border-bottom"
-          (click)="GeoFencing()"
-        >
-          Show Fence
-        </button>
-        <button
-          mat-menu-item
-          class="mat-child border-bottom"
-          (click)="CreateFencing()"
-        >
-          Create Fence
-        </button>
-      </mat-menu>
     </div>
 
     <div
@@ -229,7 +273,7 @@ perfectScrollbar
   [disabled]="!settings.fixedHeader"
   (psScrollY)="onPsScrollY($event)"
 >
-  <app-breadcrumb></app-breadcrumb>
+  <!-- <app-breadcrumb></app-breadcrumb> -->
   <div [class.has-footer]="settings.hasFooter">
     <!-- Sidebar -->
     <div class="col-md-12 row p-1 m-0" style="padding-bottom: 0px !important">
@@ -238,7 +282,7 @@ perfectScrollbar
           class="shadow p-1 rounded"
           style="
             min-height: fit-content !important;
-            height: 84vh;
+            height: 89vh;
             overflow-y: scroll;
           "
         >
@@ -283,7 +327,7 @@ perfectScrollbar
           </div>
           <input
             type="text"
-            placeholder="Search Across Vehicle(s)"
+            placeholder="Search..."
             class="SearchInput"
             (keyup)="SearchQueryChange($event)"
           />
@@ -300,17 +344,20 @@ perfectScrollbar
               [disablePagination]="true"
               *ngIf="!isVehicles"
             >
-              <mat-tab [isActive]="true">
+              <mat-tab [isActive]="true"> 
                 <ng-template mat-tab-label>
-                  <img src="./assets/icons/Online-White.png" height="28px" />
-                  <span style="font-size: small !important">Grouped</span>
+                  <img
+                    src="./assets/icons/Online-White.png"
+                    height="28px"
+                  />
+                  <span>Grouped</span>
                 </ng-template>
                 <!-- <mat-accordion> -->
                 <span
                   (ngIf)="(OnlineGroups.length)"
                   *ngFor="let item of OnlineGroups; let i = index"
                 >
-                  <mat-expansion-panel style="margin-bottom: 3px">
+                  <mat-expansion-panel style="margin-bottom: 5px">
                     <mat-expansion-panel-header class="nestedPanelHeader">
                       <mat-panel-title>
                         <!-- <input type="checkbox" style="margin-right: 10px" /> -->
@@ -333,28 +380,30 @@ perfectScrollbar
                       >
                       <span
                         style="
-                          max-width: 10ch;
-                          width: 10ch;
+                          width: calc(100% - 120px);
                           white-space: nowrap;
                           overflow: hidden;
                           text-overflow: ellipsis;
+                          font-size: 1.3rem;
                         "
                         >{{ t1.veh_reg_no }}
                         <br />
-                        <small style="font-size: 9px">{{
-                          t1.ref_location
-                        }}</small>
+                        <small style="font-size: 9px">
+                        <mat-icon style="
+                          height: 10px;
+                          width: 10px;
+                          font-size: 10px;"> location_on</mat-icon>{{t1.ref_location}}</small>
                       </span>
                       <p
                         class="speedCheck text-center"
-                        style="margin: 0px !important"
+                        style="margin: 0px !important; position:absolute; right:30px !important;"
                         [attr.data-idforspeed]="t1.device_id"
                       >
                         {{ t1.speed }} <br />
                         <small style="font-size: 12px">km/h</small>
                       </p>
                       <div
-                        style="width: 30px; height: 30px"
+                        style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                         [attr.device-Id-Vrn]="t1.device_id"
                         *ngIf="t1.veh_status == 'Idle'"
                       >
@@ -365,7 +414,7 @@ perfectScrollbar
                         />
                       </div>
                       <div
-                        style="width: 30px; height: 30px"
+                        style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                         [attr.device-Id-Vrn]="t1.device_id"
                         *ngIf="t1.veh_status == 'Parked'"
                       >
@@ -376,7 +425,7 @@ perfectScrollbar
                         />
                       </div>
                       <div
-                        style="width: 30px; height: 30px"
+                        style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                         [attr.device-Id-Vrn]="t1.device_id"
                         *ngIf="t1.veh_status == 'Moving'"
                       >
@@ -387,7 +436,7 @@ perfectScrollbar
                         />
                       </div>
                       <div
-                        style="width: 30px; height: 30px"
+                        style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                         [attr.device-Id-Vrn]="t1.device_id"
                         *ngIf="!t1.veh_status.length"
                       >
@@ -398,12 +447,12 @@ perfectScrollbar
                         />
                       </div>
                       <div
-                        style="width: 30px; height: 30px"
+                        style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                         [attr.device-Id-Vrn]="t1.device_id"
                         *ngIf="t1.veh_status.length && t1.alarm_status == '1'"
                       >
                         <img
-                          style="height: 30px"
+                          style="height: 30px;z-index: 1;"
                           src="./assets/icons/RedArrow.png"
                           [alt]="t1.veh_status + t1.alarm_status"
                         />
@@ -435,30 +484,31 @@ perfectScrollbar
                         white-space: nowrap;
                         overflow: hidden;
                         text-overflow: ellipsis;
+                        font-size: 1.3rem;
                       "
                       >{{ item.veh_reg_no }}
                     </span>
                     <p
                       class="speedCheck text-center"
-                      style="margin: 0px !important"
+                      style="margin: 0px !important; position:absolute; right:30px !important;"
                       [attr.data-idforspeed]="item.device_id"
                     >
                       {{ item.speed }} <br />
                       kph
                     </p>
                     <div
-                      style="width: 30px; height: 30px"
+                      style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                       [attr.device-Id-Vrn]="item.device_id"
                       *ngIf="item.veh_status == 'Idle'"
                     >
                       <img
-                        style="height: 30px"
+                        style="height: 30px;z-index: 1;"
                         src="./assets/icons/RedArrow.png"
                         [alt]="item.veh_status"
                       />
                     </div>
                     <div
-                      style="width: 30px; height: 30px"
+                      style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                       [attr.device-Id-Vrn]="item.device_id"
                       *ngIf="item.veh_status == 'Parked'"
                     >
@@ -469,7 +519,7 @@ perfectScrollbar
                       />
                     </div>
                     <div
-                      style="width: 30px; height: 30px"
+                      style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                       [attr.device-Id-Vrn]="item.device_id"
                       *ngIf="item.veh_status == 'Moving'"
                     >
@@ -480,7 +530,7 @@ perfectScrollbar
                       />
                     </div>
                     <div
-                      style="width: 30px; height: 30px"
+                      style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                       [attr.device-Id-Vrn]="item.device_id"
                       *ngIf="item.veh_status == ''"
                     >
@@ -515,14 +565,18 @@ perfectScrollbar
                   <mat-icon style="width: 30px !important">drive_eta</mat-icon>
                   <span
                     style="
-                      max-width: 10ch;
-                      width: 10ch;
+                      width:calc(100% - 120px);
                       white-space: nowrap;
                       overflow: hidden;
                       text-overflow: ellipsis;
+                      font-size: 1.3rem;
                     "
                     >{{ item.veh_reg_no }}<br />
-                    <small style="font-size: 9px">{{
+                    <small style="font-size: 9px"><mat-icon style="
+                      height: 10px;
+                      width: 10px;
+                      font-size: 10px;"> location_on</mat-icon>
+                       {{
                       item.ref_location
                     }}</small>
                   </span>
@@ -535,18 +589,18 @@ perfectScrollbar
                     <small style="font-size: 12px">km/h</small>
                   </p>
                   <div
-                    style="width: 30px; height: 30px"
+                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                     [attr.device-Id-Vrn]="item.device_id"
                     *ngIf="item.veh_status.length && item.alarm_status == '1'"
                   >
                     <img
-                      style="height: 30px"
+                      style="height: 30px;z-index: 1;"
                       src="./assets/icons/RedArrow.png"
                       [alt]="item.veh_status"
                     />
                   </div>
                   <div
-                    style="width: 30px; height: 30px"
+                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                     [attr.device-Id-Vrn]="item.device_id"
                     *ngIf="item.veh_status == 'Idle'"
                   >
@@ -557,7 +611,7 @@ perfectScrollbar
                     />
                   </div>
                   <div
-                    style="width: 30px; height: 30px"
+                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                     [attr.device-Id-Vrn]="item.device_id"
                     *ngIf="item.veh_status == 'Parked'"
                   >
@@ -568,7 +622,7 @@ perfectScrollbar
                     />
                   </div>
                   <div
-                    style="width: 30px; height: 30px"
+                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                     [attr.device-Id-Vrn]="item.device_id"
                     *ngIf="item.veh_status == 'Moving'"
                   >
@@ -579,7 +633,7 @@ perfectScrollbar
                     />
                   </div>
                   <div
-                    style="width: 30px; height: 30px"
+                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                     [attr.device-Id-Vrn]="item.device_id"
                     *ngIf="item.veh_status == ''"
                   >
@@ -601,9 +655,13 @@ perfectScrollbar
             >
               <mat-tab [isActive]="true">
                 <ng-template mat-tab-label>
-                  <img src="./assets/icons/Online-White.png" height="28px" />
-                  <span style="font-size: small !important">Grouped</span>
+                  <img
+                    src="./assets/icons/Online-White.png"
+                    height="28px"
+                  />
+                  <span>Grouped</span>
                 </ng-template>
+              
                 <span *ngFor="let item of TREE_DATA; let i = index">
                   <span *ngIf="item.grp_name === 'Assets'">
                     <span *ngIf="item.SubMenu.length">
@@ -627,32 +685,39 @@ perfectScrollbar
                           >
                           <span
                             style="
-                              max-width: 10ch;
-                              width: 10ch;
+
+                              width: calc(100% - 120px);
                               white-space: nowrap;
                               overflow: hidden;
                               text-overflow: ellipsis;
+                              font-size: 1.3rem;
                             "
                             >{{ t1.vrn }}
                             <br />
                             <small
-                              class="ref-location"
+                             
                               style="font-size: 9px"
-                              [attr.data-refLocation]="t1.device_id"
-                            ></small>
+                            >
+                            <mat-icon style="
+                            height: 10px;
+                            width: 10px;
+                            font-size: 10px;"> location_on</mat-icon>
+                            <span  class="ref-location" [attr.data-refLocation]="t1.device_id"></span>
+                             </small>
                           </span>
                           <p
                             class="speedCheck text-center"
-                            style="margin: 0px !important"
+                            style="margin: 0px !important; position:absolute; right:30px !important;"
                             [attr.data-idforspeed]="t1.device_id"
                           ></p>
                           <div
-                            style="width: 30px; height: 30px"
+                            style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                             class="veh_status"
                             [attr.device-Id-Vrn]="t1.device_id"
                           ></div>
                         </div>
                         <mat-expansion-panel
+                        style="margin-bottom: 5px"
                           *ngIf="t1.SubMenu.length"
                           (opened)="expandedPanel($event)"
                         >
@@ -685,33 +750,38 @@ perfectScrollbar
                                 >
                                 <span
                                   style="
-                                    max-width: 10ch;
-                                    width: 10ch;
+                                    width: calc(100% - 120px);
                                     white-space: nowrap;
                                     overflow: hidden;
                                     text-overflow: ellipsis;
+                                    font-size: 1.3rem;
                                   "
                                   >{{ t2.vrn }}
                                   <br />
                                   <small
-                                    class="ref-location"
                                     style="font-size: 9px"
-                                    [attr.data-refLocation]="t2.device_id"
-                                  ></small>
+                                   
+                                  >
+                                  <mat-icon style="
+                                  height: 10px;
+                                  width: 10px;
+                                  font-size: 10px;"> location_on</mat-icon>
+                                   <span  class="ref-location" [attr.data-refLocation]="t2.device_id"> </span>
+                                </small>
                                 </span>
                                 <p
                                   class="speedCheck text-center"
-                                  style="margin: 0px !important"
+                                  style="margin: 0px !important; position:absolute; right:30px !important;"
                                   [attr.data-idforspeed]="t2.device_id"
                                 ></p>
                                 <div
-                                  style="width: 30px; height: 30px"
+                                  style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                                   class="veh_status"
                                   [attr.device-Id-Vrn]="t2.device_id"
                                 ></div>
                               </div>
                               <mat-expansion-panel
-                                style="margin-bottom: 3px !important"
+                                style="margin-bottom: 5px !important"
                               >
                                 <mat-expansion-panel-header
                                   *ngIf="t2.grp_name"
@@ -751,26 +821,31 @@ perfectScrollbar
                                       >
                                       <span
                                         style="
-                                          max-width: 10ch;
-                                          width: 10ch;
+                                          width: calc(100% - 120px);
                                           white-space: nowrap;
                                           overflow: hidden;
                                           text-overflow: ellipsis;
+                                          font-size: 1.3rem;
                                         "
                                         >{{ t3.vrn }}
                                         <small
-                                          class="ref-location"
                                           style="font-size: 9px"
-                                          [attr.data-refLocation]="t3.device_id"
-                                        ></small>
+                                        >
+                                        <mat-icon style="
+                      height: 10px;
+                      width: 10px;
+                      font-size: 10px;"> location_on</mat-icon>
+                      <span 
+                       class="ref-location" [attr.data-refLocation]="t3.device_id"></span>
+                       </small>
                                       </span>
                                       <p
                                         class="speedCheck text-center"
-                                        style="margin: 0px !important"
+                                        style="margin: 0px !important; position:absolute; right:30px !important;"
                                         [attr.data-idforspeed]="t3.device_id"
                                       ></p>
                                       <div
-                                        style="width: 30px; height: 30px"
+                                        style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                                         class="veh_status"
                                         [attr.device-id-vrn]="t3.device_id"
                                       ></div>
@@ -803,8 +878,11 @@ perfectScrollbar
               </mat-tab>
               <mat-tab>
                 <ng-template mat-tab-label>
-                  <img src="./assets/icons/Online-White.png" height="28px" />
-                  <span style="font-size: small !important"
+                  <img
+                    src="./assets/icons/Online-White.png"
+                    height="28px"
+                  />
+                  <span
                     >Assets ({{ AllVehicles.length }})</span
                   >
                 </ng-template>
@@ -825,38 +903,42 @@ perfectScrollbar
                   <mat-icon style="width: 30px !important">drive_eta</mat-icon>
                   <span
                     style="
-                      max-width: 10ch;
-                      width: 10ch;
+                    width: calc(100% - 120px);
                       white-space: nowrap;
                       overflow: hidden;
                       text-overflow: ellipsis;
+                      font-size: 1.3rem;
                     "
                     >{{ vehicle.veh_reg_no }}
                     <br />
-                    <small style="font-size: 9px">{{
+                    <small style="font-size: 9px"><mat-icon style="
+    height: 10px;
+    width: 10px;
+    font-size: 10px;"> location_on</mat-icon>
+                       {{
                       vehicle.ref_location
                     }}</small>
                   </span>
                   <p
                     class="speedCheck text-center"
-                    style="margin: 0px !important"
+                    style="margin: 0px !important; position:absolute; right:30px !important;"
                   >
                     {{ vehicle.speed }} <br />
                     <small style="font-size: 12px"> km/h</small>
                   </p>
                   <div
-                    style="width: 30px; height: 30px"
+                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                     [attr.device-Id-Vrn]="vehicle.device_id"
                     *ngIf="vehicle.veh_status && vehicle.alarm_status == '1'"
                   >
                     <img
-                      style="height: 30px; transform: rotate(90deg)"
+                      style="height: 30px; transform: rotate(90deg);z-index: 1;"
                       src="./assets/icons/RedArrow.png"
                       [alt]="vehicle.veh_status"
                     />
                   </div>
                   <div
-                    style="width: 30px; height: 30px"
+                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                     [attr.device-Id-Vrn]="vehicle.device_id"
                     *ngIf="vehicle.veh_status == 'Idle'"
                   >
@@ -867,7 +949,7 @@ perfectScrollbar
                     />
                   </div>
                   <div
-                    style="width: 30px; height: 30px"
+                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                     [attr.device-Id-Vrn]="vehicle.device_id"
                     *ngIf="vehicle.veh_status == 'Parked'"
                   >
@@ -878,7 +960,7 @@ perfectScrollbar
                     />
                   </div>
                   <div
-                    style="width: 30px; height: 30px"
+                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                     [attr.device-Id-Vrn]="vehicle.device_id"
                     *ngIf="vehicle.veh_status == 'Moving'"
                   >
@@ -912,35 +994,35 @@ perfectScrollbar
               <mat-icon style="width: 30px !important">drive_eta</mat-icon>
               <span
                 style="
-                  max-width: 10ch;
-                  width: 10ch;
+                  width: calc(100% - 120px);
                   white-space: nowrap;
                   overflow: hidden;
                   text-overflow: ellipsis;
+                  font-size: 1.3rem;
                 "
                 >{{ item.veh_reg_no }}
               </span>
               <p
                 class="speedCheck text-center"
-                style="margin: 0px !important"
+                style="margin: 0px !important; position:absolute; right:30px !important;"
                 [attr.data-idforspeed]="item.device_id"
               >
                 {{ item.speed }} <br />
                 kph
               </p>
               <div
-                style="width: 30px; height: 30px"
+                style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                 [attr.device-Id-Vrn]="item.device_id"
                 *ngIf="item.veh_status.length && item.alarm_status == '1'"
               >
                 <img
-                  style="height: 30px; transform: rotate(90deg)"
+                  style="height: 30px; transform: rotate(90deg);z-index: 1;"
                   src="./assets/icons/RedArrow.png"
                   [alt]="item.veh_status"
                 />
               </div>
               <div
-                style="width: 30px; height: 30px"
+                style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                 [attr.device-Id-Vrn]="item.device_id"
                 *ngIf="item.veh_status == 'Idle'"
               >
@@ -951,7 +1033,7 @@ perfectScrollbar
                 />
               </div>
               <div
-                style="width: 30px; height: 30px"
+                style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                 [attr.device-Id-Vrn]="item.device_id"
                 *ngIf="item.veh_status == 'Parked'"
               >
@@ -962,7 +1044,7 @@ perfectScrollbar
                 />
               </div>
               <div
-                style="width: 30px; height: 30px"
+                style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                 [attr.device-Id-Vrn]="item.device_id"
                 *ngIf="item.veh_status == 'Moving'"
               >
@@ -973,7 +1055,7 @@ perfectScrollbar
                 />
               </div>
               <div
-                style="width: 30px; height: 30px"
+                style="width: 30px; height: 30px; position:absolute; right:0 !important;"
                 [attr.device-Id-Vrn]="t1.device_id"
                 *ngIf="!item.veh_status.length"
               >
@@ -993,28 +1075,21 @@ perfectScrollbar
         <!-- Fence List -->
         <mat-selection-list
           [multiple]="false"
-          class="shadow rounded selectionList d-none"
-          style="
-            position: absolute;
-            z-index: 1001;
-            background: white;
-            width: 20%;
-            height: 88vh;
-            margin: 4px;
-            overflow-y: scroll;
-          "
-        >
-          <mat-list-option
-            value="Close"
-            class="matListOption"
-            (click)="closeFencing()"
-            style="font-size: 2rem !important; background-color: red"
+          class="shadow rounded selectionList d-none row">
+            <span style="display: flex; align-items: center; justify-content: space-between;"><h4 class="m-0 p-0" style="margin-left: 10px !important;">Available Fences</h4>
+              <button
+              value="Close"
+              class="matListOption"
+              (click)="closeFencing()"
+            mat-icon-button
           >
-            Close
-            <mat-divider></mat-divider>
-          </mat-list-option>
+            X
+          </button>
+        </span>
+        <input type="text" oninput="geofenceQuery($event)" class="geofenceQuery" placeholder="Enter the search query">
+        <span *ngIf="fenceListLoaded">
           <mat-list-option
-            *ngFor="let geoFence of geoFences"
+          *ngFor="let geoFence of geoFences"
             [value]="geoFence.gf_name"
             class="matListOption"
             (click)="
@@ -1052,6 +1127,10 @@ perfectScrollbar
             {{ geoFence.gf_name }}
             <mat-divider></mat-divider>
           </mat-list-option>
+        </span>
+        <span  *ngIf="!fenceListLoaded">
+          <mat-spinner></mat-spinner>
+        </span>
         </mat-selection-list>
         <!-- Fence List -->
         <router-outlet></router-outlet>
@@ -1399,14 +1478,24 @@ perfectScrollbar
             alt="..."
         /></span>
       </span>
+      <span>
 
-      <button
+        <button
+        type="button"
+        class="showMoreButton btn btn-sm"
+      (click)="toggleInfo()"
+    >
+      Show More
+    </button>
+    {{" "}}
+    <button
         type="button"
         class="closeBtn btn btn-sm"
         (click)="closeDetails()"
-      >
-        Close
+        >
+        X
       </button>
+    </span>
     </div>
     <div
       class="col-md-12 row"
@@ -1426,7 +1515,7 @@ perfectScrollbar
       >
         <div class="col-12">GSM: &nbsp;({{ item.gsm_signal }})</div>
         <div class="col-12">VDOP: &nbsp;({{ item.h_v_dop }})</div>
-        <div class="col-12">GPS: &nbsp;({{ item.gps_satelite }})</div>
+        <div class="col-12">GPS: &nbsp;({{ item.gps_status }})</div>
       </div>
       <div
         class="col-md-4 row m-0"
@@ -1444,13 +1533,13 @@ perfectScrollbar
           style="width: calc(100% / 3) !important; text-align: center"
           class="border-right"
         >
-          Speed: <br />{{ item.speed }}
+          Speed: <br />{{ item.speed }} km/h
         </div>
         <div
           style="width: calc(100% / 3) !important; text-align: center"
           class="border-right"
         >
-          RPM: <br />{{ item.rpm }}
+          RPM: <br />{{ item.rpm }} R/min
         </div>
         <div style="width: calc(100% / 3) !important; text-align: center">
           Mileage: <br />{{ item.mileage_last_noted }}
@@ -1458,7 +1547,7 @@ perfectScrollbar
       </div>
     </div>
 
-    <div
+    <!-- <div
       class="col-md-12 p-0"
       style="
         display: flex;
@@ -1474,7 +1563,7 @@ perfectScrollbar
       >
         Show More
       </button>
-    </div>
+    </div> -->
   </div>
 </div>
 <div class="vehicleCardLeafletMore col-md-12 m-0 row d-none rounded">
@@ -1490,13 +1579,23 @@ perfectScrollbar
           style="height: 34px !important"
           alt="..."
       /></span>
-      <button
+      <span>
+        <button
+        type="button"
+        class="showLessButton btn btn-sm"
+        (click)="toggleInfo()"
+      >
+        Show Less
+      </button>
+      {{" "}}
+        <button
         type="button"
         class="closeBtnLess btn btn-sm"
         (click)="closeDetails()"
-      >
-        Close
+        >
+        X
       </button>
+    </span>
     </div>
     <div class="col-md-12 row m-0">
       <div
@@ -1504,7 +1603,7 @@ perfectScrollbar
         style="margin: 10px 0px !important; color: #18497d"
       >
         <div
-          class="col-md-2 row m-0 p-0"
+          class="col-md-2 row m-0 border-right"
           style="
             display: flex;
             flex-direction: column;
@@ -1557,7 +1656,7 @@ perfectScrollbar
           </div>
         </div>
         <div
-          class="col-md-2 row m-0 p-0"
+          class="col-md-2 row m-0 border-right"
           style="
             display: flex;
             flex-direction: column;
@@ -1587,7 +1686,7 @@ perfectScrollbar
               <img style="height: 1.4em" src="./assets/icons/GPS.png" />
             </div>
             <div class="col-md-9 m-0 p-0">
-              GPS: &nbsp;({{ item.gps_satelite }})
+              GPS: &nbsp;({{ item.gps_status }})
             </div>
           </div>
           <div
@@ -1605,7 +1704,7 @@ perfectScrollbar
           </div>
         </div>
         <div
-          class="col-md-2 row m-0 p-0"
+          class="col-md-2 row m-0 border-right"
           style="
             display: flex;
             flex-direction: column;
@@ -1654,7 +1753,7 @@ perfectScrollbar
             </div>
           </div>
         </div>
-        <div class="col-md-2 row m-0 p-0" style="text-align: center">
+        <div class="col-md-2 row m-0 border-right" style="text-align: center">
           <div class="col-12">
             <img
               src="./assets/icons/Speed1.png"
@@ -1663,9 +1762,9 @@ perfectScrollbar
             />
           </div>
           <div class="col-12">Speed:</div>
-          <div class="col-12">{{ item.speed }}</div>
+          <div class="col-12">{{ item.speed }} km/h </div>
         </div>
-        <div class="col-md-2 row m-0 p-0" style="text-align: center">
+        <div class="col-md-2 row m-0 border-right" style="text-align: center">
           <div class="col-12">
             <img
               src="./assets/icons/RPM.png"
@@ -1674,7 +1773,7 @@ perfectScrollbar
             />
           </div>
           <div class="col-12">RPM:</div>
-          <div class="col-12">{{ item.rpm }}</div>
+          <div class="col-12">{{ item.rpm }} R/min </div>
         </div>
         <div class="col-md-2 row m-0 p-0" style="text-align: center">
           <div class="col-12">
@@ -1710,7 +1809,7 @@ perfectScrollbar
             />
             <h4 style="text-align: center">Device Status</h4>
           </div>
-          <div class="col-md-9 p-0 row m-0" style="color: #18497d">
+          <div class="col-md-9 p-0 row m-0" style="color: #18497d; font-size: 1.2rem;">
             <div class="col-12 row" style="margin: 5px 0px !important">
               <div class="col-md-6">
                 <img
@@ -1739,7 +1838,7 @@ perfectScrollbar
                 Route Status:
               </div>
               <div class="col-md-6">
-                {{ "N/A" }}
+                {{item.route_status ? item.route_status : "N/A"}}
               </div>
             </div>
             <div class="col-12 row" style="margin: 5px 0px !important">
@@ -1773,14 +1872,18 @@ perfectScrollbar
             />
             <h4>Asset Info</h4>
           </div>
-          <div class="col-md-9 p-0 row m-0" style="color: #18497d">
+          <div class="col-md-9 p-0 row m-0" style="color: #18497d; font-size: 1.2rem;">
+            <div class="col-12 row m-0">
+              <div class="col-md-6">Device Info:</div>
+              <div class="col-md-6">{{ item.dev_info? item.dev_info: 'N/A' }}</div>
+            </div>
             <div class="col-12 row m-0">
               <div class="col-md-6">Device#:</div>
               <div class="col-md-6">{{ item.device_id }}</div>
             </div>
             <div class="col-12 row m-0">
               <div class="col-md-6">Device Type:</div>
-              <div class="col-md-6">{{ item.veh_type }}</div>
+              <div class="col-md-6">{{ item.dev_type_id }}</div>
             </div>
             <div class="col-12 row m-0">
               <div class="col-md-6">Device Model:</div>
@@ -1800,11 +1903,15 @@ perfectScrollbar
               <div class="col-md-6">Management#</div>
               <div class="col-md-6">{{ item.mgt_sim_no }}</div>
             </div>
+            <div class="col-12 row m-0">
+              <div class="col-md-6">Date:</div>
+              <div class="col-md-6">{{ item.gps_datetime.replace("T"," ").replace('.000Z',"")}}</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div
+    <!-- <div
       class="col-md-12 p-0"
       style="
         display: flex;
@@ -1820,7 +1927,7 @@ perfectScrollbar
       >
         Show Less
       </button>
-    </div>
+    </div> -->
   </div>
 </div>
 

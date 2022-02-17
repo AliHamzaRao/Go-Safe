@@ -30,6 +30,26 @@ export const routes: Routes = [
         children: [
             { path: '', loadChildren: () => import('./routes/dashboard/dashboard.module').then(m => m.DashboardModule) }
         ],
+    },{
+        path: 'showgeofence',
+        component: PagesComponent,
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        data: { breadcrumb: 'Geo Fence' },
+        resolve: { model: VehicleListResolver },
+        children: [
+            { path: '', loadChildren: () => import('./routes/dashboard/dashboard.module').then(m => m.DashboardModule) }
+        ],
+    },{
+        path: 'createfence',
+        component: PagesComponent,
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        data: { breadcrumb: 'Geo Fence' },
+        resolve: { model: VehicleListResolver },
+        children: [
+            { path: '', loadChildren: () => import('./routes/dashboard/dashboard.module').then(m => m.DashboardModule) }
+        ],
     },
     { path: 'login', loadChildren: () => import('./routes/login/login.module').then(m => m.LoginModule) },
     { path: 'error', component: ErrorComponent, data: { breadcrumb: 'Error' } },

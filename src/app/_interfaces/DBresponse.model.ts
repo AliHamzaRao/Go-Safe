@@ -91,7 +91,12 @@ export class RecordsInterval {
   public start_date: string;
   public end_date: string;
 }
-
+export class GeoFenceResponse{
+  code: number;
+  status: boolean;
+  message: string;
+  data: GeoFence[];
+}
 export class Version {
   public producer: string;
   public remarks: string;
@@ -190,7 +195,7 @@ export class Setting {
 }
 export class commandPostResponse {
   _object: {
-    Message: any
+    Message: number
     code: number
     _data: string
   }

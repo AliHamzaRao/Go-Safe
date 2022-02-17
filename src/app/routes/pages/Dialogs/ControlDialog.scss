@@ -7,6 +7,7 @@
 .mat-expansion-panel-header-title {
   color: black !important;
   width: 100% !important;
+  font-size: 2rem !important;
 }
 .ParentCheckBox {
   margin: 0.6rem !important;
@@ -16,17 +17,27 @@
 .dialogContent {
   width: 50vw !important;
 }
-
+.commandSendBtn{
+  color: rgb(29, 184, 140) !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-width: max-content !important;
+  line-height: normal !important;
+  padding: 0px !important;
+}
 .mat-expansion-panel-header[aria-expanded="true"] {
   background-color: white !important;
   border-bottom: 1px solid lightgrey;
+
 }
 
 .mat-expansion-panel-body {
   padding: 6px 10px !important;
-  height: 30vh !important;
-  height: max-content !important;
-  max-height: 40vh !important;
+  height: 40vh !important;
+  // height: max-content !important;
+  max-height: 50vh !important;
   overflow-y: scroll;
 }
 .settingType {
@@ -44,15 +55,15 @@
 .CommandSendButton {
   background-color: rgb(29, 184, 140) !important;
   color: white !important;
-  font-size: 20px;
-  padding: 5px 30px;
+  font-size: 15px;
+  // padding: 5px 30px;
 }
 
 .CommandCancelButton {
   background-color: rgb(197, 24, 62) !important;
   color: white !important;
-  font-size: 20px;
-  padding: 5px 30px;
+  font-size: 15px;
+  // padding: 5px 30px;
 }
 
 .takePictureDialog {

@@ -27,7 +27,7 @@
   <!-- Take Picture Content -->
   <span class="takePictureDialog" *ngIf="commandType =='Take Picture'">
     <span>
-      <h4>Select Camera Channel</h4>
+      <h3>Select Camera Channel</h3>
       <mat-radio-group color="primary" (change)="camChannelChange($event)">
         <mat-radio-button class="camChannelRadio" value="1"
           ><mat-icon>camera_alt</mat-icon>1</mat-radio-button
@@ -72,7 +72,7 @@
       </mat-radio-group>
     </span>
     <span>
-      <h4>Select Picture Quality</h4>
+      <h3>Select Picture Quality</h3>
       <mat-radio-group color="primary" (change)="picQualityChange($event)">
         <mat-radio-button value="High">High</mat-radio-button>
         <mat-divider></mat-divider>
@@ -83,7 +83,7 @@
     </span>
     <mat-divider></mat-divider>
     <span>
-      <h4 class="m-0">Select Request Channel</h4>
+      <h3 class="m-0">Select Request Channel</h3>
       <mat-radio-group
         aria-label="Select an option"
         color="primary"
@@ -346,7 +346,7 @@
       oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')"
     />
 
-    <h4 class="m-0">Select Request Channel</h4>
+    <h3 class="m-0">Select Request Channel</h3>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
