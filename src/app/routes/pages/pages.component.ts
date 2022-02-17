@@ -249,7 +249,8 @@ export class PagesComponent implements OnInit {
     mapType = e.target.innerText;
     this.mapTypeService.SetMap(mapType);
     this.currentMap = mapType;
-    this.closeFencing();
+    $(".selectionList").addClass("d-none");
+    // this.closeFencing();
     $(".vehicleCard").addClass("d-none");
     $(".vehicleCardMore").addClass("d-none");
     $(".vehicleCardLeaflet").addClass("d-none");
