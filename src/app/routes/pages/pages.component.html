@@ -328,6 +328,7 @@ perfectScrollbar
                   <span>Grouped</span>
                 </ng-template>
                 <!-- <mat-accordion> -->
+              <ng-template *ngIf="treeLoaded">
                   <ng-container 
                   *ngIf="OnlineGroups.length">
                 <span
@@ -437,6 +438,13 @@ perfectScrollbar
                   </mat-expansion-panel>
                 </span>
               </ng-container>
+              <ng-container *ngIf="!OnlineGroups.length">
+                <span>No Data Found</span>
+              </ng-container>
+            </ng-template>
+            <ng-template *ngIf="!treeLoaded" style="display: flex; justify-content: center; align-items: center;">
+              <mat-spinner></mat-spinner>
+            </ng-template>
               </mat-tab>
               <mat-tab>
                 <ng-template mat-tab-label>
@@ -445,6 +453,7 @@ perfectScrollbar
                     Assets ({{ onlineDevices.length }})</span
                   >
                 </ng-template>
+                <ng-template  *ngIf="treeLoaded" >
                 <ng-container 
                 *ngIf="onlineDevices.length">
                 <div
@@ -541,6 +550,13 @@ perfectScrollbar
                   </div>
                 </div>
               </ng-container>
+              <ng-container *ngIf="!onlineDevices.length">
+                <span>No Data Found</span>
+              </ng-container>
+            </ng-template>
+            <ng-template *ngIf="!treeLoaded" style="display: flex; justify-content: center; align-items: center;">
+              <mat-spinner></mat-spinner>
+            </ng-template>
               </mat-tab>
             </mat-tab-group>
             <mat-tab-group
@@ -781,7 +797,6 @@ perfectScrollbar
                     >Assets ({{ AllVehicles.length }})</span
                   >
                 </ng-template>
-
                 <div
                   class="m-0 singleDevice border-bottom"
                   *ngFor="let vehicle of AllVehicles; let i = index"
@@ -969,7 +984,7 @@ perfectScrollbar
         <button (click)="pause()">Pause</button> -->
         <!-- Fence List -->
         <mat-selection-list
-          [multiple]="false"
+        [multiple]="false"
           class="shadow rounded selectionList d-none row">
             <span style="display: flex; align-items: center; justify-content: space-between;"><h4 class="m-0 p-0" style="margin-left: 40px !important;">
               Available Fences</h4>
@@ -1368,7 +1383,7 @@ perfectScrollbar
     >
       <span style="display: flex; align-items: center">
         <span class="carName"
-          >Device {{ item.veh_reg_no }}
+          >Device {{ item.device_id }}
           <img
             src="./assets/icons/Truck.png"
             style="height: 24px !important"
@@ -1470,7 +1485,7 @@ perfectScrollbar
       style="display: flex; justify-content: space-between"
     >
       <span class="carName"
-        >Device {{ item.veh_reg_no }}
+        >Device {{ item.device_id }}
         <img
           src="./assets/icons/Truck.png"
           style="height: 34px !important"
@@ -1735,7 +1750,7 @@ perfectScrollbar
                 Route Status:
               </div>
               <div class="col-md-6">
-                {{item.route_status ? item.route_status : "N/A"}}
+                {{item.route_status ? item.route_status : "--"}}
               </div>
             </div>
             <div class="col-12 row" style="margin: 5px 0px !important">
@@ -1747,7 +1762,7 @@ perfectScrollbar
                 Driver Name:
               </div>
               <div class="col-md-6">
-                {{ item.driver ? item.driver : "N/A" }}
+                {{ item.driver ? item.driver : "--" }}
               </div>
             </div>
           </div>
@@ -1772,7 +1787,7 @@ perfectScrollbar
           <div class="col-md-9 p-0 row m-0" style="color: #18497d; font-size: 1.2rem;">
             <div class="col-12 row m-0">
               <div class="col-md-6">Device Info:</div>
-              <div class="col-md-6">{{ item.dev_info? item.dev_info: 'N/A' }}</div>
+              <div class="col-md-6">{{ item.dev_info? item.dev_info: '--' }}</div>
             </div>
             <div class="col-12 row m-0">
               <div class="col-md-6">Device#:</div>
@@ -1783,13 +1798,17 @@ perfectScrollbar
               <div class="col-md-6">{{ item.dev_type_id }}</div>
             </div>
             <div class="col-12 row m-0">
+              <div class="col-md-6">Driver Name:</div>
+              <div class="col-md-6">{{ item.driver?item.driver:'--' }}</div>
+            </div>
+            <div class="col-12 row m-0">
               <div class="col-md-6">Device Model:</div>
               <div class="col-md-6">{{ item.dev_model_id }}</div>
             </div>
             <!-- <div class="col-12 row m-0">
               <div class="col-md-6">Drive Name</div>
               <div class="col-md-6">
-                {{ item.driver ? item.driver : "N/A" }}
+                {{ item.driver ? item.driver : "--" }}
               </div>
             </div> -->
             <div class="col-12 row m-0">
