@@ -116,6 +116,12 @@ export class PagesComponent implements OnInit {
     RECDateTime: "test",
     Index: -1,
   };
+  CarMarker = L.icon({
+    iconUrl: './assets/img/vendor/google-maps/car-marker.png',
+    // iconSize:     [38, 95], // size of the icon
+    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
   @ViewChild(DashboardComponent, { static: true }) child: DashboardComponent;
   @ViewChild("sidenav") sidenav: any;
   @ViewChild("backToTop") backToTop: any;
@@ -179,11 +185,7 @@ export class PagesComponent implements OnInit {
       this.isgeofence = true;
       this.CreateFencing()
       }
-    //   iconUrl: '',
-    //   iconSize: [38, 95], // size of the icon
-    //   iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
-    //   popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
-    // });
+      
     this.logo = localStorage.CompanyLogo ? 'data:image/png;base64,' + localStorage.getItem("CompanyLogo") : '../../../assets/logos/logo 1-01.svg';
     this.username = localStorage.getItem("username") || null;
     this.mapTypeService.newMap.subscribe((data) => {
@@ -249,8 +251,7 @@ export class PagesComponent implements OnInit {
     mapType = e.target.innerText;
     this.mapTypeService.SetMap(mapType);
     this.currentMap = mapType;
-    $(".selectionList").addClass("d-none");
-    // this.closeFencing();
+    $(".selectionList").addClass("d-none");;
     $(".vehicleCard").addClass("d-none");
     $(".vehicleCardMore").addClass("d-none");
     $(".vehicleCardLeaflet").addClass("d-none");
@@ -634,13 +635,13 @@ export class PagesComponent implements OnInit {
           this.pause();
           this.markerData = [];
         }
-        this.marker = L.marker([this.latitude, this.longitude]).addTo(map);
+        this.marker = L.marker([this.latitude, this.longitude],{icon:this.CarMarker}).addTo(map);
         map.removeLayer(this.marker);
         $(
           ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
         ).remove();
         $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
-        this.marker = L.marker([this.latitude, this.longitude]).addTo(map);
+        this.marker = L.marker([this.latitude, this.longitude],{icon:this.CarMarker}).addTo(map);
         map.setView([this.latitude, this.longitude], 17);
       }, this.interval);
     }
@@ -699,7 +700,7 @@ export class PagesComponent implements OnInit {
           let currentMarker = new L.marker([
             this.markers[index][1],
             this.markers[index][2],
-          ]).on("click", () => {
+          ],{icon:this.CarMarker}).on("click", () => {
             this.getMarkerInfo([
               this.markers[index][0],
               parseFloat(this.markers[index][1]),
@@ -1131,7 +1132,7 @@ export class PagesComponent implements OnInit {
         ).remove();
         $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
       }
-      marker = L.marker(...nest);
+      marker = L.marker(...nest,{icon:this.CarMarker});
       marker.addTo(map);
       circle = L.circle(...nest, fenceData.gf_diff, { color: "#00C190" });
       circle.addTo(map);
@@ -1149,7 +1150,7 @@ export class PagesComponent implements OnInit {
       );
       nest = [];
     }
-    this.closeFencing();
+    $(".selectionList").addClass("d-none");;
   }
   RemoveFencing() {
     this.RefreshMap()
@@ -1194,7 +1195,7 @@ export class PagesComponent implements OnInit {
                 parseFloat(newData["lat"]),
                 parseFloat(newData["lng"]),
               ]);
-              thismarker = L.marker(e.latlng)
+              thismarker = L.marker(e.latlng,{icon:this.CarMarker})
                 .bindPopup(`<strong>Double click to remove marker</strong>`, {
                   maxWidth: 500,
                 })
@@ -1233,7 +1234,7 @@ export class PagesComponent implements OnInit {
                 parseFloat(newData["lat"]),
                 parseFloat(newData["lng"]),
               ]);
-              thismarker = L.marker(e.latlng)
+              thismarker = L.marker(e.latlng,{icon:this.CarMarker})
                 .bindPopup(`<strong>Double click to remove marker</strong>`, {
                   maxWidth: 500,
                 })
@@ -1335,7 +1336,7 @@ export class PagesComponent implements OnInit {
     }
   }
   CreateFencing() {
-    this.closeFencing()
+    $(".selectionList").addClass("d-none");
     if (mapType === "Google Maps") {
       $(".createFenceGoogleMap").removeClass("d-none");
       $(".gmnoprint").removeClass("d-none");
