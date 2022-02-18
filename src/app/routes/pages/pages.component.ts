@@ -54,6 +54,7 @@ export class PagesComponent implements OnInit {
   //#region Properties
   public settings: Settings;
   location: string = window.location.pathname
+  treeLoaded:boolean=true;
   username: string;
   logo: string;
   lat = 31.4884152;
@@ -203,7 +204,7 @@ export class PagesComponent implements OnInit {
       $(".notificationPanel").addClass("d-none");
       $(".notificationsRead").addClass("d-none")
       this.getVehTree()
-    }, 300000);
+    }, 60000);
 
     this.currentMap = mapType;
     if (window.innerWidth <= 768) {
@@ -304,6 +305,7 @@ export class PagesComponent implements OnInit {
   }
   //#region Get Veh Data
   getVehTree() {
+    this.treeLoaded = false;
     dataArr = [];
     this.offlineDevices = [];
     this.onlineDevices = []
@@ -447,6 +449,7 @@ export class PagesComponent implements OnInit {
     } catch (err) {
       console.error(err, "Custom Error");
     }
+    this.treeLoaded = true;
   }
   //#endregion
 

@@ -29,7 +29,9 @@ $material-icons-font-path: "~material-icons/iconfont/";
 
 /* Importing Bootstrap SCSS file. */
 // @import '~bootstrap/scss/bootstrap';
-
+*{
+  user-select: none !important;
+}
 .mat-tab-label {
   height: 48px;
   padding: 0px !important;
@@ -43,7 +45,7 @@ $material-icons-font-path: "~material-icons/iconfont/";
   position: relative;
   color: rgb(251, 182, 42) !important;
   opacity: 1 !important;
-  font-size: 1.4rem !important;
+  font-size: 14px !important;
 }
 .mat-tab-label:focus,
 .mat-tab-label:active {
