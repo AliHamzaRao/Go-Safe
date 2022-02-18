@@ -114,6 +114,10 @@ $material-icons-font-path: "~material-icons/iconfont/";
   hyphens: auto;
   width: max-content;
 }
+.mat-badge-content{
+  min-width: 22px;
+  width: max-content !important;
+}
 .cdk-overlay-pane {
   z-index: 10000 !important;
 }

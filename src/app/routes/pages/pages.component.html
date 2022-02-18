@@ -101,7 +101,6 @@ perfectScrollbar
         <button
           mat-menu-item
           class="mat-child border-bottom"
-          (click)="CreateFencing()"
           *ngIf="location == '/createfence'"
           [class.mat-child-active]="location == '/createfence'"
         >
@@ -112,32 +111,7 @@ perfectScrollbar
         <button mat-menu-item class="border-bottom" [class.mat-child-active]="currentMap === 'Open Street Maps'" (click)="MapType($event)" value="Open Street Maps">Open Street Maps</button>
         <button mat-menu-item class="border-bottom" [class.mat-child-active]="currentMap === 'Google Maps'" (click)="MapType($event)" value="Google Maps">Google Maps</button>
       </mat-menu>
-      <!-- <div class="form-group"> -->
-        <!-- <mat-form-field style="
-        margin-top: 6px;
-        padding: 0px;
-        height: 25px;
-        z-index: 1;">
-          <mat-label>Map Type</mat-label>
-          <mat-select selected="MatOption[1]">
-            <mat-option value="option1">Option 1</mat-option>
-            <mat-option value="option3" selected>Option 3</mat-option>
-          </mat-select>
-        </mat-form-field> -->
-        
-        <!-- <label for="mapType"></label>
-        <select
-          class="form-control mapDropdown"
-          name="mapType"
-          id="mapType"
-          value="Google Maps"
-          (change)="MapType($event)"
-        >
-          <option disabled value="Google Maps">Select Map</option>
-          <option value="Google Maps">Google Maps</option>
-          <option value="Open Street Maps" selected>Open Street Maps</option>
-        </select> -->
-      <!-- </div> -->
+     
       <button mat-button class="mat-hover" [matMenuTriggerFor]="reportsMenu">
         Reports <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
@@ -234,9 +208,10 @@ perfectScrollbar
           (click)="fetchNotifications()"
         >
           <mat-icon
-            [matBadge]="notifications.length"
+            [matBadge]="notifications.length > 100 ? '99+':notifications.length"
             matBadgePosition="after"
             matBadgeColor="accent"
+            
             >notifications
           </mat-icon>
         </button>
@@ -353,8 +328,9 @@ perfectScrollbar
                   <span>Grouped</span>
                 </ng-template>
                 <!-- <mat-accordion> -->
+                  <ng-container 
+                  *ngIf="OnlineGroups.length">
                 <span
-                  (ngIf)="(OnlineGroups.length)"
                   *ngFor="let item of OnlineGroups; let i = index"
                 >
                   <mat-expansion-panel style="margin-bottom: 5px">
@@ -447,12 +423,12 @@ perfectScrollbar
                         />
                       </div>
                       <div
-                        style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+                        style="width: 30px; height: 30px; position:absolute; right:0 !important; z-index: 1 !important;"
                         [attr.device-Id-Vrn]="t1.device_id"
                         *ngIf="t1.veh_status.length && t1.alarm_status == '1'"
                       >
                         <img
-                          style="height: 30px;z-index: 1;"
+                          style="height: 30px;"
                           src="../../../assets/icons/RedArrow.png"
                           [alt]="t1.veh_status + t1.alarm_status"
                         />
@@ -460,88 +436,7 @@ perfectScrollbar
                     </div>
                   </mat-expansion-panel>
                 </span>
-                <span ngElse> No Data Found </span>
-                <!-- </mat-accordion> -->
-                <!-- <span>
-                  <div
-                    class="m-0 singleDevice border-bottom"
-                    *ngFor="let item of onlineDevices; let i = index"
-                  >
-                    <input
-                      id="{{ item.device_id }}"
-                      type="checkbox"
-                      [attr.data-dataTrack]="item.dataTrack"
-                      [attr.data-device_id]="item.device_id"
-                      (change)="onCheck($event, item.dataTrack, item.device_id)"
-                    />
-                    <mat-icon style="width: 30px !important"
-                      >drive_eta</mat-icon
-                    >
-                    <span
-                      style="
-                        max-width: 10ch;
-                        width: 10ch;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
-                        font-size: 1.3rem;
-                      "
-                      >{{ item.veh_reg_no }}
-                    </span>
-                    <p
-                      class="speedCheck text-center"
-                      style="margin: 0px !important; position:absolute; right:30px !important;"
-                      [attr.data-idforspeed]="item.device_id"
-                    >
-                      {{ item.speed }} <br />
-                      kph
-                    </p>
-                    <div
-                      style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                      [attr.device-Id-Vrn]="item.device_id"
-                      *ngIf="item.veh_status == 'Idle'"
-                    >
-                      <img
-                        style="height: 30px;z-index: 1;"
-                        src="../../../assets/icons/RedArrow.png"
-                        [alt]="item.veh_status"
-                      />
-                    </div>
-                    <div
-                      style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                      [attr.device-Id-Vrn]="item.device_id"
-                      *ngIf="item.veh_status == 'Parked'"
-                    >
-                      <img
-                        style="height: 30px"
-                        src="../../../assets/icons/YellowArrow.png"
-                        [alt]="item.veh_status"
-                      />
-                    </div>
-                    <div
-                      style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                      [attr.device-Id-Vrn]="item.device_id"
-                      *ngIf="item.veh_status == 'Moving'"
-                    >
-                      <img
-                        style="height: 30px"
-                        src="../../../assets/icons/GreenArrow.png"
-                        [alt]="item.veh_status"
-                      />
-                    </div>
-                    <div
-                      style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                      [attr.device-Id-Vrn]="item.device_id"
-                      *ngIf="item.veh_status == ''"
-                    >
-                      <img
-                        style="height: 30px"
-                        src="../../../assets/icons/Disconected.png"
-                        [alt]="item.veh_status"
-                      />
-                    </div>
-                  </div>
-                </span> -->
+              </ng-container>
               </mat-tab>
               <mat-tab>
                 <ng-template mat-tab-label>
@@ -553,8 +448,9 @@ perfectScrollbar
                     Assets ({{ onlineDevices.length }})</span
                   >
                 </ng-template>
+                <ng-container 
+                *ngIf="onlineDevices.length">
                 <div
-                  (ngIf)="(onlineDevices.length)"
                   class="m-0 singleDevice border-bottom"
                   *ngFor="let item of onlineDevices; let i = index"
                 >
@@ -592,12 +488,12 @@ perfectScrollbar
                     <small style="font-size: 12px">km/h</small>
                   </p>
                   <div
-                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+                    style="width: 30px; height: 30px; position:absolute; right:0 !important; z-index: 1 !important;"
                     [attr.device-Id-Vrn]="item.device_id"
                     *ngIf="item.veh_status.length && item.alarm_status == '1'"
                   >
                     <img
-                      style="height: 30px;z-index: 1;"
+                      style="height: 30px;"
                       src="../../../assets/icons/RedArrow.png"
                       [alt]="item.veh_status"
                     />
@@ -647,8 +543,7 @@ perfectScrollbar
                     />
                   </div>
                 </div>
-
-                <span ngElse> No Data Found </span>
+              </ng-container>
               </mat-tab>
               <!-- <mat-tab>
                 <ng-template mat-tab-label>
@@ -944,12 +839,12 @@ perfectScrollbar
                     <small style="font-size: 12px"> km/h</small>
                   </p>
                   <div
-                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+                    style="width: 30px; height: 30px; position:absolute; right:0 !important; z-index: 1 !important;"
                     [attr.device-Id-Vrn]="vehicle.device_id"
                     *ngIf="vehicle.veh_status && vehicle.alarm_status == '1'"
                   >
                     <img
-                      style="height: 30px; transform: rotate(90deg);z-index: 1;"
+                      style="height: 30px; transform: rotate(90deg);"
                       src="../../../assets/icons/RedArrow.png"
                       [alt]="vehicle.veh_status"
                     />
@@ -1028,12 +923,12 @@ perfectScrollbar
                 kph
               </p>
               <div
-                style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+                style="width: 30px; height: 30px; position:absolute; right:0 !important; z-index: 1 !important;"
                 [attr.device-Id-Vrn]="item.device_id"
                 *ngIf="item.veh_status.length && item.alarm_status == '1'"
               >
                 <img
-                  style="height: 30px; transform: rotate(90deg);z-index: 1;"
+                  style="height: 30px; transform: rotate(90deg);"
                   src="../../../assets/icons/RedArrow.png"
                   [alt]="item.veh_status"
                 />
@@ -1093,7 +988,8 @@ perfectScrollbar
         <mat-selection-list
           [multiple]="false"
           class="shadow rounded selectionList d-none row">
-            <span style="display: flex; align-items: center; justify-content: space-between;"><h4 class="m-0 p-0" style="margin-left: 10px !important;">Available Fences</h4>
+            <span style="display: flex; align-items: center; justify-content: space-between;"><h4 class="m-0 p-0" style="margin-left: 40px !important;">
+              Available Fences</h4>
               <button
               value="Close"
               class="matListOption"
@@ -1145,8 +1041,9 @@ perfectScrollbar
             <mat-divider></mat-divider>
           </mat-list-option>
         </span>
-        <span  *ngIf="!fenceListLoaded">
+        <span  *ngIf="!fenceListLoaded" style="display: flex; justify-content: center; align-items: center; height: inherit; flex-direction: column;">
           <mat-spinner></mat-spinner>
+          Loading...
         </span>
         </mat-selection-list>
         <!-- Fence List -->
