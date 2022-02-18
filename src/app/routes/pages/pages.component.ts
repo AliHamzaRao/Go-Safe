@@ -1132,7 +1132,7 @@ export class PagesComponent implements OnInit {
         ).remove();
         $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
       }
-      marker = L.marker(...nest,{icon:this.CarMarker});
+      marker = L.marker(...nest);
       marker.addTo(map);
       circle = L.circle(...nest, fenceData.gf_diff, { color: "#00C190" });
       circle.addTo(map);
@@ -1195,7 +1195,7 @@ export class PagesComponent implements OnInit {
                 parseFloat(newData["lat"]),
                 parseFloat(newData["lng"]),
               ]);
-              thismarker = L.marker(e.latlng,{icon:this.CarMarker})
+              thismarker = L.marker(e.latlng)
                 .bindPopup(`<strong>Double click to remove marker</strong>`, {
                   maxWidth: 500,
                 })
@@ -1217,8 +1217,8 @@ export class PagesComponent implements OnInit {
         }, 300)
         break;
       case "Rectangle":
-        setTimeout(() => {
           this.RefreshMap()
+        setTimeout(() => {
           map.on("click", (e) => {
             let thismarker;
             if (this.rectMarkers.length == 2) {
@@ -1234,7 +1234,7 @@ export class PagesComponent implements OnInit {
                 parseFloat(newData["lat"]),
                 parseFloat(newData["lng"]),
               ]);
-              thismarker = L.marker(e.latlng,{icon:this.CarMarker})
+              thismarker = L.marker(e.latlng)
                 .bindPopup(`<strong>Double click to remove marker</strong>`, {
                   maxWidth: 500,
                 })
@@ -1347,6 +1347,7 @@ export class PagesComponent implements OnInit {
     }
   }
   closeCreateFencing() {
+    this.router.navigate(['/'])
     this.fenceType = "Select Fence Type";
     $(".fenceType").val("Select Fence Type");
     map.off();
