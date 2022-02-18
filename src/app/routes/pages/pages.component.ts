@@ -164,7 +164,6 @@ export class PagesComponent implements OnInit {
     $('.notificationsUnread').addClass('d-none')
     $(".notificationPanel").addClass("d-none");
     $(".notificationsRead").addClass("d-none")
-    // this.dialog.open(ControlDialogComponent)
     dataArr = [];
     this.offlineDevices = [];
     this.onlineDevices = []
@@ -176,7 +175,6 @@ export class PagesComponent implements OnInit {
     if (window.location.pathname == "/vehicles") {
       this.isVehicles = true;
     }
-    // this.icon = L.icon({
     if (window.location.pathname == "/showgeofence") {
       this.isgeofence = true;
       this.GeoFencing();
@@ -785,32 +783,6 @@ export class PagesComponent implements OnInit {
         this.AllDeviceDataService.AllDevices.subscribe((data) => {
           this.AllDevices = JSON.parse(data);
         });
-        // this.CurrentStateService.getCurrentState(this.data.veh_id).subscribe((el: CurrentStateResponse) => {
-        //   if (el.status) {
-        //     this.markers = [];
-        //     el.data.forEach((item) => {
-        //       this.lat = parseFloat(item.lat);
-        //       this.lng = parseFloat(item.long);
-        //       marker = [this.data.device_id, item.lat, item.long];
-        //       this.markers.push(marker);
-        //       let markerString = JSON.stringify(this.markers);
-        //       this.markersService.SetMarkers(markerString);
-        //     })
-        //   }
-        // })
-        // let tempObj = this.checkedDevices.find((item) => item.id == this.data.device_id)
-        // if (!tempObj) {
-        //   this.checkedDevices.push({
-        //     event: e,
-        //     id: _id,
-        //   });
-        // }
-        // this.AllDevices.push(this.data);
-        // $('.notificationsUnread').removeClass('d-none')
-        // this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
-        // this.AllDeviceDataService.AllDevices.subscribe((data) => {
-        //   this.AllDevices = JSON.parse(data);
-        // });
       }
       if (mapType === "Open Street Maps") {
         this.newPacketParse = new PacketParser(DataTrack);
@@ -840,36 +812,6 @@ export class PagesComponent implements OnInit {
           this.AllDevices = JSON.parse(data);
         });
       }
-      //   this.CurrentStateService.getCurrentState(this.data.veh_id).subscribe((el: CurrentStateResponse) => {
-      //     if (el.status) {
-      //       this.markers = [];
-      //       el.data.forEach((item) => {
-      //         this.lat = parseFloat(item.lat);
-      //         this.lng = parseFloat(item.long);
-      //         marker = [this.data.device_id, item.lat, item.long];
-      //         this.markers.push(marker);
-      //         let markerString = JSON.stringify(this.markers);
-      //         this.markersService.SetMarkers(markerString);
-      //         this.setLeafLetMarkers();
-      //       })
-      //     }
-      //   })
-      //   let tempObj = this.checkedDevices.find((item) => item.id == this.data.device_id)
-      //   if (!tempObj) {
-      //     this.checkedDevices.push({
-      //       event: e,
-      //       id: _id,
-      //     });
-      //   }
-      //   this.AllDevices.push(this.data);
-      //   $('.notificationsUnread').removeClass('d-none')
-      //   $(".notificationPanel").addClass("d-none");
-      //   $(".notificationsRead").addClass("d-none");
-      //   this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
-      //   this.AllDeviceDataService.AllDevices.subscribe((data) => {
-      //     this.AllDevices = JSON.parse(data);
-      //   });
-      // }
     }
     else {
       if (this.AllDevices.length < 1) {
@@ -1340,7 +1282,6 @@ export class PagesComponent implements OnInit {
     if (mapType === "Google Maps") {
       $(".createFenceGoogleMap").removeClass("d-none");
       $(".gmnoprint").removeClass("d-none");
-      // $('.googleMap').attr('ng-reflect-drawing-manager', "[object Object]")
     } else if (mapType === "Open Street Maps") {
       this.RefreshMap();
       $(".createFence").removeClass("d-none");
@@ -1730,14 +1671,11 @@ export class AllControlsDialogComponent implements OnInit ,AfterViewInit {
       
     this.CommandsService.GetCommands().subscribe(commands => {
       if (commands.status) {
-      // this.loading= true;
         this.AllCommands = commands.data;
-        // this.loading= false;
       }
     })
     this.SettingsService.GetSettings().subscribe(settings => {
       if(settings.status){
-      // this.loading= true;
       this.AllSettings = settings.data;
     }
     this.loading= false;
@@ -2565,7 +2503,6 @@ export class SettingDialogComponent implements OnInit {
       }
     }
     if (this.settingName == 'Change APN User name and Password') {
-      // this.apn = $('.apnInput').val().toString();
       this.username = $('.usernameInput').val().toString();
       this.password = $('.passwordInput').val().toString();
       if (this.username && this.password) {
