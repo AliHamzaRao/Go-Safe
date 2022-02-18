@@ -185,7 +185,7 @@ export class PagesComponent implements OnInit {
       this.CreateFencing()
       }
       
-    this.logo = localStorage.CompanyLogo ? 'data:image/png;base64,' + localStorage.getItem("CompanyLogo") : '../../../assets/logos/logo 1-01.svg';
+    this.logo = localStorage.CompanyLogo ? 'data:image/png;base64,' + localStorage.getItem("CompanyLogo") : './assets/logos/logo 1-01.svg';
     this.username = localStorage.getItem("username") || null;
     this.mapTypeService.newMap.subscribe((data) => {
       mapType = data;
@@ -571,7 +571,7 @@ export class PagesComponent implements OnInit {
   loadLeafLetMap() {
     el = document.getElementById("leaflet-map");
     L.Icon.Default.imagePath = "assets/img/vendor/leaflet/";
-    // L.Icon.Default.imagePath = "../../../assets/icons/GreenArrow.png";
+    // L.Icon.Default.imagePath = "./assets/icons/GreenArrow.png";
     map = L.map(el).setView([this.lat, this.lng], 10);
     L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
       attribution:
