@@ -983,8 +983,7 @@ perfectScrollbar
         <!-- <button (click)="play()">Play</button>
         <button (click)="pause()">Pause</button> -->
         <!-- Fence List -->
-        <mat-selection-list
-        [multiple]="false"
+        <div
           class="shadow rounded selectionList d-none row">
             <span style="display: flex; align-items: center; justify-content: space-between;"><h4 class="m-0 p-0" style="margin-left: 40px !important;">
               Available Fences</h4>
@@ -997,12 +996,17 @@ perfectScrollbar
             X
           </button>
         </span>
-        <input type="text" oninput="geofenceQuery($event)" class="geofenceQuery" placeholder="Enter the search query">
+        <input type="text" (keyup)="geofenceQuery($event)" class="geofenceQuery" placeholder="Enter the search query">
         <span *ngIf="fenceListLoaded">
-          <mat-list-option
-          *ngFor="let geoFence of geoFences"
+          <ng-cotainer *ngIf="
+          searchedFences.length === 0 ||
+          searchedFences.length === geoFences.length
+        ">
+          <ng-container  
+          *ngFor="let geoFence of geoFences">
+          <div
             [value]="geoFence.gf_name"
-            class="matListOption"
+            class="matListOption cursor-pointer"
             (click)="
               Draw({
                 FenceParam: geoFence.FenceParam,
@@ -1014,36 +1018,83 @@ perfectScrollbar
               })
             "
           >
-            <span *ngIf="geoFence.gf_type === 'Circle'">
+            <ng-container *ngIf="geoFence.gf_type === 'Circle'">
+              <img
+                style="margin-right: 10px"
+                src="../../../assets/icons/Circle.jpg"
+                alt="cir"
+              />
+            </ng-container>
+            <ng-container *ngIf="geoFence.gf_type === 'Rectangle'">
+              <img
+                style="margin-right: 10px"
+                src="../../../assets/icons/square.jpg"
+                alt="sq"
+              />
+            </ng-container>
+            <ng-container *ngIf="geoFence.gf_type === 'Polygon'">
+              <img
+                style="margin-right: 10px"
+                src="../../../assets/icons/polygone.png"
+                alt="poly"
+              />
+            </ng-container>
+            <p class="p-0 m-0">
+              {{ geoFence.gf_name }}
+            </p>
+          </div>
+          </ng-container>
+        </ng-cotainer>
+        <ng-container *ngIf="searchedFences.length">       
+          <ng-container  
+          *ngFor="let fence of searchedFences">
+          <div
+            [value]="fence.gf_name"
+            class="matListOption cursor-pointer"
+            (click)="
+              Draw({
+                FenceParam: fence.FenceParam,
+                gf_id: fence.gf_id,
+                gf_diff: fence.gf_diff,
+                gf_name: fence.gf_name,
+                gf_type: fence.gf_type,
+                gf_diff: fence.gf_diff
+              })
+            "
+          >
+            <ng-container *ngIf="fence.gf_type === 'Circle'">
               <img
                 style="margin-right: 10px"
                 src="./assets/icons/Circle.jpg"
                 alt="cir"
               />
-            </span>
-            <span *ngIf="geoFence.gf_type === 'Rectangle'">
+            </ng-container>
+            <ng-container *ngIf="fence.gf_type === 'Rectangle'">
               <img
                 style="margin-right: 10px"
                 src="./assets/icons/square.jpg"
                 alt="sq"
               />
-            </span>
-            <span *ngIf="geoFence.gf_type === 'Polygon'">
+            </ng-container>
+            <ng-container *ngIf="fence.gf_type === 'Polygon'">
               <img
                 style="margin-right: 10px"
                 src="./assets/icons/polygone.png"
                 alt="poly"
               />
-            </span>
-            {{ geoFence.gf_name }}
-            <mat-divider></mat-divider>
-          </mat-list-option>
+            </ng-container>
+            <p class="p-0 m-0">
+              {{ fence.gf_name }}
+            </p>
+          </div>
+          </ng-container>
+        </ng-container>
         </span>
         <span  *ngIf="!fenceListLoaded" style="display: flex; justify-content: center; align-items: center; height: inherit; flex-direction: column;">
           <mat-spinner></mat-spinner>
           Loading...
         </span>
-        </mat-selection-list>
+        </div>
         <!-- Fence List -->
         <router-outlet></router-outlet>
       </div>

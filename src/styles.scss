@@ -106,9 +106,12 @@ $material-icons-font-path: "~material-icons/iconfont/";
   font-size: 10px;
 }
 
-// .matListOption {
-//   border-bottom: 1px solid !important;
-// }
+.matListOption {
+  padding: 10px !important;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid lightgray;
+}
 .mat-list-text {
   flex-direction: row !important;
   line-height: 1.5rem !important;
