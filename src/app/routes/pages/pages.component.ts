@@ -198,7 +198,7 @@ export class PagesComponent implements OnInit {
       map.off();
       this.RefreshMap()
     }
-    if(this.isgeofence){
+    if(!this.isgeofence){
     setInterval(() => {
       $('.notificationsUnread').addClass('d-none')
       $(".notificationPanel").addClass("d-none");
