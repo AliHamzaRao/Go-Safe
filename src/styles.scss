@@ -111,6 +111,10 @@ $material-icons-font-path: "~material-icons/iconfont/";
   display: flex;
   align-items: center;
   border-bottom: 1px solid lightgray;
+  font-size: 1.3rem ;
+  &:hover{
+    background-color: #f0f0f0;
+  }
 }
 .mat-list-text {
   flex-direction: row !important;

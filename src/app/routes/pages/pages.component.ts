@@ -198,12 +198,14 @@ export class PagesComponent implements OnInit {
       map.off();
       this.RefreshMap()
     }
+    if(this.isgeofence){
     setInterval(() => {
       $('.notificationsUnread').addClass('d-none')
       $(".notificationPanel").addClass("d-none");
       $(".notificationsRead").addClass("d-none")
       this.getVehTree()
     }, 60000);
+  }
 
     this.currentMap = mapType;
     if (window.innerWidth <= 768) {
