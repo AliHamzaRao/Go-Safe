@@ -76,6 +76,7 @@ export class PagesComponent implements OnInit {
   setTime: any;
   marker: any;
   notifications: Alarm[] = [];
+  alarmsFound:boolean = false;
   geoFences: GeoFence[];
   searchedFences:GeoFence[]=[];
   fenceType: any;
@@ -781,8 +782,12 @@ export class PagesComponent implements OnInit {
         }
         this.markers.push(marker);
         let markerString = JSON.stringify(this.markers);
-        this.markersService.SetMarkers(markerString);
         this.AllDevices.push(this.data);
+        this.markersService.SetMarkers(markerString);
+        let deviceID= this.AllDevices[this.AllDevices.length - 1].device_id
+        let clusterID= this.AllDevices[this.AllDevices.length - 1].cluster_id
+        let vehicleID= this.AllDevices[this.AllDevices.length - 1].veh_id
+        this.fetchAlarms(deviceID, clusterID, vehicleID)
         this.setLeafLetMarkers();
         $('.notificationsUnread').removeClass('d-none')
         this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
@@ -810,6 +815,10 @@ export class PagesComponent implements OnInit {
         this.markersService.SetMarkers(markerString);
         this.setLeafLetMarkers();
         this.AllDevices.push(this.data);
+        let deviceID= this.AllDevices[this.AllDevices.length - 1].device_id
+        let clusterID= this.AllDevices[this.AllDevices.length - 1].cluster_id
+        let vehicleID= this.AllDevices[this.AllDevices.length - 1].veh_id
+        this.fetchAlarms(deviceID, clusterID, vehicleID)
         $('.notificationsUnread').removeClass('d-none')
         $(".notificationPanel").addClass("d-none");
         $(".notificationsRead").addClass("d-none");
@@ -835,6 +844,10 @@ export class PagesComponent implements OnInit {
       $(`[data-device_id=${_id}]`).prop('checked', false)
       this.checkedDevices.splice(checkedDeviceIndex, 1);
       this.AllDevices.splice(index, 1);
+      let deviceID= this.AllDevices[this.AllDevices.length - 1].device_id
+      let clusterID= this.AllDevices[this.AllDevices.length - 1].cluster_id
+      let vehicleID= this.AllDevices[this.AllDevices.length - 1].veh_id
+      this.fetchAlarms(deviceID, clusterID, vehicleID)
       let MarkerIndex = this.markers.findIndex(
         (item: any[]) => item[0] === _id
       );
@@ -1472,26 +1485,46 @@ export class PagesComponent implements OnInit {
     }
   }
   //#endregion
-
-  //#region Alarm Metods
-  fetchNotifications() {
-
+  fetchAlarms(devId, cstId, vehId){
     let alarmsData = {
-      deviceID: this.AllDevices[this.AllDevices.length - 1].device_id,
-      clusterID: this.AllDevices[this.AllDevices.length - 1].cluster_id,
-      vehicleID: this.AllDevices[this.AllDevices.length - 1].veh_id
+      deviceID: devId,
+      clusterID: cstId,
+      vehicleID: vehId
     }
     this.Alarms.getNotifications(alarmsData).subscribe((res) => {
       if (!res.status) {
         this.Toast.clear()
         this.Toast.error(res.message, "Error Showing Notifications");
       } else {
+        this.alarmsFound = false;
         this.notifications = res.data;
         $('.notificationsUnread').removeClass('d-none')
-        this.readNotifications();
-      }
-
+        this.alarmsFound = true;
+      }  
     });
+  }
+  //#region Alarm Metods
+  fetchNotifications() {
+
+    // let alarmsData = {
+    //   deviceID: this.AllDevices[this.AllDevices.length - 1].device_id,
+    //   clusterID: this.AllDevices[this.AllDevices.length - 1].cluster_id,
+    //   vehicleID: this.AllDevices[this.AllDevices.length - 1].veh_id
+    // }
+    // this.Alarms.getNotifications(alarmsData).subscribe((res) => {
+    //   if (!res.status) {
+    //     this.Toast.clear()
+    //     this.Toast.error(res.message, "Error Showing Notifications");
+    //   } else {
+    //     this.alarmsFound = false;
+    //     this.notifications = res.data;
+    //     $('.notificationsUnread').removeClass('d-none')
+    //     this.readNotifications();
+    //     this.alarmsFound = true;
+    //   }
+      
+    // });
+    this.readNotifications();
   }
   readNotifications() {
     $(".notificationsUnread").addClass("d-none");

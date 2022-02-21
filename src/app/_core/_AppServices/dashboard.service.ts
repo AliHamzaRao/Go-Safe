@@ -23,6 +23,7 @@ export class dashboardService {
   GetVehiclesTree(): Observable<VehicleResponse> {
     var url = this.userSer.getApiUrl();
     if (url.length) {
+      debugger;
       var list = this.http.get<VehicleResponse>(url + "/api/VehicleTree/list/", { 'headers': this.headers }).pipe(
         catchError(error => {
           this.router.navigate(['/500']);

@@ -201,17 +201,18 @@ perfectScrollbar
       style="width: max-content !important"
     >
       <span class="border-right">
+          <!-- *ngIf="alarmsFound == true" -->
         <button
           [class.d-none]="AllDevices.length == 0"
           mat-icon-button
           class="notificationsUnread"
           (click)="fetchNotifications()"
         >
+        
           <mat-icon
             [matBadge]="notifications.length > 100 ? '99+':notifications.length"
             matBadgePosition="after"
             matBadgeColor="accent"
-            
             >notifications
           </mat-icon>
         </button>
@@ -1548,14 +1549,6 @@ perfectScrollbar
       >
         Show Less
       </button>
-      {{" "}}
-        <button
-        type="button"
-        class="closeBtnLess btn btn-sm"
-        (click)="closeDetails()"
-        >
-        X
-      </button>
     </span>
     </div>
     <div class="col-md-12 row m-0">
@@ -1875,6 +1868,17 @@ perfectScrollbar
           </div>
         </div>
       </div>
+      <div
+      class="col-md-12 row border-top m-0"
+      style="padding: 5px 0px !important; display: flex; justify-content: center; "
+    >
+    <button
+    type="button"
+    class="closeBtnLess btn btn-sm"
+    (click)="closeDetails()"
+    >
+    Close
+  </button></div>
     </div>
     <!-- <div
       class="col-md-12 p-0"
