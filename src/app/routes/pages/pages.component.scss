@@ -491,7 +491,11 @@
   border: none;
   width: 90%;
   margin-left: 10px;
-  margin-top: 20px;
+  margin-top: 24px;
+}
+.geofenceQuery:focus{
+border: none;
+outline: none;
 }
 .vehicleCardLeaflet {
   position: absolute;

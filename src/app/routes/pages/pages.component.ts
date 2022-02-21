@@ -77,6 +77,7 @@ export class PagesComponent implements OnInit {
   marker: any;
   notifications: Alarm[] = [];
   geoFences: GeoFence[];
+  searchedFences:GeoFence[]=[];
   fenceType: any;
   rectMarkers: any[] = [];
   polyMarkers: any[] = [];
@@ -1177,6 +1178,13 @@ export class PagesComponent implements OnInit {
   }
   geofenceQuery(e){
     console.log(e.target.value)
+    let query :string= e.target.value
+    if(query.length){
+    this.searchedFences = this.geoFences.filter((fences:GeoFence)=>fences.gf_name.includes(query))
+    }
+    else {
+      this.searchedFences = [];
+    }
   }
   closeFencing() {
     this.router.navigate(['/'])
@@ -1345,7 +1353,6 @@ export class PagesComponent implements OnInit {
       $(".gmnoprint").removeClass("d-none");
       // $('.googleMap').attr('ng-reflect-drawing-manager', "[object Object]")
     } else if (mapType === "Open Street Maps") {
-      this.RefreshMap();
       $(".createFence").removeClass("d-none");
     }
   }
@@ -2725,6 +2732,5 @@ export class SettingDialogComponent implements OnInit {
     this.dialog.closeAll();
     this.dialog.open(AllControlsDialogComponent)
   }
-
 }
 //#endregion
