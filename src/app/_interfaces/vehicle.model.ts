@@ -1,7 +1,7 @@
 import { PacketParser } from "../routes/dashboard/PacketParser";
 
 // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
-class SubMenu3 {
+export class SubMenu3 {
   grp_id: number;
   datatrack: string;
   device_id: string;

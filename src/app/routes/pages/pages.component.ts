@@ -25,11 +25,12 @@ import { Vehicles } from "src/app/_interfaces/vehicle.model";
 import { dashboardService } from "src/app/_core/_AppServices/dashboard.service";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
 import { CurrentStateService } from '../../_core/_AppServices/CurrentStateService';
-import { CurrentStateResponse, Command, Setting, Alarm, GeoFence, Data } from '../../_interfaces/DBresponse.model';
+import { Command, Setting, Alarm, GeoFence} from '../../_interfaces/DBresponse.model';
 import { CommandsService } from '../../_core/_AppServices/CommandsService';
 import { CommandTypeService } from '../../_core/_AppServices/CommandTypeService';
 import { SettingsService } from '../../_core/_AppServices/SettingsService';
 import { SettingTypeService } from '../../_core/_AppServices/SettingTypeService';
+import {SubMenu3} from "../../_interfaces/vehicle.model"
 // Global Variables
 declare var L;
 var map;
@@ -121,9 +122,9 @@ export class PagesComponent implements OnInit {
   };
   CarMarker = L.icon({
     iconUrl: './assets/img/vendor/google-maps/car-marker.png',
-    // iconSize:     [38, 95], // size of the icon
-    iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-    popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    // iconSize:     [38, 95], 
+    // iconAnchor:   [22, 94], 
+    popupAnchor:  [-3, -76] 
 });
   @ViewChild(DashboardComponent, { static: true }) child: DashboardComponent;
   @ViewChild("sidenav") sidenav: any;
@@ -181,6 +182,7 @@ export class PagesComponent implements OnInit {
     if (window.location.pathname == "/showgeofence") {
       this.isgeofence = true;
       this.GeoFencing();
+      this.stop();
     }
       if(window.location.pathname == "/createfence"){
       this.isgeofence = true;
@@ -315,6 +317,8 @@ export class PagesComponent implements OnInit {
     this.OnlineGroups = [];
     this.AllDevices = [];
     this.AllVehicles = [];
+    let obj;
+    let nest;
     $('.notificationsUnread').addClass('d-none')
     $(".notificationPanel").addClass("d-none");
     $(".notificationsRead").addClass("d-none");
@@ -369,9 +373,9 @@ export class PagesComponent implements OnInit {
           if (dataArr.length) {
             dataArr.forEach((item: PacketParser) => {
               if (item.Online == '1') {
-                let obj = this.TREE_DATA[1].SubMenu.find((data: Vehicles) => data.grp_id.toString() == item.group_id)
+                obj = this.TREE_DATA[1].SubMenu.find((data: Vehicles) => data.grp_id.toString() == item.group_id)
                 obj.OnlineDevice = [];
-                let nest = obj.SubMenu.find((value: Vehicles) => value.device_id == item.device_id)
+                nest = obj.SubMenu.find((value: Vehicles) => value.device_id == item.device_id)
                 if (nest['device_id'] == item.device_id) {
                   obj.OnlineDevice.push(item)
                   this.OnlineGroups.push(obj)
@@ -1904,7 +1908,6 @@ export class ControlDialogComponent implements OnInit {
           channel: this.channel
         }
         this.CommandsService.SendCommand(data).subscribe(res => {
-          debugger;
           if (isNaN(res._object.Message) ){
             this.Toast.clear()
             this.Toast.error(res._object.Message.toString())
