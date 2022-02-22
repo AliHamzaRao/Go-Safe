@@ -55,7 +55,7 @@ export class PagesComponent implements OnInit {
   //#region Properties
   public settings: Settings;
   location: string = window.location.pathname
-  treeLoaded:boolean=true;
+  treeLoaded:boolean=false;
   username: string;
   logo: string;
   lat = 31.4884152;
@@ -165,17 +165,10 @@ export class PagesComponent implements OnInit {
   }
   //#region OnInit
   ngOnInit() {
+    this.ResetData();
     $('.notificationsUnread').addClass('d-none')
     $(".notificationPanel").addClass("d-none");
     $(".notificationsRead").addClass("d-none")
-    dataArr = [];
-    this.offlineDevices = [];
-    this.onlineDevices = []
-    this.childArray = [];
-    this.OnlineGroups = [];
-    this.markers = [];
-    this.AllDevices = [];
-    this.AllVehicles = [];
     if (window.location.pathname == "/vehicles") {
       this.isVehicles = true;
     }
@@ -203,6 +196,7 @@ export class PagesComponent implements OnInit {
     }
     if(!this.isgeofence){
     setInterval(() => {
+      this.ResetData();
       $('.notificationsUnread').addClass('d-none')
       $(".notificationPanel").addClass("d-none");
       $(".notificationsRead").addClass("d-none")
@@ -228,7 +222,6 @@ export class PagesComponent implements OnInit {
       setTimeout(() => {
         devices.forEach((item) => {
           $(`[data-device_id]`).each((param, el) => {
-            console.log(el.id)
             if (item.id == el.id) {
               $(el).prop('checked', true)
             }
@@ -248,6 +241,17 @@ export class PagesComponent implements OnInit {
         })
       });
     }
+  }
+
+  ResetData(){
+    dataArr = [];
+    this.offlineDevices = [];
+    this.onlineDevices = []
+    this.childArray = [];
+    this.OnlineGroups = [];
+    this.markers = [];
+    this.AllDevices = [];
+    this.AllVehicles = [];
   }
   //#endregion
 
@@ -309,20 +313,10 @@ export class PagesComponent implements OnInit {
   }
   //#region Get Veh Data
   getVehTree() {
-    this.treeLoaded = false;
-    dataArr = [];
-    this.offlineDevices = [];
-    this.onlineDevices = []
-    this.childArray = [];
-    this.OnlineGroups = [];
-    this.AllDevices = [];
-    this.AllVehicles = [];
     let obj;
     let nest;
-    $('.notificationsUnread').addClass('d-none')
-    $(".notificationPanel").addClass("d-none");
-    $(".notificationsRead").addClass("d-none");
     try {
+    this.treeLoaded = false;
       // this.route.data.subscribe((data) => {
       //   data["model"].data.forEach((item: any, index: any) => {
       //     this.TREE_DATA.push(item);
@@ -451,11 +445,11 @@ export class PagesComponent implements OnInit {
               : null
           });
         });
-      });
-    } catch (err) {
+      });  
+    this.treeLoaded = true;
+  } catch (err) {
       console.error(err, "Custom Error");
     }
-    this.treeLoaded = true;
   }
   //#endregion
 
@@ -687,7 +681,7 @@ export class PagesComponent implements OnInit {
   }
 
   draw() {
-    polyline = L.polyline([
+  polyline = L.polyline([
       this.markerData[0],
       this.markerData[this.markerData.length - 1],
     ]).addTo(map);
@@ -793,7 +787,6 @@ export class PagesComponent implements OnInit {
         let vehicleID= this.AllDevices[this.AllDevices.length - 1].veh_id
         this.fetchAlarms(deviceID, clusterID, vehicleID)
         this.setLeafLetMarkers();
-        $('.notificationsUnread').removeClass('d-none')
         this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
         this.AllDeviceDataService.AllDevices.subscribe((data) => {
           this.AllDevices = JSON.parse(data);
@@ -823,7 +816,6 @@ export class PagesComponent implements OnInit {
         let clusterID= this.AllDevices[this.AllDevices.length - 1].cluster_id
         let vehicleID= this.AllDevices[this.AllDevices.length - 1].veh_id
         this.fetchAlarms(deviceID, clusterID, vehicleID)
-        $('.notificationsUnread').removeClass('d-none')
         $(".notificationPanel").addClass("d-none");
         $(".notificationsRead").addClass("d-none");
         this.AllDeviceDataService.SetDevices(JSON.stringify(this.AllDevices));
@@ -848,10 +840,11 @@ export class PagesComponent implements OnInit {
       $(`[data-device_id=${_id}]`).prop('checked', false)
       this.checkedDevices.splice(checkedDeviceIndex, 1);
       this.AllDevices.splice(index, 1);
+      if(this.AllDevices.length){
       let deviceID= this.AllDevices[this.AllDevices.length - 1].device_id
       let clusterID= this.AllDevices[this.AllDevices.length - 1].cluster_id
       let vehicleID= this.AllDevices[this.AllDevices.length - 1].veh_id
-      this.fetchAlarms(deviceID, clusterID, vehicleID)
+      this.fetchAlarms(deviceID, clusterID, vehicleID)}
       let MarkerIndex = this.markers.findIndex(
         (item: any[]) => item[0] === _id
       );
@@ -1138,7 +1131,6 @@ export class PagesComponent implements OnInit {
     $(".selectionList").removeClass("d-none");
   }
   geofenceQuery(e){
-    console.log(e.target.value)
     let query :string= e.target.value
     if(query.length){
     this.searchedFences = this.geoFences.filter((fences:GeoFence)=>fences.gf_name.includes(query))

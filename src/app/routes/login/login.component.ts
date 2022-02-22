@@ -91,7 +91,6 @@ export class LoginComponent implements OnInit {
         this.loading = true;
         if (values.username.includes("_")) {
           let cmpCode = values.username.split("_");
-          console.log(cmpCode);
           let Api = this.CompInfo.network_config.find(
             (item: any) => item.cmp_code === cmpCode[0]
           );
@@ -114,7 +113,6 @@ export class LoginComponent implements OnInit {
 
               await this.um.login(values).subscribe(
                 (res: any) => {
-                  console.log(res);
                   if (res.access_token) {
                     this.tokenStorage = res.access_token;
                     this.loading = false;

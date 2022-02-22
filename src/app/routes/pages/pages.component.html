@@ -1,19 +1,4 @@
-<!-- <mat-sidenav-container>
-<mat-sidenav
-*ngIf="settings.menu == 'vertical'"
-[opened]="settings.sidenavIsOpened"
-[mode]="settings.sidenavIsPinned ? 'side' : 'over'"
-#sidenav
-class="sidenav mat-elevation-z6"
-> -->
-<!-- <app-sidenav></app-sidenav> -->
-<!-- </mat-sidenav> -->
-<!-- <mat-sidenav-content
-id="main"
-perfectScrollbar
-[disabled]="settings.fixedHeader"
-(psScrollY)="onPsScrollY($event)"
-> -->
+
 <mat-toolbar style="background-color: #18497d; color: white" class="flex-p-x">
   <a
     *ngIf="settings.menu == 'horizontal'"
@@ -70,9 +55,6 @@ perfectScrollbar
         {{currentMap}} <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
       
-      <!-- (click)="GeoFencing()"
-
-      (click)="GeoFencing()" -->
       <mat-menu #GeoFenceMenu="matMenu">
         <button
           mat-menu-item
@@ -201,7 +183,6 @@ perfectScrollbar
       style="width: max-content !important"
     >
       <span class="border-right">
-          <!-- *ngIf="alarmsFound == true" -->
         <button
           [class.d-none]="AllDevices.length == 0"
           mat-icon-button
@@ -292,7 +273,6 @@ perfectScrollbar
               class="userPanelKeys"
               (click)="openHistoryDialog()"
             >
-              <!-- <mat-icon style="height: 0 !important">history</mat-icon> -->
               <img
                 src="./assets/icons/History-White.png"
                 style="margin-left: 8px; height: 30px; margin-bottom: -20px"
@@ -323,23 +303,14 @@ perfectScrollbar
               <mat-tab [isActive]="true"> 
                 <ng-template mat-tab-label>
                   <mat-icon>devices_other</mat-icon>
-                  <!-- <img
-                    src="./assets/icons/Online-White.png"
-                    height="28px"
-                  /> -->
                   <span>Grouped</span>
                 </ng-template>
-                <!-- <mat-accordion> -->
-              <ng-template *ngIf="treeLoaded">
-                  <ng-container 
-                  *ngIf="OnlineGroups.length">
                 <span
                   *ngFor="let item of OnlineGroups; let i = index"
                 >
                   <mat-expansion-panel style="margin-bottom: 5px">
                     <mat-expansion-panel-header class="nestedPanelHeader">
                       <mat-panel-title>
-                        <!-- <input type="checkbox" style="margin-right: 10px" /> -->
                         {{ item.grp_name }} ({{ item.OnlineDevice.length }})
                       </mat-panel-title>
                     </mat-expansion-panel-header>
@@ -439,14 +410,8 @@ perfectScrollbar
                     </div>
                   </mat-expansion-panel>
                 </span>
-              </ng-container>
-              <ng-container *ngIf="!OnlineGroups.length">
-                <span>No Data Found</span>
-              </ng-container>
-            </ng-template>
-            <ng-template *ngIf="!treeLoaded" style="display: flex; justify-content: center; align-items: center;">
-              <mat-spinner></mat-spinner>
-            </ng-template>
+                <span *ngIf="!OnlineGroups.length">No Data Found</span>
+            <!-- </ng-template> -->
               </mat-tab>
               <mat-tab>
                 <ng-template mat-tab-label>
@@ -455,9 +420,7 @@ perfectScrollbar
                     Assets ({{ onlineDevices.length }})</span
                   >
                 </ng-template>
-                <ng-template  *ngIf="treeLoaded" >
-                <ng-container 
-                *ngIf="onlineDevices.length">
+                <!-- <ng-template *ngIf="onlineDevices.length != '0'"> -->
                 <div
                   class="m-0 singleDevice border-bottom"
                   *ngFor="let item of onlineDevices; let i = index"
@@ -551,14 +514,7 @@ perfectScrollbar
                     />
                   </div>
                 </div>
-              </ng-container>
-              <ng-container *ngIf="!onlineDevices.length">
-                <span>No Data Found</span>
-              </ng-container>
-            </ng-template>
-            <ng-template *ngIf="!treeLoaded" style="display: flex; justify-content: center; align-items: center;">
-              <mat-spinner></mat-spinner>
-            </ng-template>
+                <span *ngIf="!onlineDevices.length">No Data Found</span>
               </mat-tab>
             </mat-tab-group>
             <mat-tab-group
@@ -1448,14 +1404,6 @@ perfectScrollbar
     >
       Show More
     </button>
-    {{" "}}
-    <button
-        type="button"
-        class="closeBtn btn btn-sm"
-        (click)="closeDetails()"
-        >
-        X
-      </button>
     </span>
     </div>
     <div
@@ -1506,25 +1454,17 @@ perfectScrollbar
           Mileage: <br />{{ item.mileage_last_noted }}
         </div>
       </div>
-    </div>
-
-    <!-- <div
-      class="col-md-12 p-0"
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 5px 0px;
-      "
-    >
+      <div
+      class="col-md-12 m-0 border-top mt-2" style="display: flex; justify-content: center; padding: 1rem 0px 0px !important;">
+    
       <button
-        type="button"
-        class="showMoreButton btn btn-sm"
-        (click)="toggleInfo()"
+      type="button"
+      class="closeBtn btn btn-sm"
+      (click)="closeDetails()"
       >
-        Show More
-      </button>
-    </div> -->
+      Close
+    </button></div>
+    </div>
   </div>
 </div>
 <div class="vehicleCardLeafletMore col-md-12 m-0 row d-none rounded">
@@ -1846,12 +1786,6 @@ perfectScrollbar
               <div class="col-md-6">Device Model:</div>
               <div class="col-md-6">{{ item.dev_model_id }}</div>
             </div>
-            <!-- <div class="col-12 row m-0">
-              <div class="col-md-6">Drive Name</div>
-              <div class="col-md-6">
-                {{ item.driver ? item.driver : "--" }}
-              </div>
-            </div> -->
             <div class="col-12 row m-0">
               <div class="col-md-6">Sim#:</div>
               <div class="col-md-6">{{ item.sim_no }}</div>
@@ -1879,23 +1813,6 @@ perfectScrollbar
     Close
   </button></div>
     </div>
-    <!-- <div
-      class="col-md-12 p-0"
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 5px 0px;
-      "
-    >
-      <button
-        type="button"
-        class="showLessButton btn btn-sm"
-        (click)="toggleInfo()"
-      >
-        Show Less
-      </button>
-    </div> -->
   </div>
 </div>
 
