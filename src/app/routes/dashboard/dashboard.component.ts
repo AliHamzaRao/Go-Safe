@@ -168,10 +168,8 @@ export class DashboardComponent implements OnInit {
   ngAfterViewInit() {
   }
   mapLoad(e) {
-    setTimeout(() => {
-      $(".gmnoprint").addClass("d-none");
-    }, 3000);
     this.map = e;
+    $(".gmnoprint").removeClass("d-none");
   }
   drawCircle(e) {
     if (this.circle) {

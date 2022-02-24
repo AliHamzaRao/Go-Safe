@@ -1,3 +1,4 @@
+
 <div class="vehicleCard d-none">
   <div
     class="col-md-12"
@@ -26,14 +27,6 @@
     >
       Show More
     </button>
-    {{" "}}
-    <button
-        type="button"
-        class="closeBtn btn btn-sm"
-        (click)="closeDetails()"
-        >
-        X
-      </button>
     </span>
     </div>
     <div
@@ -84,25 +77,17 @@
           Mileage: <br />{{ item.mileage_last_noted }}
         </div>
       </div>
-    </div>
-
-    <!-- <div
-      class="col-md-12 p-0"
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 5px 0px;
-      "
-    >
+      <div
+      class="col-md-12 m-0 border-top mt-2" style="display: flex; justify-content: center; padding: 1rem 0px 0px !important;">
+    
       <button
-        type="button"
-        class="showMoreButton btn btn-sm"
-        (click)="toggleInfo()"
+      type="button"
+      class="closeBtn btn btn-sm"
+      (click)="closeDetails()"
       >
-        Show More
-      </button>
-    </div> -->
+      Close
+    </button></div>
+    </div>
   </div>
 </div>
 <div class="vehicleCardMore col-md-12 m-0 row d-none rounded">
@@ -125,14 +110,6 @@
         (click)="toggleInfo()"
       >
         Show Less
-      </button>
-        {{" "}}
-        <button
-        type="button"
-        class="closeBtnLess btn btn-sm"
-        (click)="closeDetails()"
-        >
-        X
       </button>
     </span>
     </div>
@@ -432,12 +409,6 @@
               <div class="col-md-6">Device Model:</div>
               <div class="col-md-6">{{ item.dev_model_id }}</div>
             </div>
-            <!-- <div class="col-12 row m-0">
-              <div class="col-md-6">Drive Name</div>
-              <div class="col-md-6">
-                {{ item.driver ? item.driver : "--" }}
-              </div>
-            </div> -->
             <div class="col-12 row m-0">
               <div class="col-md-6">Sim#:</div>
               <div class="col-md-6">{{ item.sim_no }}</div>
@@ -448,32 +419,25 @@
             </div>
             <div class="col-12 row m-0">
               <div class="col-md-6">Date:</div>
-              <div class="col-md-6">{{ item.gps_datetime }}</div>
+              <div class="col-md-6">{{ item.gps_datetime.replace("T"," ").replace('.000Z',"")}}</div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- <div
-      class="col-md-12 p-0"
-      style="
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 5px 0px;
-      "
+      <div
+      class="col-md-12 row border-top m-0"
+      style="padding: 5px 0px !important; display: flex; justify-content: center; "
     >
-      <button
-        type="button"
-        class="showLessButton btn btn-sm"
-        (click)="toggleInfo()"
-      >
-        Show Less
-      </button>
-    </div> -->
+    <button
+    type="button"
+    class="closeBtnLess btn btn-sm"
+    (click)="closeDetails()"
+    >
+    Close
+  </button></div>
+    </div>
   </div>
 </div>
-
 <div class="m-0 p-0 shadow rounded mapCont" style="height: 89vh !important">
   <div *ngIf="mapType === 'Open Street Maps'">
     <div id="leafletContainer" class="rounded">

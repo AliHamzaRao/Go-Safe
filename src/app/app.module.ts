@@ -22,7 +22,7 @@ import { PipesModule } from './theme/pipes/pipes.module';
 import { AppRoutingModule } from './app.routing';
 
 import { AppComponent } from './app.component';
-import { AllControlsDialogComponent, AssetTripDialogComponent, ControlDialogComponent, historyDialogComponent, PagesComponent, AllSettingsDialogComponent, SettingDialogComponent } from 'src/app/routes/pages/pages.component';
+import { historyDialogComponent, PagesComponent } from 'src/app/routes/pages/pages.component';
 import { NotFoundComponent } from './routes/pages/errors/not-found/not-found.component';
 import { ErrorComponent } from './routes/pages/errors/error/error.component';
 import { AppSettings } from './_core/settings/app.settings';
@@ -47,6 +47,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { VehicleListResolver } from './_resolvers/Vehicle_Post_Resolver';
 import { Vehicles } from './_interfaces/vehicle.model';
 import { AgmDrawingModule } from "@agm/drawing"
+import { AllControlsDialogComponent } from './routes/pages/Dialogs/AllControlsDialog/AllControlsDialog.component';
+import { AllSettingsDialogComponent } from './routes/pages/Dialogs/AllSettingsDialog/AllSettingsDialog.component';
+import { ControlDialogComponent } from './routes/pages/Dialogs/ControlDialog/ControlDialog.component';
+import { SettingDialogComponent } from './routes/pages/Dialogs/SettingDialog/SettingDialog.component';
+import { AssetTripDialogComponent } from './routes/pages/Dialogs/ReportsDialogs/AssetTripDialog/AssetTripDialog.component';
 @NgModule({
   imports: [
     BrowserModule,
@@ -99,7 +104,7 @@ import { AgmDrawingModule } from "@agm/drawing"
     ControlDialogComponent,
     AllControlsDialogComponent,
     AllSettingsDialogComponent,
-    SettingDialogComponent
+    SettingDialogComponent,
   ],
 
   providers: [

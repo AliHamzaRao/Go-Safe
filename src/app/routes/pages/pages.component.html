@@ -751,6 +751,7 @@
                     >Assets ({{ AllVehicles.length }})</span
                   >
                 </ng-template>
+                <div class="AlldevicesData">
                 <div
                   class="m-0 singleDevice border-bottom"
                   *ngFor="let vehicle of AllVehicles; let i = index"
@@ -835,6 +836,7 @@
                     />
                   </div>
                 </div>
+              </div>
               </mat-tab>
             </mat-tab-group>
           </div>
@@ -1371,7 +1373,7 @@
       <mat-divider></mat-divider>
     </div>
   </div>
-  <div ngElse>
+  <div  *ngIf="notifications.length == 0 ">
     <h3 style="text-align: center">No New Notifications</h3>
   </div>
 </div>

@@ -18,10 +18,13 @@ import { MatInputModule } from '@angular/material/input';
 import { DashboardModule } from '../dashboard/dashboard.module';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatRadioModule } from '@angular/material/radio';
+// import { GeoFenceComponent } from './Dialogs/GeoFenceDialog/GeoFenceDialog.component';
 
 export const routes = [
   { path: '', component: PagesComponent, pathMatch: 'full' },
-  { path: '/vehicles', component: PagesComponent, pathMatch: 'full' }
+  { path: '/vehicles', component: PagesComponent, pathMatch: 'full' },
+  { path: '/createfence', component: PagesComponent, pathMatch: 'full' },
+  { path: '/showgeofence', component: PagesComponent, pathMatch: 'full' }
 ];
 
 @NgModule({
@@ -46,6 +49,7 @@ export const routes = [
   ],
   declarations: [
     // historyRecordDialogComponent,
+  
   ],
   providers: [
     VehicleListResolver
