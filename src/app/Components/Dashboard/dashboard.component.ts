@@ -133,11 +133,11 @@ export class DashboardComponent implements OnInit {
       this.reg_no = data
     })
     this.markerService.newMarkers.subscribe(
-      (markers) => (this.markers = JSON.parse(markers))
+      (markers) => (this.markers = markers)
     );
-    // this.singleDeviceDataService.singleDevice.subscribe((data) => this.singleDeviceData = JSON.parse(data))
+    this.singleDeviceDataService.singleDevice.subscribe((data) => this.singleDeviceData = data);
     this.AllDeviceDataService.AllDevices.subscribe(
-      (data) => (this.AllDevices = JSON.parse(data))
+      (data) => (this.AllDevices = data)
     );
     this.GeoFencingService.currentFence.subscribe((data) => {
       this.geoFence = new fenceTypo(JSON.parse(data));
@@ -155,7 +155,7 @@ export class DashboardComponent implements OnInit {
     });
     if ($(".googleMap").is(":visible")) {
       this.AllDeviceDataService.AllDevices.subscribe(
-        (data) => (this.AllDevices = JSON.parse(data))
+        (data) => (this.AllDevices = data)
       );
     }
     setTimeout(() => {
@@ -381,14 +381,14 @@ export class DashboardComponent implements OnInit {
   }
   exportToExcel() {
     this.historyDataService.newMarkers.subscribe((data) => {
-      this.markersData = JSON.parse(data);
+      this.markersData = data
       Historydata = this.markersData
     });
     this.ExportService.downloadExcelFile(Historydata, this.reg_no);
   }
   exportToPDF() {
     this.historyDataService.newMarkers.subscribe((data) => {
-      this.markersData = JSON.parse(data);
+      this.markersData = data
       Historydata = this.markersData
     });
     this.ExportService.downloadPDF(Historydata, this.reg_no);
@@ -401,10 +401,10 @@ export class DashboardComponent implements OnInit {
     clearInterval(this.setTime);
     this.markerData = [];
     this.historyDataService.newMarkers.subscribe((data) => {
-      this.markersData = JSON.parse(data);
+      this.markersData = data
     });
 
-    this.markersData.forEach((element) => {
+    this.markersData.forEach((element , index) => {
       this.markerData.push({
         latitude: parseFloat(element.Latitude),
         longitude: parseFloat(element.Longitude),
@@ -415,7 +415,7 @@ export class DashboardComponent implements OnInit {
   }
   play() {
     this.historyDataService.newMarkers.subscribe((data) => {
-      this.markersData = JSON.parse(data);
+      this.markersData = data;
       Historydata = this.markersData
     });
     this.markersData.forEach((element) => {

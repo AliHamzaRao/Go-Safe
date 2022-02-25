@@ -1,4 +1,4 @@
-import { PacketParser } from "../routes/dashboard/PacketParser";
+import { PacketParser } from "../Components/dashboard/PacketParser";
 
 // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 export class SubMenu3 {

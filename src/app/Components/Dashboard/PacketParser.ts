@@ -27,8 +27,8 @@ export class PacketParser {
                 this.veh_reg_no = ArrUpd[i++];
                 this.veh_type = parseInt(ArrUpd[i++]);
                 this.cust_id = ArrUpd[i++];
-                this.rec_datetime = new Date(ArrUpd[i++]);
-                this.gps_datetime = new Date(ArrUpd[i++]);
+                this.rec_datetime = new Date(ArrUpd[i++]).toDateString();
+                this.gps_datetime = new Date(ArrUpd[i++]).toDateString();
                 this.lat = ArrUpd[i++];
                 this.lng = ArrUpd[i++];
                 this.veh_status = ArrUpd[i++];
@@ -80,7 +80,7 @@ export class PacketParser {
         this.alarm_status = "0";
         if ((this.veh_id > 0)) {
             if ((alarms != "")) {
-                this.almPriority + "<#>" + this.almSrNo + "<#>" + new Date(this.almRecDateTime) + "<#>" + new Date(this.almGpsDateTime) + "<#>" + this.alarmDesc + "<#>" + this.almSpeed + "<#>" + this.almLocation + "<#>" + this.alarmID;
+                this.almPriority + "<#>" + this.almSrNo + "<#>" + new Date(this.almRecDateTime).toDateString() + "<#>" + new Date(this.almGpsDateTime).toDateString() + "<#>" + this.alarmDesc + "<#>" + this.almSpeed + "<#>" + this.almLocation + "<#>" + this.alarmID;
                 let ArrAlm: any[] = alarms.split("<#>");
                 if ((ArrAlm.length >= 8)) {
                     this.almPriority = ArrAlm[i++];
@@ -111,8 +111,8 @@ export class PacketParser {
     public veh_reg_no: string = "";
     public veh_type: number = 0;
     public cust_id: string = "";
-    public rec_datetime: Date;
-    public gps_datetime: Date;
+    public rec_datetime: string;
+    public gps_datetime: string;
     public lat: string = "";
     public lng: string = "";
     public veh_status: string = "";
@@ -154,8 +154,8 @@ export class PacketParser {
     public wh_id: string = "";
     public almPriority: number;
     public almSrNo: number;
-    public almRecDateTime: Date;
-    public almGpsDateTime: Date;
+    public almRecDateTime: string;
+    public almGpsDateTime: string;
     public alarmDesc: string = "";
     public alarmID: string = "";
     public almSpeed: string = "";

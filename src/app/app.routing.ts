@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 
-import { PagesComponent } from 'src/app/routes/pages/pages.component';
-import { NotFoundComponent } from 'src/app/routes/pages/errors/not-found/not-found.component';
-import { ErrorComponent } from 'src/app/routes/pages/errors/error/error.component';
+import { PagesComponent } from 'src/app/Components/Pages/pages.component';
+import { NotFoundComponent } from 'src/app/Components/Pages/errors/not-found/not-found.component';
+import { ErrorComponent } from 'src/app/Components/Pages/errors/error/error.component';
 import { AuthGuard } from './_core/auth.guard';
 import { VehicleListResolver } from './_resolvers/Vehicle_Post_Resolver';
 
@@ -16,9 +16,9 @@ export const routes: Routes = [
         data: { breadcrumb: 'Dashboard' },
         resolve: { model: VehicleListResolver },
         children: [
-            { path: '', loadChildren: () => import('./routes/dashboard/dashboard.module').then(m => m.DashboardModule) },
-            { path: 'asset-trip-report', data: { breadcrumb: 'Asset Trip Report' }, loadChildren: () => import('./routes/Assets/asset-trip-report/asset-trip-report.module').then(m => m.AssetTripReportModule) },
-            // { path: 'vehicles', data: { breadcrumb: 'Vehicles' }, loadChildren: () => import('./routes/dashboard/dashboard.module').then(m => m.DashboardModule) },
+            { path: '', loadChildren: () => import('./Components/dashboard/dashboard.module').then(m => m.DashboardModule) },
+            { path: 'asset-trip-report', data: { breadcrumb: 'Asset Trip Report' }, loadChildren: () => import('./Components/Reporting/asset-trip-report/asset-trip-report.module').then(m => m.AssetTripReportModule) },
+            // { path: 'vehicles', data: { breadcrumb: 'Vehicles' }, loadChildren: () => import('./Components/dashboard/dashboard.module').then(m => m.DashboardModule) },
         ],
     }, {
         path: 'vehicles',
@@ -28,7 +28,7 @@ export const routes: Routes = [
         data: { breadcrumb: 'Vehicles' },
         resolve: { model: VehicleListResolver },
         children: [
-            { path: '', loadChildren: () => import('./routes/dashboard/dashboard.module').then(m => m.DashboardModule) }
+            { path: '', loadChildren: () => import('./Components/dashboard/dashboard.module').then(m => m.DashboardModule) }
         ],
     },{
         path: 'showgeofence',
@@ -38,7 +38,7 @@ export const routes: Routes = [
         data: { breadcrumb: 'Geo Fence' },
         resolve: { model: VehicleListResolver },
         children: [
-            { path: '', loadChildren: () => import('./routes/dashboard/dashboard.module').then(m => m.DashboardModule) }
+            { path: '', loadChildren: () => import('./Components/dashboard/dashboard.module').then(m => m.DashboardModule) }
         ],
     },{
         path: 'createfence',
@@ -48,10 +48,10 @@ export const routes: Routes = [
         data: { breadcrumb: 'Geo Fence' },
         resolve: { model: VehicleListResolver },
         children: [
-            { path: '', loadChildren: () => import('./routes/dashboard/dashboard.module').then(m => m.DashboardModule) }
+            { path: '', loadChildren: () => import('./Components/dashboard/dashboard.module').then(m => m.DashboardModule) }
         ],
     },
-    { path: 'login', loadChildren: () => import('./routes/login/login.module').then(m => m.LoginModule) },
+    { path: 'login', loadChildren: () => import('./Components/login/login.module').then(m => m.LoginModule) },
     { path: 'error', component: ErrorComponent, data: { breadcrumb: 'Error' } },
     { path: '**', component: NotFoundComponent }
 ];

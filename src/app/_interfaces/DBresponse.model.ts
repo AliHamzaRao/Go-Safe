@@ -1,4 +1,4 @@
-import { PacketParser } from '../routes/dashboard/PacketParser';
+import { PacketParser } from '../Components/dashboard/PacketParser';
 export class Response {
   code: number;
   status: boolean;

@@ -287,7 +287,7 @@
             class="SearchInput"
             (keyup)="SearchQueryChange($event)"
           />
-
+          <ng-container *ngIf="treeLoaded == true">
           <div
             class="vehicleList"
             *ngIf="
@@ -459,7 +459,7 @@
                     <small style="font-size: 12px">km/h</small>
                   </p>
                   <div
-                    style="width: 30px; height: 30px; position:absolute; right:0 !important; z-index: 1 !important;"
+                    style="width: 30px; height: 30px; position:absolute; right:calc(100% - 200px); z-index: 1 !important;"
                     [attr.device-Id-Vrn]="item.device_id"
                     *ngIf="item.veh_status.length && item.alarm_status == '1'"
                   >
@@ -470,7 +470,7 @@
                     />
                   </div>
                   <div
-                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+                    style="width: 30px; height: 30px; position:absolute; right:calc(100% - 200px);"
                     [attr.device-Id-Vrn]="item.device_id"
                     *ngIf="item.veh_status == 'Idle'"
                   >
@@ -481,7 +481,7 @@
                     />
                   </div>
                   <div
-                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+                    style="width: 30px; height: 30px; position:absolute; right:calc(100% - 200px);"
                     [attr.device-Id-Vrn]="item.device_id"
                     *ngIf="item.veh_status == 'Parked'"
                   >
@@ -492,7 +492,7 @@
                     />
                   </div>
                   <div
-                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+                    style="width: 30px; height: 30px; position:absolute; right:calc(100% - 200px);"
                     [attr.device-Id-Vrn]="item.device_id"
                     *ngIf="item.veh_status == 'Moving'"
                   >
@@ -503,7 +503,7 @@
                     />
                   </div>
                   <div
-                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+                    style="width: 30px; height: 30px; position:absolute; right:calc(100% - 200px);"
                     [attr.device-Id-Vrn]="item.device_id"
                     *ngIf="item.veh_status == ''"
                   >
@@ -840,99 +840,108 @@
               </mat-tab>
             </mat-tab-group>
           </div>
-
           <div
             class="vehicleList"
             *ngIf="SearchedDevices.length"
             style="height: 87vh !important; overflow-y: scroll"
+          >  <div
+          class="m-0 singleDevice border-bottom"
+          *ngFor="let item of SearchedDevices; let i = index"
+        >
+          <input
+            id="{{ item.device_id }}"
+            type="checkbox"
+            [attr.data-dataTrack]="item.dataTrack"
+            [attr.data-device_id]="item.device_id"
+            (change)="onCheck($event, item.dataTrack, item.device_id)"
+          />
+          <mat-icon style="width: 30px !important">drive_eta</mat-icon>
+          <span
+            style="
+              width:calc(100% - 120px);
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              font-size: 1.3rem;
+            "
+            >{{ item.veh_reg_no }}<br />
+            <small style="font-size: 9px"><mat-icon style="
+              height: 10px;
+              width: 10px;
+              font-size: 10px;"> location_on</mat-icon>
+               {{
+              item.ref_location
+            }}</small>
+          </span>
+          <p
+            class="text-center"
+            style="margin: 0px !important"
+            [attr.data-idforspeed]="item.device_id"
           >
-            <div
-              class="m-0 singleDevice border-bottom"
-              *ngFor="let item of SearchedDevices; let i = index"
-            >
-              <input
-                id="{{ item.device_id }}"
-                type="checkbox"
-                [attr.data-dataTrack]="item.dataTrack"
-                [attr.data-device_id]="item.device_id"
-                (change)="onCheck($event, item.dataTrack, item.device_id)"
-              />
-              <mat-icon style="width: 30px !important">drive_eta</mat-icon>
-              <span
-                style="
-                  width: calc(100% - 120px);
-                  white-space: nowrap;
-                  overflow: hidden;
-                  text-overflow: ellipsis;
-                  font-size: 1.3rem;
-                "
-                >{{ item.veh_reg_no }}
-              </span>
-              <p
-                class="speedCheck text-center"
-                style="margin: 0px !important; position:absolute; right:30px !important;"
-                [attr.data-idforspeed]="item.device_id"
-              >
-                {{ item.speed }} <br />
-                kph
-              </p>
-              <div
-                style="width: 30px; height: 30px; position:absolute; right:0 !important; z-index: 1 !important;"
-                [attr.device-Id-Vrn]="item.device_id"
-                *ngIf="item.veh_status.length && item.alarm_status == '1'"
-              >
-                <img
-                  style="height: 30px; transform: rotate(90deg);"
-                  src="./assets/icons/RedArrow.png"
-                  [alt]="item.veh_status"
-                />
-              </div>
-              <div
-                style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                [attr.device-Id-Vrn]="item.device_id"
-                *ngIf="item.veh_status == 'Idle'"
-              >
-                <img
-                  style="height: 30px"
-                  src="./assets/icons/BlueArrow.png"
-                  [alt]="item.veh_status"
-                />
-              </div>
-              <div
-                style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                [attr.device-Id-Vrn]="item.device_id"
-                *ngIf="item.veh_status == 'Parked'"
-              >
-                <img
-                  style="height: 30px; transform: rotate(90deg)"
-                  src="./assets/icons/YellowArrow.png"
-                  [alt]="item.veh_status"
-                />
-              </div>
-              <div
-                style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                [attr.device-Id-Vrn]="item.device_id"
-                *ngIf="item.veh_status == 'Moving'"
-              >
-                <img
-                  style="height: 30px; transform: rotate(90deg)"
-                  src="./assets/icons/GreenArrow.png"
-                  [alt]="item.veh_status"
-                />
-              </div>
-              <div
-                style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                [attr.device-Id-Vrn]="t1.device_id"
-                *ngIf="!item.veh_status.length"
-              >
-                <img
-                  style="height: 30px"
-                  src="./assets/icons/Disconected.png"
-                  [alt]="item.veh_status"
-                />
-              </div>
-            </div>
+            {{ item.speed }} <br />
+            <small style="font-size: 12px">km/h</small>
+          </p>
+          <div
+            style="width: 30px; height: 30px; position:absolute; right:0 !important; z-index: 1 !important;"
+            [attr.device-Id-Vrn]="item.device_id"
+            *ngIf="item.veh_status.length && item.alarm_status == '1'"
+          >
+            <img
+              style="height: 30px;"
+              src="./assets/icons/RedArrow.png"
+              [alt]="item.veh_status"
+            />
           </div>
+          <div
+            style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+            [attr.device-Id-Vrn]="item.device_id"
+            *ngIf="item.veh_status == 'Idle'"
+          >
+            <img
+              style="height: 30px"
+              src="./assets/icons/BlueArrow.png"
+              [alt]="item.veh_status"
+            />
+          </div>
+          <div
+            style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+            [attr.device-Id-Vrn]="item.device_id"
+            *ngIf="item.veh_status == 'Parked'"
+          >
+            <img
+              style="height: 30px"
+              src="./assets/icons/YellowArrow.png"
+              [alt]="item.veh_status"
+            />
+          </div>
+          <div
+            style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+            [attr.device-Id-Vrn]="item.device_id"
+            *ngIf="item.veh_status == 'Moving'"
+          >
+            <img
+              style="height: 30px"
+              src="./assets/icons/GreenArrow.png"
+              [alt]="item.veh_status"
+            />
+          </div>
+          <div
+            style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+            [attr.device-Id-Vrn]="item.device_id"
+            *ngIf="item.veh_status == ''"
+          >
+            <img
+              style="height: 30px"
+              src="./assets/icons/Disconected.png"
+              [alt]="item.veh_status"
+            />
+          </div>
+        </div>
+          </div>
+          </ng-container>
+          <ng-container *ngIf="treeLoaded == false">
+            <mat-spinner></mat-spinner>
+          </ng-container>
         </div>
       </div>
       <div class="col-md-10 p-1" style="position: relative">
@@ -1798,7 +1807,7 @@
             </div>
             <div class="col-12 row m-0">
               <div class="col-md-6">Date:</div>
-              <div class="col-md-6">{{ item.gps_datetime.replace("T"," ").replace('.000Z',"")}}</div>
+              <div class="col-md-6">{{ item.gps_datetime}}</div>
             </div>
           </div>
         </div>

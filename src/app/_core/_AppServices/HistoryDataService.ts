@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { History } from 'src/app/_interfaces/DBresponse.model';
 @Injectable({
     providedIn: 'root',
 })
 export class historyDataService {
     constructor() { }
-    private currentMarkers = new BehaviorSubject("[Latitude:31.488415,Longitude:74.370465]");
+    private currentMarkers = new BehaviorSubject<History[]>([]);
     newMarkers = this.currentMarkers.asObservable();
-    setNewMarkers(markers: string) {
+    setNewMarkers(markers: any[]) {
         this.currentMarkers.next(markers)
     }
 }

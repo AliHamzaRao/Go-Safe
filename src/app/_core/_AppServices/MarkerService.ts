@@ -6,9 +6,9 @@ import { BehaviorSubject } from 'rxjs';
 export class markerService {
   constructor() { }
 
-  private currentMarkers = new BehaviorSubject('[[0,0,0]]');
+  private currentMarkers = new BehaviorSubject([[0,0,0]]);
   newMarkers = this.currentMarkers.asObservable();
-  SetMarkers(markers: string) {
+  SetMarkers(markers: any[]) {
     this.currentMarkers.next(markers);
   }
 }
