@@ -25,10 +25,10 @@ export const routes: Routes = [
         component: PagesComponent,
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
-        data: { breadcrumb: 'Vehicles' },
         resolve: { model: VehicleListResolver },
         children: [
-            { path: '', loadChildren: () => import('./Components/dashboard/dashboard.module').then(m => m.DashboardModule) }
+            { path: '',
+        data: { breadcrumb: 'Vehicles' }, loadChildren: () => import('./Components/dashboard/dashboard.module').then(m => m.DashboardModule) }
         ],
     },{
         path: 'showgeofence',

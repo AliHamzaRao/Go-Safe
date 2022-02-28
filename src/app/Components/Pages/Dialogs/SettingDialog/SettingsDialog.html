@@ -1,4 +1,10 @@
-<h2 mat-dialog-title class="dialogTitle">{{settingName?settingName:'Test'}}</h2>
+<div mat-dialog-title class="dialogTitle">
+<h2>{{settingName?settingName:'Test'}}</h2>
+
+<button mat-icon-button (click)="cancelRequest()">
+  <mat-icon>highlight_off</mat-icon>
+</button>
+</div>
 <div class="m-0 p-0 dialogContent" mat-dialog-content>
   <!-- Set Message Center Number Content -->
   <span

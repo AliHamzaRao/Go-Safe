@@ -463,6 +463,9 @@
   height: 30vh;
   overflow-y: scroll;
 }
+.SearchedDevices::-webkit-scrollbar{
+  display: none;
+}
 .notificationPanel::-webkit-scrollbar {
   display: none;
 }

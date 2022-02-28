@@ -31,6 +31,7 @@ import { AllSettingsDialogComponent } from "./Dialogs/AllSettingsDialog/AllSetti
 import { DeviceIdService } from '../../_core/_AppServices/DeviceId.service';
 import { AssetTripDialogComponent } from "./Dialogs/ReportsDialogs/AssetTripDialog/AssetTripDialog.component";
 import { historyDialogComponent } from './Dialogs/HistoryDialog/historyDialog.component';
+import { TimeInterval } from 'rxjs';
 // Global Variables
 declare var L;
 var map;
@@ -98,6 +99,7 @@ export class PagesComponent implements OnInit, OnDestroy {
   isVehicles: boolean = false;
   isgeofence: boolean = false;
   isHistory: boolean = false;
+  listLoading:boolean = true;
   onlineDevices: PacketParser[] = [];
   offlineDevices: PacketParser[] = [];
   AllVehicles: PacketParser[] = [];
@@ -124,9 +126,10 @@ export class PagesComponent implements OnInit, OnDestroy {
   CarMarker = L.icon({
     iconUrl: './assets/img/vendor/google-maps/car-marker.png',
     // iconSize:     [38, 95], 
-    // iconAnchor:   [22, 94], 
-    popupAnchor: [-3, -76]
+    iconAnchor:   [ 0, 0], 
+    // popupAnchor: [, ]
   });
+  updateTree:any;
   @ViewChild(DashboardComponent, { static: true }) child: DashboardComponent;
   @ViewChild("sidenav") sidenav: any;
   @ViewChild("backToTop") backToTop: any;
@@ -198,6 +201,7 @@ export class PagesComponent implements OnInit, OnDestroy {
         this.markersData = data
         if (data.length > 0)
           if (this.markersData.length) {
+            this.isHistory = true
             this.markersData.forEach((el, i) => {
               this.polylineMarkers.push([
                 parseFloat(el.Latitude),
@@ -216,12 +220,13 @@ export class PagesComponent implements OnInit, OnDestroy {
       map.off()
       this.RefreshMap()
     }
-    if (!this.isgeofence || !this.isHistory) {
-      setInterval(() => {
+    this.updateTree = setInterval(() => {
+      if(!this.isgeofence || !this.isHistory){
         this.ResetData();
         this.getVehTree()
-      }, 60000);
-    }
+      }
+      }, 60000)
+      this.updateTree;
 
     this.currentMap = mapType;
     if (window.innerWidth <= 768) {
@@ -237,7 +242,9 @@ export class PagesComponent implements OnInit, OnDestroy {
 
   //#region TabChangeEvent
   tabChanged(e, devices = this.checkedDevices) {
+
     if (devices.length) {
+      this.listLoading = true;
       setTimeout(() => {
         devices.forEach((item) => {
           $(`[data-device_id]`).each((param, el) => {
@@ -250,7 +257,8 @@ export class PagesComponent implements OnInit, OnDestroy {
             }
           })
         })
-      });
+      this.listLoading = false;
+      },4000);
     }
   }
   expandedPanel(e) {
@@ -622,6 +630,25 @@ export class PagesComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.loadLeafLetMap();
     });
+    if(this.markerData.length){
+    this.historyDataService.newMarkers.subscribe(
+      (data) => {
+        this.markersData = data
+        if (data.length > 0)
+          if (this.markersData.length) {
+            this.markersData.forEach((el, i) => {
+              this.polylineMarkers.push([
+                parseFloat(el.Latitude),
+                parseFloat(el.Longitude),
+              ]);
+              this.lat = parseFloat(el.Latitude);
+              this.lng = parseFloat(el.Longitude);
+            });
+            map.setView([this.lat, this.lng], 10);
+            L.polyline(this.polylineMarkers).addTo(map);
+          }
+      });
+    }
   }
   //#endregion
 
@@ -935,7 +962,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       } else {
         this.reg_no = this.AllDevices[0].veh_reg_no;
         this.RegistrationNoService.newRegNo(this.reg_no)
-        this.dialog.open(historyDialogComponent);
+        this.dialog.open(historyDialogComponent,{disableClose: true});
         this.isHistory = true;
         this.closeDetails();
       }
@@ -949,7 +976,7 @@ export class PagesComponent implements OnInit, OnDestroy {
     return null;
   }
   openAssetTripDialog() {
-    this.dialog.open(AssetTripDialogComponent);
+    this.dialog.open(AssetTripDialogComponent,{disableClose: true});
   }
   openAllControlsDialog() {
     if (this.AllDevices.length == 1) {
@@ -968,7 +995,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       else {
         this.dev_id = this.AllDevices[0].device_id;
         this.DeviceIdService.setId(parseInt(this.dev_id))
-        this.dialog.open(AllControlsDialogComponent);
+        this.dialog.open(AllControlsDialogComponent,{disableClose: true});
       }
     }
     else if (this.AllDevices.length > 1) {
@@ -996,7 +1023,7 @@ export class PagesComponent implements OnInit, OnDestroy {
         );
       } else {
         this.dev_id = this.AllDevices[0].device_id;
-        this.dialog.open(AllSettingsDialogComponent);
+        this.dialog.open(AllSettingsDialogComponent,{disableClose: true});
       }
     } else if (this.AllDevices.length > 1) {
       this.Toast.clear()
@@ -1582,6 +1609,10 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.markerData = [];
     this.markersData = [];
     this.checkedDevices = [];
+    $(".notificationsUnread").addClass("d-none");
+    $(".notificationPanel").addClass("d-none");
+    $(".notificationsRead").addClass("d-none");
+    clearInterval(this.updateTree)
   }
 }
 //#region Dialogs Component Declarations

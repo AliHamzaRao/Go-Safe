@@ -476,7 +476,7 @@
                   >
                     <img
                       style="height: 30px"
-                      src="./assets/icons/BlueArrow.png"
+                      src="./assets/icons/BlueArrow.png"`
                       [alt]="item.veh_status"
                     />
                   </div>
@@ -841,10 +841,12 @@
             </mat-tab-group>
           </div>
           <div
-            class="vehicleList"
+            class="vehicleList SearchedDevices"
             *ngIf="SearchedDevices.length"
             style="height: 87vh !important; overflow-y: scroll"
-          >  <div
+          >  
+            <h4 class="m-0 p-0">Search Results</h4>
+          <div
           class="m-0 singleDevice border-bottom"
           *ngFor="let item of SearchedDevices; let i = index"
         >
@@ -882,7 +884,7 @@
             <small style="font-size: 12px">km/h</small>
           </p>
           <div
-            style="width: 30px; height: 30px; position:absolute; right:0 !important; z-index: 1 !important;"
+            style="width: 30px; height: 30px; position:absolute; right:20px !important; z-index: 1 !important; transform: rotate(90deg)"
             [attr.device-Id-Vrn]="item.device_id"
             *ngIf="item.veh_status.length && item.alarm_status == '1'"
           >
@@ -893,7 +895,7 @@
             />
           </div>
           <div
-            style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+            style="width: 30px; height: 30px; position:absolute; right:20px !important;"
             [attr.device-Id-Vrn]="item.device_id"
             *ngIf="item.veh_status == 'Idle'"
           >
@@ -904,7 +906,7 @@
             />
           </div>
           <div
-            style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+            style="width: 30px; height: 30px; position:absolute; right:20px !important; transform: rotate(90deg)"
             [attr.device-Id-Vrn]="item.device_id"
             *ngIf="item.veh_status == 'Parked'"
           >
@@ -915,7 +917,7 @@
             />
           </div>
           <div
-            style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+            style="width: 30px; height: 30px; position:absolute; right:20px !important; transform: rotate(90deg)"
             [attr.device-Id-Vrn]="item.device_id"
             *ngIf="item.veh_status == 'Moving'"
           >
@@ -926,7 +928,7 @@
             />
           </div>
           <div
-            style="width: 30px; height: 30px; position:absolute; right:0 !important;"
+            style="width: 30px; height: 30px; position:absolute; right:20px !important; transform: rotate(90deg)"
             [attr.device-Id-Vrn]="item.device_id"
             *ngIf="item.veh_status == ''"
           >

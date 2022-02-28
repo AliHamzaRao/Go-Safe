@@ -1,4 +1,9 @@
-<h2 mat-dialog-title class="dialogTitle">{{commandType?commandType:'Test'}}</h2>
+<div mat-dialog-title class="dialogTitle">
+   <h2>{{commandType?commandType:'Test'}}</h2>
+  <button mat-icon-button (click)="cancelRequest()">
+    <mat-icon>highlight_off</mat-icon>
+  </button>
+</div>
 <div class="m-0 p-0 dialogContent" mat-dialog-content>
   <!-- Alarm Reset Content -->
   <span class="alarmResetDialog" *ngIf="commandType =='Alarm Reset'">
