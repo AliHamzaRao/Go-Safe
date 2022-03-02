@@ -1,218 +1,136 @@
-
-<mat-toolbar style="background-color: #18497d; color: white" class="flex-p-x">
-  <a
-    *ngIf="settings.menu == 'horizontal'"
-    mat-raised-button
-    color="accent"
-    routerLink="/"
-    (click)="closeSubMenus()"
-    class="small-logo"
-    >G</a
-  >
+<mat-toolbar  [fxHide.md]="true" [fxShow.lg]="true"  style="font-size:12px;background-color: #18497d; color: white" class="flex-p-x">
+ 
   <a class="logo" routerLink="/" (click)="closeSubMenus()">
-    <img src="{{ logo }}" alt="" style="width: 200px !important"
-  /></a>
+    <img src="{{ logo }}" alt="" style="width: 200px !important" /></a>
   <div fxLayout="row" fxLayoutAlign="space-between" class="w-100">
     <div fxLayout="row" style="align-items: center">
-      <button
-        mat-button
-        class="mat-hover"
-        routerLink=""
-        [class.nav-link-active]="location == '/'"
-      >
+      <button mat-button class="mat-hover" routerLink="" [class.nav-link-active]="location == '/'">
         Live Tacking
       </button>
-      <button
-        mat-button
-        class="mat-hover"
-        routerLink="vehicles"
-        *ngIf="!isVehicles"
-        [class.nav-link-active]="location == '/vehicles'"
-      >
+      <button mat-button class="mat-hover" routerLink="/vehicles" [class.nav-link-active]="location == '/vehicles'">
         Vehicles
       </button>
-      <button
-        mat-button
-        class="mat-hover"
-        *ngIf="isVehicles"
-        [class.nav-link-active]="isVehicles"
-      >
-        Vehicles
-      </button>
-      <button mat-button [matMenuTriggerFor]="GeoFenceMenu" 
-      [class.nav-link-active]="isgeofence"
-      class="mat-hover" >
+      <button mat-button [matMenuTriggerFor]="GeoFenceMenu" [class.nav-link-active]="isgeofence" class="mat-hover">
         Geofence <mat-icon>keyboard_arrow_down </mat-icon>
       </button>
       <button mat-button class="mat-hover" [matMenuTriggerFor]="routeMenu">
         Route <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
       <mat-menu #routeMenu="matMenu">
-        <button mat-menu-item class="mat-child" >Add Route</button>
+        <button mat-menu-item class="mat-child">Add Route</button>
         <button mat-menu-item class="mat-child">Check Ruote</button>
       </mat-menu>
       <button mat-button class="mat-hover" [matMenuTriggerFor]="mapMenu">
         {{currentMap}} <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
-      
+
       <mat-menu #GeoFenceMenu="matMenu">
-        <button
-          mat-menu-item
-          class="mat-child border-bottom"
-          *ngIf="location != '/showgeofence'"
-          routerLink="/showgeofence"
-        >
-          Show Fence
-        </button><button
-          mat-menu-item
-          class="mat-child border-bottom"
-          *ngIf="location == '/showgeofence'"
-          [class.mat-child-active]="location == '/showgeofence'"
-        >
+        <button mat-menu-item class="mat-child" routerLink="/showgeofence"
+          [class.mat-child-active]="location == '/showgeofence'">
           Show Fence
         </button>
-        <button
-          mat-menu-item
-          class="mat-child border-bottom"
-          (click)="CreateFencing()"
-          routerLink="/createfence"
-          *ngIf="location != '/createfence'"
-        >
-          Create Fence
-        </button>
-        <button
-          mat-menu-item
-          class="mat-child border-bottom"
-          *ngIf="location == '/createfence'"
-          [class.mat-child-active]="location == '/createfence'"
-        >
+        <button mat-menu-item class="mat-child" routerLink="/createfence"
+          [class.mat-child-active]="location == '/createfence'">
           Create Fence
         </button>
       </mat-menu>
       <mat-menu #mapMenu="matMenu">
-        <button mat-menu-item class="border-bottom" [class.mat-child-active]="currentMap === 'Open Street Maps'" (click)="MapType($event)" value="Open Street Maps">Open Street Maps</button>
-        <button mat-menu-item class="border-bottom" [class.mat-child-active]="currentMap === 'Google Maps'" (click)="MapType($event)" value="Google Maps">Google Maps</button>
+        <button class="mat-child" mat-menu-item [class.mat-child-active]="currentMap === 'Open Street Maps'"
+          (click)="MapType($event)" value="Open Street Maps">Open Street Maps</button>
+        <button class="mat-child" mat-menu-item [class.mat-child-active]="currentMap === 'Google Maps'"
+          (click)="MapType($event)" value="Google Maps">Google Maps</button>
       </mat-menu>
-     
+
       <button mat-button class="mat-hover" [matMenuTriggerFor]="reportsMenu">
         Reports <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
       <mat-menu #reportsMenu="matMenu">
-        <button
-          mat-menu-item
-          [matMenuTriggerFor]="trackingReportsMenu"
-          class="mat-child border-bottom"
-        >
+        <button mat-menu-item [matMenuTriggerFor]="trackingReportsMenu" class="mat-child ">
           Tracking Reports
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child ">
           Fuel Reports
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Temprature Reports
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Management Reports
         </button>
       </mat-menu>
       <mat-menu #trackingReportsMenu="matMenu">
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Asset History
         </button>
-        <button
-          mat-menu-item
-          class="mat-child border-bottom"
-          (click)="openAssetTripDialog()"
-        >
+        <button mat-menu-item class="mat-child" (click)="openAssetTripDialog()">
           Asset Trips
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Multi Assets Kilometer
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Asset Activity
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Asset Alarm
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Asset Commands
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Accumulative Trips Fuel
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Alarms Close Report
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Asset Route Report
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Asset Sensor History
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Driver Activity
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Driver Activity Summary
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Asset Driver Trips
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Asset Engine RPM History
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Over Speed Report
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Driver Behaviour Report
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Container Trip Report
         </button>
-        <button mat-menu-item class="mat-child border-bottom">
+        <button mat-menu-item class="mat-child">
           Alarm Audit Report
         </button>
       </mat-menu>
     </div>
 
-    <div
-      fxLayout="row"
-      fxLayoutAlign="center center"
-      style="width: max-content !important"
-    >
+    <div fxLayout="row" fxLayoutAlign="center center" style="width: max-content !important">
       <span class="border-right">
-        <button
-          [class.d-none]="AllDevices.length == 0"
-          mat-icon-button
-          class="notificationsUnread"
-          (click)="fetchNotifications()"
-        >
-        
-          <mat-icon
-            [matBadge]="notifications.length > 100 ? '99+':notifications.length"
-            matBadgePosition="after"
-            matBadgeColor="accent"
-            >notifications
+        <button [class.d-none]="AllDevices.length == 0" mat-icon-button class="notificationsUnread"
+          (click)="fetchNotifications()">
+
+          <mat-icon [matBadge]="notifications.length > 100 ? '99+':notifications.length" matBadgePosition="after"
+            matBadgeColor="accent">notifications
           </mat-icon>
         </button>
-        <button
-          class="d-none notificationsRead"
-          mat-icon-button
-          (click)="unReadNotifications()"
-        >
+        <button class="d-none notificationsRead" mat-icon-button (click)="unReadNotifications()">
           <mat-icon>notifications</mat-icon>
         </button>
       </span>
-      <span style="font-size: small; margin-left: 10px"
-        >Welcome! {{ username.toUpperCase() }}</span
-      >
-      <button
-        mat-button
-        class="mat-hover"
-        [matMenuTriggerFor]="userAccessablilityMenu"
-      >
+      <span style="font-size: small; margin-left: 10px">Welcome! {{ username.toUpperCase() }}</span>
+      <button mat-button class="mat-hover" [matMenuTriggerFor]="userAccessablilityMenu">
         <mat-icon>person_outline</mat-icon>
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
@@ -222,724 +140,581 @@
     </div>
   </div>
 </mat-toolbar>
+<mat-toolbar  [fxShow.md]="true" [fxHide.lg]="true"  style="font-size:12px;background-color: #18497d; color: white" class="flex-p-x">
+  
+  <a class="logo" routerLink="/" (click)="closeSubMenus()">
+    <img src="{{ logo }}" alt="" style="width: 200px !important" />
+  </a>
+  <a mat-raised-button color="accent" routerLink="/" (click)="closeSubMenus()"
+    class="small-logo"></a>
+  <div fxLayout="row" fxLayoutAlign="space-between" class="w-100">
+    <div fxLayout="row" style="align-items: center">
+      <button mat-button class="mat-hover" routerLink="" [class.nav-link-active]="location == '/'">
+        Live Tacking
+      </button>
+      <button mat-button class="mat-hover" routerLink="/vehicles" [class.nav-link-active]="location == '/vehicles'">
+        Vehicles
+      </button>
+      <button mat-button [matMenuTriggerFor]="GeoFenceMenu" [class.nav-link-active]="isgeofence" class="mat-hover">
+        Geofence <mat-icon>keyboard_arrow_down </mat-icon>
+      </button>
+      <button mat-button class="mat-hover" [matMenuTriggerFor]="routeMenu">
+        Route <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+      <mat-menu #routeMenu="matMenu">
+        <button mat-menu-item class="mat-child">Add Route</button>
+        <button mat-menu-item class="mat-child">Check Ruote</button>
+      </mat-menu>
+      <button mat-button class="mat-hover" [matMenuTriggerFor]="mapMenu">
+        {{currentMap}} <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
 
-<div
-  id="main-content"
-  class="inner-sidenav-content transition-2"
-  perfectScrollbar
-  [disabled]="!settings.fixedHeader"
-  (psScrollY)="onPsScrollY($event)"
->
+      <mat-menu #GeoFenceMenu="matMenu">
+        <button mat-menu-item class="mat-child" routerLink="/showgeofence"
+          [class.mat-child-active]="location == '/showgeofence'">
+          Show Fence
+        </button>
+        <button mat-menu-item class="mat-child" routerLink="/createfence"
+          [class.mat-child-active]="location == '/createfence'">
+          Create Fence
+        </button>
+      </mat-menu>
+      <mat-menu #mapMenu="matMenu">
+        <button mat-menu-item [class.mat-child-active]="currentMap === 'Open Street Maps'"
+          (click)="MapType($event)" value="Open Street Maps">Open Street Maps</button>
+        <button mat-menu-item [class.mat-child-active]="currentMap === 'Google Maps'"
+          (click)="MapType($event)" value="Google Maps">Google Maps</button>
+      </mat-menu>
+
+      <button mat-button class="mat-hover" [matMenuTriggerFor]="reportsMenu">
+        Reports <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+      <mat-menu #reportsMenu="matMenu">
+        <button mat-menu-item [matMenuTriggerFor]="trackingReportsMenu" class="mat-child ">
+          Tracking Reports
+        </button>
+        <button mat-menu-item class="mat-child ">
+          Fuel Reports
+        </button>
+        <button mat-menu-item class="mat-child">
+          Temprature Reports
+        </button>
+        <button mat-menu-item class="mat-child">
+          Management Reports
+        </button>
+      </mat-menu>
+      <mat-menu #trackingReportsMenu="matMenu">
+        <button mat-menu-item class="mat-child">
+          Asset History
+        </button>
+        <button mat-menu-item class="mat-child" (click)="openAssetTripDialog()">
+          Asset Trips
+        </button>
+        <button mat-menu-item class="mat-child">
+          Multi Assets Kilometer
+        </button>
+        <button mat-menu-item class="mat-child">
+          Asset Activity
+        </button>
+        <button mat-menu-item class="mat-child">
+          Asset Alarm
+        </button>
+        <button mat-menu-item class="mat-child">
+          Asset Commands
+        </button>
+        <button mat-menu-item class="mat-child">
+          Accumulative Trips Fuel
+        </button>
+        <button mat-menu-item class="mat-child">
+          Alarms Close Report
+        </button>
+        <button mat-menu-item class="mat-child">
+          Asset Route Report
+        </button>
+        <button mat-menu-item class="mat-child">
+          Asset Sensor History
+        </button>
+        <button mat-menu-item class="mat-child">
+          Driver Activity
+        </button>
+        <button mat-menu-item class="mat-child">
+          Driver Activity Summary
+        </button>
+        <button mat-menu-item class="mat-child">
+          Asset Driver Trips
+        </button>
+        <button mat-menu-item class="mat-child">
+          Asset Engine RPM History
+        </button>
+        <button mat-menu-item class="mat-child">
+          Over Speed Report
+        </button>
+        <button mat-menu-item class="mat-child">
+          Driver Behaviour Report
+        </button>
+        <button mat-menu-item class="mat-child">
+          Container Trip Report
+        </button>
+        <button mat-menu-item class="mat-child">
+          Alarm Audit Report
+        </button>
+      </mat-menu>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="center center" style="width: max-content !important">
+      <span class="border-right">
+        <button [class.d-none]="AllDevices.length == 0" mat-icon-button class="notificationsUnread"
+          (click)="fetchNotifications()">
+
+          <mat-icon [matBadge]="notifications.length > 100 ? '99+':notifications.length" matBadgePosition="after"
+            matBadgeColor="accent">notifications
+          </mat-icon>
+        </button>
+        <button class="d-none notificationsRead" mat-icon-button (click)="unReadNotifications()">
+          <mat-icon>notifications</mat-icon>
+        </button>
+      </span>
+      <span style="font-size: small; margin-left: 10px">Welcome! {{ username.toUpperCase() }}</span>
+      <button mat-button class="mat-hover" [matMenuTriggerFor]="userAccessablilityMenu">
+        <mat-icon>person_outline</mat-icon>
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+      <mat-menu #userAccessablilityMenu="matMenu">
+        <button mat-menu-item (click)="Logout()">Sign Out</button>
+      </mat-menu>
+    </div>
+  </div>
+</mat-toolbar>
+<div id="main-content" class="inner-sidenav-content transition-2" perfectScrollbar [disabled]="!settings.fixedHeader"
+  (psScrollY)="onPsScrollY($event)">
   <!-- <app-breadcrumb></app-breadcrumb> -->
   <div [class.has-footer]="settings.hasFooter">
     <!-- Sidebar -->
     <div class="col-md-12 row p-1 m-0" style="padding-bottom: 0px !important">
       <div class="col-md-2 p-1">
-        <div
-          class="shadow p-1 rounded"
-          style="
+        <div class="shadow p-1 rounded" style="
             min-height: fit-content !important;
             height: 89vh;
             overflow-y: scroll;
-          "
-        >
+          ">
           <div class="panelKeysContainer rounded">
-            <button
-              mat-button
-              class="userPanelKeys"
-              (click)="openAllControlsDialog()"
-            >
-              <img
-                src="./assets/icons/Control-white.png"
-                style="margin-left: 3px; height: 23px; margin-bottom: -20px"
-              />
+            <button mat-button class="userPanelKeys" (click)="openAllControlsDialog()">
+              <img src="./assets/icons/Control-white.png"
+                style="margin-left: 3px; height: 23px; margin-bottom: -20px" />
               <br />
               <span class="13px ​!important"> Control</span>
             </button>
-            <button
-              mat-button
-              class="userPanelKeys"
-              (click)="openAllSettingsDialog()"
-            >
-              <img
-                src="./assets/icons/Setting-White.png"
-                style="margin-left: 8px; height: 30px; margin-bottom: -20px"
-              />
+            <button mat-button class="userPanelKeys" (click)="openAllSettingsDialog()">
+              <img src="./assets/icons/Setting-White.png"
+                style="margin-left: 8px; height: 30px; margin-bottom: -20px" />
               <br />
               <span class="13px !important">Settings</span>
             </button>
-            <button
-              mat-button
-              class="userPanelKeys"
-              (click)="openHistoryDialog()"
-            >
-              <img
-                src="./assets/icons/History-White.png"
-                style="margin-left: 8px; height: 30px; margin-bottom: -20px"
-              />
+            <button mat-button class="userPanelKeys" (click)="openHistoryDialog()">
+              <img src="./assets/icons/History-White.png"
+                style="margin-left: 8px; height: 30px; margin-bottom: -20px" />
               <br />
               <span class="13px !important"> History </span>
             </button>
           </div>
-          <input
-            type="text"
-            placeholder="Search..."
-            class="SearchInput"
-            (keyup)="SearchQueryChange($event)"
-          />
+          <input type="text" placeholder="Search..." class="SearchInput" (keyup)="SearchQueryChange($event)" />
           <ng-container *ngIf="treeLoaded == true">
-          <div
-            class="vehicleList"
-            *ngIf="
+            <div class="vehicleList" *ngIf="
               SearchedDevices.length === 0 ||
               SearchedDevices.length === AllVehicles.length
-            "
-          >
-            <mat-tab-group
-              (selectedTabChange)="tabChanged($event, checkedDevices)"
-              [disablePagination]="true"
-              *ngIf="!isVehicles"
-            >
-              <mat-tab [isActive]="true"> 
-                <ng-template mat-tab-label>
-                  <mat-icon>devices_other</mat-icon>
-                  <span>Grouped</span>
-                </ng-template>
-                <span
-                  *ngFor="let item of OnlineGroups; let i = index"
-                >
-                  <mat-expansion-panel style="margin-bottom: 5px">
-                    <mat-expansion-panel-header class="nestedPanelHeader">
-                      <mat-panel-title>
-                        {{ item.grp_name }} ({{ item.OnlineDevice.length }})
-                      </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <div
-                      class="m-0 singleDevice border-bottom"
-                      *ngFor="let t1 of item.OnlineDevice; let i = index"
-                    >
-                      <input
-                        id="{{ t1.device_id }}"
-                        type="checkbox"
-                        [attr.data-dataTrack]="t1.dataTrack"
-                        [attr.data-device_id]="t1.device_id"
-                        (change)="onCheck($event, t1.dataTrack, t1.device_id)"
-                      />
-                      <mat-icon style="width: 30px !important"
-                        >drive_eta</mat-icon
-                      >
-                      <span
-                        style="
+            ">
+              <mat-tab-group (selectedTabChange)="tabChanged($event, checkedDevices)" [disablePagination]="true"
+                *ngIf="!isVehicles">
+                <mat-tab [isActive]="true">
+                  <ng-template mat-tab-label>
+                    <mat-icon>devices_other</mat-icon>
+                    <span>Grouped</span>
+                  </ng-template>
+                  <span *ngFor="let item of OnlineGroups; let i = index">
+                    <mat-expansion-panel style="margin-bottom: 5px">
+                      <mat-expansion-panel-header class="nestedPanelHeader">
+                        <mat-panel-title>
+                          {{ item.grp_name }} ({{ item.OnlineDevice.length }})
+                        </mat-panel-title>
+                      </mat-expansion-panel-header>
+                      <div class="m-0 singleDevice border-bottom" *ngFor="let t1 of item.OnlineDevice; let i = index">
+                        <input id="{{ t1.device_id }}" type="checkbox" [attr.data-dataTrack]="t1.dataTrack"
+                          [attr.data-device_id]="t1.device_id" (change)="onCheck($event, t1.dataTrack, t1.device_id)" />
+                        <mat-icon style="width: 30px !important">drive_eta</mat-icon>
+                        <span style="
                           width: calc(100% - 120px);
                           white-space: nowrap;
                           overflow: hidden;
                           text-overflow: ellipsis;
-                          font-size: 1.3rem;
-                        "
-                        >{{ t1.veh_reg_no }}
-                        <br />
-                        <small style="font-size: 9px">
-                        <mat-icon style="
+                          font-size: 1rem;
+                        ">{{ t1.veh_reg_no }}
+                          <br />
+                          <small style="font-size: 1rem">
+                            <mat-icon style="
                           height: 10px;
                           width: 10px;
-                          font-size: 10px;"> location_on</mat-icon>{{t1.ref_location}}</small>
-                      </span>
-                      <p
-                        class="speedCheck text-center"
-                        style="margin: 0px !important; position:absolute; right:30px !important;"
-                        [attr.data-idforspeed]="t1.device_id"
-                      >
-                        {{ t1.speed }} <br />
-                        <small style="font-size: 12px">km/h</small>
-                      </p>
-                      <div
-                        style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                        [attr.device-Id-Vrn]="t1.device_id"
-                        *ngIf="t1.veh_status == 'Idle'"
-                      >
-                        <img
-                          style="height: 30px"
-                          src="./assets/icons/BlueArrow.png"
-                          [alt]="t1.veh_status"
-                        />
+                          font-size: 10px;"> location_on</mat-icon>
+                          <abbr [title]="t1.ref_location">{{t1.ref_location}}</abbr>
+                          </small>
+                        </span>
+                        <p class="speedCheck text-center"
+                          style="margin: 0px !important; position:absolute; right:30px !important;"
+                          [attr.data-idforspeed]="t1.device_id">
+                          {{ t1.speed }} <br />
+                          <small style="font-size: 12px">km/h</small>
+                        </p>
+                        <div style="width: 25px; height: 25px; position:absolute; right:0 !important;"
+                          [attr.device-Id-Vrn]="t1.device_id" *ngIf="t1.veh_status == 'Idle'">
+                          <img style="height: 100%" src="./assets/icons/BlueArrow.png" [alt]="t1.veh_status" />
+                        </div>
+                        <div style="width: 25px; height: 25px; position:absolute; right:0 !important;"
+                          [attr.device-Id-Vrn]="t1.device_id" *ngIf="t1.veh_status == 'Parked'">
+                          <img style="height: 100%" src="./assets/icons/YellowArrow.png" [alt]="t1.veh_status" />
+                        </div>
+                        <div style="width: 25px; height: 25px; position:absolute; right:0 !important;"
+                          [attr.device-Id-Vrn]="t1.device_id" *ngIf="t1.veh_status == 'Moving'">
+                          <img style="height: 100%" src="./assets/icons/GreenArrow.png" [alt]="t1.veh_status" />
+                        </div>
+                        <div style="width: 25px; height: 25px; position:absolute; right:0 !important;"
+                          [attr.device-Id-Vrn]="t1.device_id" *ngIf="!t1.veh_status.length">
+                          <img style="height: 100%" src="./assets/icons/Disconected.png" [alt]="t1.veh_status" />
+                        </div>
+                        <div
+                          style="width: 25px; height: 25px; position:absolute; right:0 !important; z-index: 1 !important;"
+                          [attr.device-Id-Vrn]="t1.device_id" *ngIf="t1.veh_status.length && t1.alarm_status == '1'">
+                          <img style="height: 100%;" src="./assets/icons/RedArrow.png"
+                            [alt]="t1.veh_status + t1.alarm_status" />
+                        </div>
                       </div>
-                      <div
-                        style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                        [attr.device-Id-Vrn]="t1.device_id"
-                        *ngIf="t1.veh_status == 'Parked'"
-                      >
-                        <img
-                          style="height: 30px"
-                          src="./assets/icons/YellowArrow.png"
-                          [alt]="t1.veh_status"
-                        />
-                      </div>
-                      <div
-                        style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                        [attr.device-Id-Vrn]="t1.device_id"
-                        *ngIf="t1.veh_status == 'Moving'"
-                      >
-                        <img
-                          style="height: 30px"
-                          src="./assets/icons/GreenArrow.png"
-                          [alt]="t1.veh_status"
-                        />
-                      </div>
-                      <div
-                        style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                        [attr.device-Id-Vrn]="t1.device_id"
-                        *ngIf="!t1.veh_status.length"
-                      >
-                        <img
-                          style="height: 30px"
-                          src="./assets/icons/Disconected.png"
-                          [alt]="t1.veh_status"
-                        />
-                      </div>
-                      <div
-                        style="width: 30px; height: 30px; position:absolute; right:0 !important; z-index: 1 !important;"
-                        [attr.device-Id-Vrn]="t1.device_id"
-                        *ngIf="t1.veh_status.length && t1.alarm_status == '1'"
-                      >
-                        <img
-                          style="height: 30px;"
-                          src="./assets/icons/RedArrow.png"
-                          [alt]="t1.veh_status + t1.alarm_status"
-                        />
-                      </div>
-                    </div>
-                  </mat-expansion-panel>
-                </span>
-                <span *ngIf="!OnlineGroups.length">No Data Found</span>
-            <!-- </ng-template> -->
-              </mat-tab>
-              <mat-tab>
-                <ng-template mat-tab-label>
-                  <img src="./assets/icons/Online-White.png" height="28px" />
-                  <span style="font-size: small">
-                    Assets ({{ onlineDevices.length }})</span
-                  >
-                </ng-template>
-                <!-- <ng-template *ngIf="onlineDevices.length != '0'"> -->
-                <div
-                  class="m-0 singleDevice border-bottom"
-                  *ngFor="let item of onlineDevices; let i = index"
-                >
-                  <input
-                    id="{{ item.device_id }}"
-                    type="checkbox"
-                    [attr.data-dataTrack]="item.dataTrack"
-                    [attr.data-device_id]="item.device_id"
-                    (change)="onCheck($event, item.dataTrack, item.device_id)"
-                  />
-                  <mat-icon style="width: 30px !important">drive_eta</mat-icon>
-                  <span
-                    style="
+                    </mat-expansion-panel>
+                  </span>
+                  <span *ngIf="!OnlineGroups.length">No Data Found</span>
+                  <!-- </ng-template> -->
+                </mat-tab>
+                <mat-tab>
+                  <ng-template mat-tab-label>
+                    <mat-icon>track_changes</mat-icon>
+                    <!-- <img src="./assets/icons/Online-White.png" height="28px" /> -->
+                    <span style="font-size: small">
+                      Assets ({{ onlineDevices.length }})</span>
+                  </ng-template>
+                  <!-- <ng-template *ngIf="onlineDevices.length != '0'"> -->
+                  <div class="m-0 singleDevice border-bottom" *ngFor="let item of onlineDevices; let i = index">
+                    <input id="{{ item.device_id }}" type="checkbox" [attr.data-dataTrack]="item.dataTrack"
+                      [attr.data-device_id]="item.device_id"
+                      (change)="onCheck($event, item.dataTrack, item.device_id)" />
+                    <mat-icon style="width: 30px !important">drive_eta</mat-icon>
+                    <span style="
                       width:calc(100% - 120px);
                       white-space: nowrap;
                       overflow: hidden;
                       text-overflow: ellipsis;
-                      font-size: 1.3rem;
-                    "
-                    >{{ item.veh_reg_no }}<br />
-                    <small style="font-size: 9px"><mat-icon style="
+                      font-size: 1rem;
+                    ">{{ item.veh_reg_no }}<br />
+                      <small style="font-size: 1rem">
+                        <mat-icon style="
                       height: 10px;
                       width: 10px;
                       font-size: 10px;"> location_on</mat-icon>
-                       {{
-                      item.ref_location
-                    }}</small>
-                  </span>
-                  <p
-                    class="text-center"
-                    style="margin: 0px !important"
-                    [attr.data-idforspeed]="item.device_id"
-                  >
-                    {{ item.speed }} <br />
-                    <small style="font-size: 12px">km/h</small>
-                  </p>
-                  <div
-                    style="width: 30px; height: 30px; position:absolute; right:calc(100% - 200px); z-index: 1 !important;"
-                    [attr.device-Id-Vrn]="item.device_id"
-                    *ngIf="item.veh_status.length && item.alarm_status == '1'"
-                  >
-                    <img
-                      style="height: 30px;"
-                      src="./assets/icons/RedArrow.png"
-                      [alt]="item.veh_status"
-                    />
+                      <abbr [title]='item.ref_location'>
+                        {{item.ref_location}}</abbr>
+                      </small>
+                    </span>
+                    <p class="text-center" style="margin: 0px !important" [attr.data-idforspeed]="item.device_id">
+                      {{ item.speed }} <br />
+                      <small style="font-size: 12px">km/h</small>
+                    </p>
+                    <div style="width: 25px; height: 25px; position:absolute; right:20px; z-index: 1 !important;"
+                      [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status.length && item.alarm_status == '1'">
+                      <img style="height: 100%;" src="./assets/icons/RedArrow.png" [alt]="item.veh_status" />
+                    </div>
+                    <div style="width: 25px; height: 25px; position:absolute; right:20px;"
+                      [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status == 'Idle'">
+                      <img style="height: 100%" src="./assets/icons/BlueArrow.png" ` [alt]="item.veh_status" />
+                    </div>
+                    <div style="width: 25px; height: 25px; position:absolute; right:20px;"
+                      [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status == 'Parked'">
+                      <img style="height: 100%" src="./assets/icons/YellowArrow.png" [alt]="item.veh_status" />
+                    </div>
+                    <div style="width: 25px; height: 25px; position:absolute; right:20px;"
+                      [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status == 'Moving'">
+                      <img style="height: 100%" src="./assets/icons/GreenArrow.png" [alt]="item.veh_status" />
+                    </div>
+                    <div style="width: 25px; height: 25px; position:absolute; right:20px;"
+                      [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status == ''">
+                      <img style="height: 100%" src="./assets/icons/Disconected.png" [alt]="item.veh_status" />
+                    </div>
                   </div>
-                  <div
-                    style="width: 30px; height: 30px; position:absolute; right:calc(100% - 200px);"
-                    [attr.device-Id-Vrn]="item.device_id"
-                    *ngIf="item.veh_status == 'Idle'"
-                  >
-                    <img
-                      style="height: 30px"
-                      src="./assets/icons/BlueArrow.png"`
-                      [alt]="item.veh_status"
-                    />
-                  </div>
-                  <div
-                    style="width: 30px; height: 30px; position:absolute; right:calc(100% - 200px);"
-                    [attr.device-Id-Vrn]="item.device_id"
-                    *ngIf="item.veh_status == 'Parked'"
-                  >
-                    <img
-                      style="height: 30px"
-                      src="./assets/icons/YellowArrow.png"
-                      [alt]="item.veh_status"
-                    />
-                  </div>
-                  <div
-                    style="width: 30px; height: 30px; position:absolute; right:calc(100% - 200px);"
-                    [attr.device-Id-Vrn]="item.device_id"
-                    *ngIf="item.veh_status == 'Moving'"
-                  >
-                    <img
-                      style="height: 30px"
-                      src="./assets/icons/GreenArrow.png"
-                      [alt]="item.veh_status"
-                    />
-                  </div>
-                  <div
-                    style="width: 30px; height: 30px; position:absolute; right:calc(100% - 200px);"
-                    [attr.device-Id-Vrn]="item.device_id"
-                    *ngIf="item.veh_status == ''"
-                  >
-                    <img
-                      style="height: 30px"
-                      src="./assets/icons/Disconected.png"
-                      [alt]="item.veh_status"
-                    />
-                  </div>
-                </div>
-                <span *ngIf="!onlineDevices.length">No Data Found</span>
-              </mat-tab>
-            </mat-tab-group>
-            <mat-tab-group
-              (selectedTabChange)="tabChanged($event, checkedDevices)"
-              [disablePagination]="true"
-              *ngIf="isVehicles"
-            >
-              <mat-tab [isActive]="true">
-                <ng-template mat-tab-label>
-                  <mat-icon>devices_other</mat-icon>
-                  <span>Grouped</span>
-                </ng-template>
-              
-                <span *ngFor="let item of TREE_DATA; let i = index">
-                  <span *ngIf="item.grp_name === 'Assets'">
-                    <span *ngIf="item.SubMenu.length">
-                      <!-- <mat-accordion> -->
-                      <span *ngFor="let t1 of item.SubMenu; let j = index">
-                        <div
-                          class="m-0 singleDevice border-bottom"
-                          *ngIf="t1.vrn !== null"
-                        >
-                          <input
-                            id="{{ t1.device_id }}"
-                            type="checkbox"
-                            [attr.data-dataTrack]="t1.datatrack"
-                            [attr.data-device_id]="t1.device_id"
-                            (change)="
+                  <span *ngIf="!onlineDevices.length">No Data Found</span>
+                </mat-tab>
+              </mat-tab-group>
+              <mat-tab-group (selectedTabChange)="tabChanged($event, checkedDevices)" [disablePagination]="true"
+                *ngIf="isVehicles">
+                <mat-tab [isActive]="true">
+                  <ng-template mat-tab-label>
+                    <mat-icon>devices_other</mat-icon>
+                    <span>Grouped</span>
+                  </ng-template>
+
+                  <span *ngFor="let item of TREE_DATA; let i = index">
+                    <span *ngIf="item.grp_name === 'Assets'">
+                      <span *ngIf="item.SubMenu.length">
+                        <!-- <mat-accordion> -->
+                        <span *ngFor="let t1 of item.SubMenu; let j = index">
+                          <div class="m-0 singleDevice border-bottom" *ngIf="t1.vrn !== null">
+                            <input id="{{ t1.device_id }}" type="checkbox" [attr.data-dataTrack]="t1.datatrack"
+                              [attr.data-device_id]="t1.device_id" (change)="
                               onCheck($event, t1.datatrack, t1.device_id)
-                            "
-                          />
-                          <mat-icon style="width: 30px !important"
-                            >drive_eta</mat-icon
-                          >
-                          <span
-                            style="
+                            " />
+                            <mat-icon style="width: 30px !important">drive_eta</mat-icon>
+                            <span style="
 
                               width: calc(100% - 120px);
                               white-space: nowrap;
                               overflow: hidden;
                               text-overflow: ellipsis;
-                              font-size: 1.3rem;
-                            "
-                            >{{ t1.vrn }}
-                            <br />
-                            <small
-                             
-                              style="font-size: 9px"
-                            >
-                            <mat-icon style="
+                              font-size: 1rem;
+                            ">{{ t1.vrn }}
+                              <br />
+                              <small style="font-size: 1rem">
+                                <mat-icon style="
                             height: 10px;
                             width: 10px;
                             font-size: 10px;"> location_on</mat-icon>
-                            <span  class="ref-location" [attr.data-refLocation]="t1.device_id"></span>
-                             </small>
-                          </span>
-                          <p
-                            class="speedCheck text-center"
-                            style="margin: 0px !important; position:absolute; right:30px !important;"
-                            [attr.data-idforspeed]="t1.device_id"
-                          ></p>
-                          <div
-                            style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                            class="veh_status"
-                            [attr.device-Id-Vrn]="t1.device_id"
-                          ></div>
-                        </div>
-                        <mat-expansion-panel
-                        style="margin-bottom: 5px"
-                          *ngIf="t1.SubMenu.length"
-                          (opened)="expandedPanel($event)"
-                        >
-                          <mat-expansion-panel-header class="nestedPanelHeader">
-                            <mat-panel-title>
-                              <!-- <input
+                                <span class="ref-location" [attr.data-refLocation]="t1.device_id"></span>
+                              </small>
+                            </span>
+                            <p class="speedCheck text-center"
+                              style="margin: 0px !important; position:absolute; right:30px !important;"
+                              [attr.data-idforspeed]="t1.device_id"></p>
+                            <div style="width: 25px; height: 25px; position:absolute; right:0 !important;"
+                              class="veh_status" [attr.device-Id-Vrn]="t1.device_id"></div>
+                          </div>
+                          <mat-expansion-panel style="margin-bottom: 5px" *ngIf="t1.SubMenu.length"
+                            (opened)="expandedPanel($event)">
+                            <mat-expansion-panel-header class="nestedPanelHeader">
+                              <mat-panel-title>
+                                <!-- <input
                                     type="checkbox"
                                     style="margin-right: 10px"
                                   /> -->
-                              {{ t1.grp_name }} ({{ t1.SubMenu.length }})
-                            </mat-panel-title>
-                          </mat-expansion-panel-header>
-                          <span *ngIf="t1.SubMenu.length">
-                            <span *ngFor="let t2 of t1.SubMenu; let k = index">
-                              <div
-                                class="m-0 singleDevice border-bottom"
-                                *ngIf="t2.vrn !== null"
-                              >
-                                <input
-                                  id="{{ t2.device_id }}"
-                                  type="checkbox"
-                                  [attr.data-dataTrack]="t2.datatrack"
-                                  [attr.data-device_id]="t2.device_id"
-                                  (change)="
+                                {{ t1.grp_name }} ({{ t1.SubMenu.length }})
+                              </mat-panel-title>
+                            </mat-expansion-panel-header>
+                            <span *ngIf="t1.SubMenu.length">
+                              <span *ngFor="let t2 of t1.SubMenu; let k = index">
+                                <div class="m-0 singleDevice border-bottom" *ngIf="t2.vrn !== null">
+                                  <input id="{{ t2.device_id }}" type="checkbox" [attr.data-dataTrack]="t2.datatrack"
+                                    [attr.data-device_id]="t2.device_id" (change)="
                                     onCheck($event, t2.datatrack, t2.device_id)
-                                  "
-                                />
-                                <mat-icon style="width: 30px !important"
-                                  >drive_eta</mat-icon
-                                >
-                                <span
-                                  style="
+                                  " />
+                                  <mat-icon style="width: 30px !important">drive_eta</mat-icon>
+                                  <span style="
                                     width: calc(100% - 120px);
                                     white-space: nowrap;
                                     overflow: hidden;
                                     text-overflow: ellipsis;
-                                    font-size: 1.3rem;
-                                  "
-                                  >{{ t2.vrn }}
-                                  <br />
-                                  <small
-                                    style="font-size: 9px"  
-                                  >
-                                  <mat-icon style="
+                                    font-size: 1rem;
+                                  ">{{ t2.vrn }}
+                                    <br />
+                                    <small style="font-size: 1rem">
+                                      <mat-icon style="
                                   height: 10px;
                                   width: 10px;
                                   font-size: 10px;"> location_on</mat-icon>
-                                   <span  class="ref-location" [attr.data-refLocation]="t2.device_id"> </span>
-                                </small>
-                                </span>
-                                <p
-                                  class="speedCheck text-center"
-                                  style="margin: 0px !important; position:absolute; right:30px !important;"
-                                  [attr.data-idforspeed]="t2.device_id"
-                                ></p>
-                                <div
-                                  style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                                  class="veh_status"
-                                  [attr.device-Id-Vrn]="t2.device_id"
-                                ></div>
-                              </div>
-                              <mat-expansion-panel
-                                style="margin-bottom: 5px !important"
-                              >
-                                <mat-expansion-panel-header
-                                  *ngIf="t2.grp_name"
-                                  class="MorenestedPanelHeader"
-                                >
-                                  <mat-panel-title>
-                                    <!-- <input
+                                      <span class="ref-location" [attr.data-refLocation]="t2.device_id"> </span>
+                                    </small>
+                                  </span>
+                                  <p class="speedCheck text-center"
+                                    style="margin: 0px !important; position:absolute; right:30px !important;"
+                                    [attr.data-idforspeed]="t2.device_id"></p>
+                                  <div style="width: 25px; height: 25px; position:absolute; right:0 !important;"
+                                    class="veh_status" [attr.device-Id-Vrn]="t2.device_id"></div>
+                                </div>
+                                <mat-expansion-panel style="margin-bottom: 5px !important">
+                                  <mat-expansion-panel-header *ngIf="t2.grp_name" class="MorenestedPanelHeader">
+                                    <mat-panel-title>
+                                      <!-- <input
                                           type="checkbox"
                                           style="margin-right: 10px"
                                         /> -->
-                                    {{ t2.grp_name }} ({{ t2.SubMenu.length }})
-                                  </mat-panel-title>
-                                </mat-expansion-panel-header>
-                                <span *ngIf="t2.SubMenu.length">
-                                  <span
-                                    *ngFor="let t3 of t2.SubMenu; let l = index"
-                                  >
-                                    <div
-                                      class="m-0 singleDevice border-bottom"
-                                      *ngIf="t3.vrn !== null"
-                                    >
-                                      <input
-                                        id="{{ t3.device_id }}"
-                                        type="checkbox"
-                                        [attr.data-dataTrack]="t3.datatrack"
-                                        [attr.data-device_id]="t3.device_id"
-                                        (change)="
+                                      {{ t2.grp_name }} ({{ t2.SubMenu.length }})
+                                    </mat-panel-title>
+                                  </mat-expansion-panel-header>
+                                  <span *ngIf="t2.SubMenu.length">
+                                    <span *ngFor="let t3 of t2.SubMenu; let l = index">
+                                      <div class="m-0 singleDevice border-bottom" *ngIf="t3.vrn !== null">
+                                        <input id="{{ t3.device_id }}" type="checkbox"
+                                          [attr.data-dataTrack]="t3.datatrack" [attr.data-device_id]="t3.device_id"
+                                          (change)="
                                           onCheck(
                                             $event,
                                             t3.datatrack,
                                             t3.device_id
                                           )
-                                        "
-                                      />
-                                      <mat-icon style="width: 30px !important"
-                                        >drive_eta</mat-icon
-                                      >
-                                      <span
-                                        style="
+                                        " />
+                                        <mat-icon style="width: 30px !important">drive_eta</mat-icon>
+                                        <span style="
                                           width: calc(100% - 120px);
                                           white-space: nowrap;
                                           overflow: hidden;
                                           text-overflow: ellipsis;
-                                          font-size: 1.3rem;
-                                        "
-                                        >{{ t3.vrn }}
-                                        <small
-                                          style="font-size: 9px"
-                                        >
-                                        <mat-icon style="
+                                          font-size: 1rem;
+                                        ">{{ t3.vrn }}
+                                          <small style="font-size: 1rem">
+                                            <mat-icon style="
                       height: 10px;
                       width: 10px;
                       font-size: 10px;"> location_on</mat-icon>
-                      <span 
-                       class="ref-location" [attr.data-refLocation]="t3.device_id"></span>
-                       </small>
-                                      </span>
-                                      <p
-                                        class="speedCheck text-center"
-                                        style="margin: 0px !important; position:absolute; right:30px !important;"
-                                        [attr.data-idforspeed]="t3.device_id"
-                                      ></p>
-                                      <div
-                                        style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                                        class="veh_status"
-                                        [attr.device-id-vrn]="t3.device_id"
-                                      ></div>
-                                    </div>
-                                    <mat-expansion-panel *ngIf="t3.grp_name">
-                                      <mat-expansion-panel-header
-                                        class="nestedPanelHeader"
-                                      >
-                                        <mat-panel-title>
-                                          {{ t3.grp_name }} ({{
+                                            <span class="ref-location" [attr.data-refLocation]="t3.device_id"></span>
+                                          </small>
+                                        </span>
+                                        <p class="speedCheck text-center"
+                                          style="margin: 0px !important; position:absolute; right:30px !important;"
+                                          [attr.data-idforspeed]="t3.device_id"></p>
+                                        <div style="width: 25px; height: 25px; position:absolute; right:0 !important;"
+                                          class="veh_status" [attr.device-id-vrn]="t3.device_id"></div>
+                                      </div>
+                                      <mat-expansion-panel *ngIf="t3.grp_name">
+                                        <mat-expansion-panel-header class="nestedPanelHeader">
+                                          <mat-panel-title>
+                                            {{ t3.grp_name }} ({{
                                             t3.SubMenu.length
-                                          }})
-                                        </mat-panel-title>
-                                      </mat-expansion-panel-header>
-                                    </mat-expansion-panel>
+                                            }})
+                                          </mat-panel-title>
+                                        </mat-expansion-panel-header>
+                                      </mat-expansion-panel>
+                                    </span>
                                   </span>
-                                </span>
-                              </mat-expansion-panel>
+                                </mat-expansion-panel>
+                              </span>
                             </span>
-                          </span>
-                        </mat-expansion-panel>
+                          </mat-expansion-panel>
+                        </span>
+                        <!-- </mat-accordion> -->
                       </span>
-                      <!-- </mat-accordion> -->
                     </span>
                   </span>
-                </span>
-                <!-- </mat-expansion-panel> -->
-                <!-- </mat-accordion> -->
-                <span> </span>
-              </mat-tab>
-              <mat-tab>
-                <ng-template mat-tab-label>
-                  <img
-                    src="./assets/icons/Online-White.png"
-                    height="28px"
-                  />
-                  <span
-                    >Assets ({{ AllVehicles.length }})</span
-                  >
-                </ng-template>
-                <div class="AlldevicesData">
-                <div
-                  class="m-0 singleDevice border-bottom"
-                  *ngFor="let vehicle of AllVehicles; let i = index"
-                >
-                  <input
-                    id="{{ vehicle.device_id }}"
-                    type="checkbox"
-                    [attr.data-dataTrack]="vehicle.dataTrack"
-                    [attr.data-device_id]="vehicle.device_id"
-                    (change)="
+                  <!-- </mat-expansion-panel> -->
+                  <!-- </mat-accordion> -->
+                  <span> </span>
+                </mat-tab>
+                <mat-tab>
+                  <ng-template mat-tab-label>
+                    <mat-icon>track_changes</mat-icon>
+                    <!-- <img src="./assets/icons/Online-White.png" height="28px" /> -->
+                    <span>Assets ({{ AllVehicles.length }})</span>
+                  </ng-template>
+                  <div class="AlldevicesData">
+                    <div class="m-0 singleDevice border-bottom" *ngFor="let vehicle of AllVehicles; let i = index">
+                      <input id="{{ vehicle.device_id }}" type="checkbox" [attr.data-dataTrack]="vehicle.dataTrack"
+                        [attr.data-device_id]="vehicle.device_id" (change)="
                       onCheck($event, vehicle.dataTrack, vehicle.device_id)
-                    "
-                  />
-                  <mat-icon style="width: 30px !important">drive_eta</mat-icon>
-                  <span
-                    style="
+                    " />
+                      <mat-icon style="width: 30px !important">drive_eta</mat-icon>
+                      <span style="
                     width: calc(100% - 120px);
                       white-space: nowrap;
                       overflow: hidden;
                       text-overflow: ellipsis;
-                      font-size: 1.3rem;
-                    "
-                    >{{ vehicle.veh_reg_no }}
-                    <br />
-                    <small style="font-size: 9px"><mat-icon style="
+                      font-size: 1rem;
+                    ">{{ vehicle.veh_reg_no }}
+                        <br />
+                        <small style="font-size: 1rem">
+                          <mat-icon style="
     height: 10px;
     width: 10px;
     font-size: 10px;"> location_on</mat-icon>
-                       {{
-                      vehicle.ref_location
-                    }}</small>
-                  </span>
-                  <p
-                    class="speedCheck text-center"
-                    style="margin: 0px !important; position:absolute; right:30px !important;"
-                  >
-                    {{ vehicle.speed }} <br />
-                    <small style="font-size: 12px"> km/h</small>
-                  </p>
-                  <div
-                    style="width: 30px; height: 30px; position:absolute; right:0 !important; z-index: 1 !important;"
-                    [attr.device-Id-Vrn]="vehicle.device_id"
-                    *ngIf="vehicle.veh_status && vehicle.alarm_status == '1'"
-                  >
-                    <img
-                      style="height: 30px; transform: rotate(90deg);"
-                      src="./assets/icons/RedArrow.png"
-                      [alt]="vehicle.veh_status"
-                    />
+    <abbr [title]='vehicle.ref_location'>
+      {{vehicle.ref_location}}
+    </abbr>
+                        </small>
+                      </span>
+                      <p class="speedCheck text-center"
+                        style="margin: 0px !important; position:absolute; right:30px !important;">
+                        {{ vehicle.speed }} <br />
+                        <small style="font-size: 12px"> km/h</small>
+                      </p>
+                      <div
+                        style="width: 25px; height: 25px; position:absolute; right:0 !important; z-index: 1 !important;"
+                        [attr.device-Id-Vrn]="vehicle.device_id"
+                        *ngIf="vehicle.veh_status && vehicle.alarm_status == '1'">
+                        <img style="height: 100%; transform: rotate(90deg);" src="./assets/icons/RedArrow.png"
+                          [alt]="vehicle.veh_status" />
+                      </div>
+                      <div style="width: 25px; height: 25px; position:absolute; right:0 !important;"
+                        [attr.device-Id-Vrn]="vehicle.device_id" *ngIf="vehicle.veh_status == 'Idle'">
+                        <img style="height: 100%" src="./assets/icons/BlueArrow.png" [alt]="vehicle.veh_status" />
+                      </div>
+                      <div style="width: 25px; height: 25px; position:absolute; right:0 !important;"
+                        [attr.device-Id-Vrn]="vehicle.device_id" *ngIf="vehicle.veh_status == 'Parked'">
+                        <img style="height: 100%; transform: rotate(90deg)" src="./assets/icons/YellowArrow.png"
+                          [alt]="vehicle.veh_status" />
+                      </div>
+                      <div style="width: 25px; height: 25px; position:absolute; right:0 !important;"
+                        [attr.device-Id-Vrn]="vehicle.device_id" *ngIf="vehicle.veh_status == 'Moving'">
+                        <img style="height: 100%; transform: rotate(90deg)" src="./assets/icons/GreenArrow.png"
+                          [alt]="vehicle.veh_status" />
+                      </div>
+                    </div>
                   </div>
-                  <div
-                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                    [attr.device-Id-Vrn]="vehicle.device_id"
-                    *ngIf="vehicle.veh_status == 'Idle'"
-                  >
-                    <img
-                      style="height: 30px"
-                      src="./assets/icons/BlueArrow.png"
-                      [alt]="vehicle.veh_status"
-                    />
-                  </div>
-                  <div
-                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                    [attr.device-Id-Vrn]="vehicle.device_id"
-                    *ngIf="vehicle.veh_status == 'Parked'"
-                  >
-                    <img
-                      style="height: 30px; transform: rotate(90deg)"
-                      src="./assets/icons/YellowArrow.png"
-                      [alt]="vehicle.veh_status"
-                    />
-                  </div>
-                  <div
-                    style="width: 30px; height: 30px; position:absolute; right:0 !important;"
-                    [attr.device-Id-Vrn]="vehicle.device_id"
-                    *ngIf="vehicle.veh_status == 'Moving'"
-                  >
-                    <img
-                      style="height: 30px; transform: rotate(90deg)"
-                      src="./assets/icons/GreenArrow.png"
-                      [alt]="vehicle.veh_status"
-                    />
-                  </div>
-                </div>
-              </div>
-              </mat-tab>
-            </mat-tab-group>
-          </div>
-          <div
-            class="vehicleList SearchedDevices"
-            *ngIf="SearchedDevices.length"
-            style="height: 87vh !important; overflow-y: scroll"
-          >  
-            <h4 class="m-0 p-0">Search Results</h4>
-          <div
-          class="m-0 singleDevice border-bottom"
-          *ngFor="let item of SearchedDevices; let i = index"
-        >
-          <input
-            id="{{ item.device_id }}"
-            type="checkbox"
-            [attr.data-dataTrack]="item.dataTrack"
-            [attr.data-device_id]="item.device_id"
-            (change)="onCheck($event, item.dataTrack, item.device_id)"
-          />
-          <mat-icon style="width: 30px !important">drive_eta</mat-icon>
-          <span
-            style="
+                </mat-tab>
+              </mat-tab-group>
+            </div>
+            <div class="vehicleList SearchedDevices" *ngIf="SearchedDevices.length"
+              style="height: 87vh !important; overflow-y: scroll">
+              <h4 class="m-0 p-0">Search Results</h4>
+              <div class="m-0 singleDevice border-bottom" *ngFor="let item of SearchedDevices; let i = index">
+                <input id="{{ item.device_id }}" type="checkbox" [attr.data-dataTrack]="item.dataTrack"
+                  [attr.data-device_id]="item.device_id" (change)="onCheck($event, item.dataTrack, item.device_id)" />
+                <mat-icon style="width: 30px !important">drive_eta</mat-icon>
+                <span style="
               width:calc(100% - 120px);
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
-              font-size: 1.3rem;
-            "
-            >{{ item.veh_reg_no }}<br />
-            <small style="font-size: 9px"><mat-icon style="
+              font-size: 1rem;
+            ">{{ item.veh_reg_no }}<br />
+                  <small style="font-size: 1rem">
+                    <mat-icon style="
               height: 10px;
               width: 10px;
               font-size: 10px;"> location_on</mat-icon>
-               {{
-              item.ref_location
-            }}</small>
-          </span>
-          <p
-            class="text-center"
-            style="margin: 0px !important"
-            [attr.data-idforspeed]="item.device_id"
-          >
-            {{ item.speed }} <br />
-            <small style="font-size: 12px">km/h</small>
-          </p>
-          <div
-            style="width: 30px; height: 30px; position:absolute; right:20px !important; z-index: 1 !important; transform: rotate(90deg)"
-            [attr.device-Id-Vrn]="item.device_id"
-            *ngIf="item.veh_status.length && item.alarm_status == '1'"
-          >
-            <img
-              style="height: 30px;"
-              src="./assets/icons/RedArrow.png"
-              [alt]="item.veh_status"
-            />
-          </div>
-          <div
-            style="width: 30px; height: 30px; position:absolute; right:20px !important;"
-            [attr.device-Id-Vrn]="item.device_id"
-            *ngIf="item.veh_status == 'Idle'"
-          >
-            <img
-              style="height: 30px"
-              src="./assets/icons/BlueArrow.png"
-              [alt]="item.veh_status"
-            />
-          </div>
-          <div
-            style="width: 30px; height: 30px; position:absolute; right:20px !important; transform: rotate(90deg)"
-            [attr.device-Id-Vrn]="item.device_id"
-            *ngIf="item.veh_status == 'Parked'"
-          >
-            <img
-              style="height: 30px"
-              src="./assets/icons/YellowArrow.png"
-              [alt]="item.veh_status"
-            />
-          </div>
-          <div
-            style="width: 30px; height: 30px; position:absolute; right:20px !important; transform: rotate(90deg)"
-            [attr.device-Id-Vrn]="item.device_id"
-            *ngIf="item.veh_status == 'Moving'"
-          >
-            <img
-              style="height: 30px"
-              src="./assets/icons/GreenArrow.png"
-              [alt]="item.veh_status"
-            />
-          </div>
-          <div
-            style="width: 30px; height: 30px; position:absolute; right:20px !important; transform: rotate(90deg)"
-            [attr.device-Id-Vrn]="item.device_id"
-            *ngIf="item.veh_status == ''"
-          >
-            <img
-              style="height: 30px"
-              src="./assets/icons/Disconected.png"
-              [alt]="item.veh_status"
-            />
-          </div>
-        </div>
-          </div>
+              <abbr [title]="item.ref_location">
+                {{item.ref_location}}
+              </abbr>
+                  </small>
+                </span>
+                <p class="text-center" style="margin: 0px !important" [attr.data-idforspeed]="item.device_id">
+                  {{ item.speed }} <br />
+                  <small style="font-size: 12px">km/h</small>
+                </p>
+                <div
+                  style="width: 25px; height: 25px; position:absolute; right:20px !important; z-index: 1 !important; transform: rotate(90deg)"
+                  [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status.length && item.alarm_status == '1'">
+                  <img style="height: 100%;" src="./assets/icons/RedArrow.png" [alt]="item.veh_status" />
+                </div>
+                <div style="width: 25px; height: 25px; position:absolute; right:20px !important;"
+                  [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status == 'Idle'">
+                  <img style="height: 100%" src="./assets/icons/BlueArrow.png" [alt]="item.veh_status" />
+                </div>
+                <div
+                  style="width: 25px; height: 25px; position:absolute; right:20px !important; transform: rotate(90deg)"
+                  [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status == 'Parked'">
+                  <img style="height: 100%" src="./assets/icons/YellowArrow.png" [alt]="item.veh_status" />
+                </div>
+                <div
+                  style="width: 25px; height: 25px; position:absolute; right:20px !important; transform: rotate(90deg)"
+                  [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status == 'Moving'">
+                  <img style="height: 100%" src="./assets/icons/GreenArrow.png" [alt]="item.veh_status" />
+                </div>
+                <div
+                  style="width: 25px; height: 25px; position:absolute; right:20px !important; transform: rotate(90deg)"
+                  [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status == ''">
+                  <img style="height: 100%" src="./assets/icons/Disconected.png" [alt]="item.veh_status" />
+                </div>
+              </div>
+            </div>
           </ng-container>
           <ng-container *ngIf="treeLoaded == false">
             <mat-spinner></mat-spinner>
@@ -950,31 +725,22 @@
         <!-- <button (click)="play()">Play</button>
         <button (click)="pause()">Pause</button> -->
         <!-- Fence List -->
-        <div
-          class="shadow rounded selectionList d-none row">
-            <span style="display: flex; align-items: center; justify-content: space-between;"><h4 class="m-0 p-0" style="margin-left: 40px !important;">
+        <div class="shadow rounded selectionList d-none row">
+          <span style="display: flex; align-items: center; justify-content: space-between;">
+            <h4 class="m-0 p-0" style="margin-left: 40px !important;">
               Available Fences</h4>
-              <button
-              value="Close"
-              class="matListOption"
-              (click)="closeFencing()"
-            mat-icon-button
-          >
-            X
-          </button>
-        </span>
-        <input type="text" (keyup)="geofenceQuery($event)" class="geofenceQuery" placeholder="Enter the search query">
-        <span *ngIf="fenceListLoaded">
-          <ng-cotainer *ngIf="
+            <button value="Close" class="matListOption" (click)="closeFencing()" mat-icon-button>
+              X
+            </button>
+          </span>
+          <input type="text" (keyup)="geofenceQuery($event)" class="geofenceQuery" placeholder="Enter the search query">
+          <span *ngIf="fenceListLoaded">
+            <ng-cotainer *ngIf="
           searchedFences.length === 0 ||
           searchedFences.length === geoFences.length
         ">
-          <ng-container  
-          *ngFor="let geoFence of geoFences">
-          <div
-            [value]="geoFence.gf_name"
-            class="matListOption cursor-pointer"
-            (click)="
+              <ng-container *ngFor="let geoFence of geoFences">
+                <div [value]="geoFence.gf_name" class="matListOption cursor-pointer" (click)="
               Draw({
                 FenceParam: geoFence.FenceParam,
                 gf_id: geoFence.gf_id,
@@ -983,42 +749,25 @@
                 gf_type: geoFence.gf_type,
                 gf_diff: geoFence.gf_diff
               })
-            "
-          >
-            <ng-container *ngIf="geoFence.gf_type === 'Circle'">
-              <img
-                style="margin-right: 10px"
-                src="./assets/icons/Circle.jpg"
-                alt="cir"
-              />
-            </ng-container>
-            <ng-container *ngIf="geoFence.gf_type === 'Rectangle'">
-              <img
-                style="margin-right: 10px"
-                src="./assets/icons/square.jpg"
-                alt="sq"
-              />
-            </ng-container>
-            <ng-container *ngIf="geoFence.gf_type === 'Polygon'">
-              <img
-                style="margin-right: 10px"
-                src="./assets/icons/polygone.png"
-                alt="poly"
-              />
-            </ng-container>
-            <p class="p-0 m-0">
-              {{ geoFence.gf_name }}
-            </p>
-          </div>
-          </ng-container>
-        </ng-cotainer>
-        <ng-container *ngIf="searchedFences.length">       
-          <ng-container  
-          *ngFor="let fence of searchedFences">
-          <div
-            [value]="fence.gf_name"
-            class="matListOption cursor-pointer"
-            (click)="
+            ">
+                  <ng-container *ngIf="geoFence.gf_type === 'Circle'">
+                    <img style="margin-right: 10px" src="./assets/icons/Circle.jpg" alt="cir" />
+                  </ng-container>
+                  <ng-container *ngIf="geoFence.gf_type === 'Rectangle'">
+                    <img style="margin-right: 10px" src="./assets/icons/square.jpg" alt="sq" />
+                  </ng-container>
+                  <ng-container *ngIf="geoFence.gf_type === 'Polygon'">
+                    <img style="margin-right: 10px" src="./assets/icons/polygone.png" alt="poly" />
+                  </ng-container>
+                  <p class="p-0 m-0">
+                    {{ geoFence.gf_name }}
+                  </p>
+                </div>
+              </ng-container>
+            </ng-cotainer>
+            <ng-container *ngIf="searchedFences.length">
+              <ng-container *ngFor="let fence of searchedFences">
+                <div [value]="fence.gf_name" class="matListOption cursor-pointer" (click)="
               Draw({
                 FenceParam: fence.FenceParam,
                 gf_id: fence.gf_id,
@@ -1027,40 +776,28 @@
                 gf_type: fence.gf_type,
                 gf_diff: fence.gf_diff
               })
-            "
-          >
-            <ng-container *ngIf="fence.gf_type === 'Circle'">
-              <img
-                style="margin-right: 10px"
-                src="./assets/icons/Circle.jpg"
-                alt="cir"
-              />
+            ">
+                  <ng-container *ngIf="fence.gf_type === 'Circle'">
+                    <img style="margin-right: 10px" src="./assets/icons/Circle.jpg" alt="cir" />
+                  </ng-container>
+                  <ng-container *ngIf="fence.gf_type === 'Rectangle'">
+                    <img style="margin-right: 10px" src="./assets/icons/square.jpg" alt="sq" />
+                  </ng-container>
+                  <ng-container *ngIf="fence.gf_type === 'Polygon'">
+                    <img style="margin-right: 10px" src="./assets/icons/polygone.png" alt="poly" />
+                  </ng-container>
+                  <p class="p-0 m-0">
+                    {{ fence.gf_name }}
+                  </p>
+                </div>
+              </ng-container>
             </ng-container>
-            <ng-container *ngIf="fence.gf_type === 'Rectangle'">
-              <img
-                style="margin-right: 10px"
-                src="./assets/icons/square.jpg"
-                alt="sq"
-              />
-            </ng-container>
-            <ng-container *ngIf="fence.gf_type === 'Polygon'">
-              <img
-                style="margin-right: 10px"
-                src="./assets/icons/polygone.png"
-                alt="poly"
-              />
-            </ng-container>
-            <p class="p-0 m-0">
-              {{ fence.gf_name }}
-            </p>
-          </div>
-          </ng-container>
-        </ng-container>
-        </span>
-        <span  *ngIf="!fenceListLoaded" style="display: flex; justify-content: center; align-items: center; height: inherit; flex-direction: column;">
-          <mat-spinner></mat-spinner>
-          Loading...
-        </span>
+          </span>
+          <span *ngIf="!fenceListLoaded"
+            style="display: flex; justify-content: center; align-items: center; height: inherit; flex-direction: column;">
+            <mat-spinner></mat-spinner>
+            Loading...
+          </span>
         </div>
         <!-- Fence List -->
         <router-outlet></router-outlet>
@@ -1068,37 +805,19 @@
     </div>
   </div>
 </div>
-<div
-  #backToTop
-  fxLayout="row"
-  fxLayoutAlign="center center"
-  class="back-to-top"
-  (click)="scrollToTop()"
->
+<div #backToTop fxLayout="row" fxLayoutAlign="center center" class="back-to-top" (click)="scrollToTop()">
   <mat-icon>arrow_upward</mat-icon>
 </div>
 <!-- </mat-sidenav-content> -->
 <!-- </mat-sidenav-container> -->
 
-<button
-  *ngIf="currentMap === 'Open Street Maps'"
-  style="position: absolute; right: 15px; top: 71px"
-  mat-flat-button
-  color="primary"
-  class="closeGeoFenceBtn d-none"
-  (click)="RemoveFencing()"
->
+<button *ngIf="currentMap === 'Open Street Maps'" style="position: absolute; right: 15px; top: 71px" mat-flat-button
+  color="primary" class="closeGeoFenceBtn d-none" (click)="RemoveFencing()">
   Close Geo Fencing
 </button>
 
-<button
-  *ngIf="currentMap === 'Open Street Maps'"
-  style="position: absolute; right: 15px; top: 71px"
-  mat-flat-button
-  color="primary"
-  class="closeHistory d-none"
-  (click)="closeHistory()"
->
+<button *ngIf="currentMap === 'Open Street Maps'" style="position: absolute; right: 15px; top: 71px" mat-flat-button
+  color="primary" class="closeHistory d-none" (click)="closeHistory()">
   Close History
 </button>
 
@@ -1126,82 +845,39 @@
       <img src="./assets/icons/Circle.jpg" alt="" />
     </button>
   </div>
-  <button
-    mat-icon-button
-    class="recordControl expBtn"
-    (click)="export()"
-    data-title="Export"
-  >
+  <button mat-icon-button class="recordControl expBtn" (click)="export()" data-title="Export">
     <img src="./assets/icons/Export.png" />
   </button>
-  <button
-    mat-icon-button
-    class="recordControl drawButton"
-    (click)="draw()"
-    data-title="Draw Route"
-  >
+  <button mat-icon-button class="recordControl drawButton" (click)="draw()" data-title="Draw Route">
     <img src="./assets/icons/Route.png" />
   </button>
-  <button
-    mat-icon-button
-    class="recordControl pauseBtn d-none"
-    (click)="pause()"
-    data-title="Pause"
-  >
+  <button mat-icon-button class="recordControl pauseBtn d-none" (click)="pause()" data-title="Pause">
     <img src="./assets/icons/Pause.png" />
   </button>
-  <button
-    mat-icon-button
-    class="recordControl playBtn"
-    (click)="play()"
-    data-title="Play"
-  >
+  <button mat-icon-button class="recordControl playBtn" (click)="play()" data-title="Play">
     <img src="./assets/icons/Play.png" />
   </button>
-  <button
-    mat-icon-button
-    class="recordControl"
-    (click)="speed()"
-    data-title="Speed"
-  >
+  <button mat-icon-button class="recordControl" (click)="speed()" data-title="Speed">
     <img src="./assets/icons/Speed.png" />
   </button>
-  <button
-    mat-icon-button
-    class="recordControl"
-    (click)="stop()"
-    data-title="Stop"
-  >
+  <button mat-icon-button class="recordControl" (click)="stop()" data-title="Stop">
     <img src="./assets/icons/Stop.png" />
   </button>
-  <button
-    mat-icon-button
-    class="recordControl"
-    (click)="toggleInfoCard()"
-    data-title="Device Info"
-  >
+  <button mat-icon-button class="recordControl" (click)="toggleInfoCard()" data-title="Device Info">
     <img src="./assets/icons/HistoryInfo.png" />
   </button>
-  <div
-    class="card rounded d-none infoCard"
-    style="position: absolute; bottom: 60px !important"
-  >
-    <div
-      class="card-header rounded"
-      style="
+  <div class="card rounded d-none infoCard" style="position: absolute; bottom: 60px !important">
+    <div class="card-header rounded" style="
         color: white !important;
         padding: 5px;
         font-weight: lighter !important;
         background-color: #18497d !important;
         border-bottom-right-radius: 0px !important;
         border-bottom-left-radius: 0px !important;
-      "
-    >
+      ">
       <h3 class="m-0">Information</h3>
     </div>
-    <div
-      class="card-body row m-0 p-2 rounded"
-      style="
+    <div class="card-body row m-0 p-2 rounded" style="
         background-color: #f6f6f6 !important;
         background-image: url('.././assets/images/map.png');
 
@@ -1210,58 +886,40 @@
         background-position: center;
         border-top-right-radius: 0px !important;
         border-top-left-radius: 0px !important;
-      "
-    >
+      ">
       <div class="col-md-12">
         <h4 style="color: #27b489 !important">General Information</h4>
-        <div
-          style="
+        <div style="
             display: flex;
             justify-content: space-evenly;
             margin-bottom: 10px;
-          "
-        >
+          ">
           <div class="border-right" style="padding: 10px">
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Serial
             </h6>
             <h6 class="text-muted m-0 p-0">1209114</h6>
           </div>
           <div class="border-right" style="padding: 10px">
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Name
             </h6>
             <h6 class="text-muted m-0 p-0">LMG 1020</h6>
           </div>
           <div class="border-right" style="padding: 10px">
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Latitude
             </h6>
             <h6 class="text-muted m-0 p-0">{{ historyInfo.Latitude }}</h6>
           </div>
           <div class="border-right" style="padding: 10px">
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Longitude
             </h6>
             <h6 class="text-muted m-0 p-0">{{ historyInfo.Longitude }}</h6>
           </div>
           <div style="padding: 10px">
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Last Updated
             </h6>
             <h6 class="text-muted m-0 p-0">{{ historyInfo.RECDateTime }}</h6>
@@ -1271,78 +929,54 @@
       <div class="col-md-12">
         <h4 style="color: #27b489 !important">Sensor Information</h4>
         <div style="display: flex; margin-bottom: 10px">
-          <div
-            class="border-right"
-            style="
+          <div class="border-right" style="
               padding: 10px;
               display: flex;
               justify-content: center;
               align-items: center;
               flex-direction: column;
               width: calc(100% / 5);
-            "
-          >
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            ">
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Velocity
             </h6>
             <h6 class="text-muted m-0 p-0">{{ historyInfo.Speed }}</h6>
           </div>
-          <div
-            class="border-right"
-            style="
+          <div class="border-right" style="
               padding: 10px;
               display: flex;
               justify-content: center;
               align-items: center;
               flex-direction: column;
               width: calc(100% / 5);
-            "
-          >
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            ">
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Heading
             </h6>
             <h6 class="text-muted m-0 p-0">{{ historyInfo.Dir }} South</h6>
           </div>
-          <div
-            class="border-right"
-            style="
+          <div class="border-right" style="
               padding: 10px;
               display: flex;
               justify-content: center;
               align-items: center;
               flex-direction: column;
               width: calc(100% / 5);
-            "
-          >
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            ">
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               GPS Satellites
             </h6>
             <h6 class="text-muted m-0 p-0">0</h6>
           </div>
-          <div
-            class="border-right"
-            style="
+          <div class="border-right" style="
               padding: 10px;
               display: flex;
               justify-content: center;
               align-items: center;
               flex-direction: column;
               width: calc(100% / 5);
-            "
-          >
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            ">
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Ignition
             </h6>
             <h6 class="text-muted m-0 p-0" *ngIf="historyInfo.Speed != '0'">
@@ -1350,20 +984,15 @@
             </h6>
             <h6 class="text-muted m-0 p-0" ngElse>OFF</h6>
           </div>
-          <div
-            style="
+          <div style="
               padding: 10px;
               display: flex;
               justify-content: center;
               align-items: center;
               flex-direction: column;
               width: calc(100% / 5);
-            "
-          >
-            <h6
-              class="m-0"
-              style="color: #18497d; margin-bottom: 5px !important"
-            >
+            ">
+            <h6 class="m-0" style="color: #18497d; margin-bottom: 5px !important">
               Power
             </h6>
             <h6 class="text-muted m-0 p-0">0%</h6>
@@ -1384,147 +1013,86 @@
       <mat-divider></mat-divider>
     </div>
   </div>
-  <div  *ngIf="notifications.length == 0 ">
+  <div *ngIf="notifications.length == 0 ">
     <h3 style="text-align: center">No New Notifications</h3>
   </div>
 </div>
 
 <div class="vehicleCardLeaflet d-none">
-  <div
-    class="col-md-12"
-    style="margin: 5px 0px 0px"
-    *ngFor="let item of singleDeviceData; let i = index"
-  >
-    <div
-      class="col-md-12 p-0"
-      style="display: flex; justify-content: space-between"
-    >
+  <div class="col-md-12" style="margin: 5px 0px 0px" *ngFor="let item of singleDeviceData; let i = index">
+    <div class="col-md-12 p-0" style="display: flex; justify-content: space-between">
       <span style="display: flex; align-items: center">
-        <span class="carName"
-          >Device {{ item.device_id }}
-          <img
-            src="./assets/icons/Truck.png"
-            style="height: 24px !important"
-            alt="..."
-        /></span>
+        <span class="carName">Device {{ item.device_id }}
+          <img src="./assets/icons/Truck.png" style="height: 24px !important" alt="..." /></span>
       </span>
       <span>
 
-        <button
-        type="button"
-        class="showMoreButton btn btn-sm"
-      (click)="toggleInfo()"
-    >
-      Show More
-    </button>
-    </span>
+        <button type="button" class="showMoreButton btn btn-sm" (click)="toggleInfo()">
+          Show More
+        </button>
+      </span>
     </div>
-    <div
-      class="col-md-12 row"
-      style="margin: 10px 0px !important; color: #18497d"
-    >
-      <div
-        class="col-md-4 row m-0"
-        style="display: flex; flex-direction: column; align-items: center"
-      >
+    <div class="col-md-12 row" style="margin: 10px 0px !important; color: #18497d">
+      <div class="col-md-4 row m-0" style="display: flex; flex-direction: column; align-items: center">
         <div class="col-12">&nbsp;</div>
         <div class="col-12">GPS: &nbsp;({{ item.gps_satelite }})</div>
         <div class="col-12">HDOP: &nbsp;({{ item.h_v_dop }})</div>
       </div>
-      <div
-        class="col-md-4 row m-0"
-        style="display: flex; flex-direction: column; align-items: center"
-      >
+      <div class="col-md-4 row m-0" style="display: flex; flex-direction: column; align-items: center">
         <div class="col-12">GSM: &nbsp;({{ item.gsm_signal }})</div>
         <div class="col-12">VDOP: &nbsp;({{ item.h_v_dop }})</div>
         <div class="col-12">GPS: &nbsp;({{ item.gps_status }})</div>
       </div>
-      <div
-        class="col-md-4 row m-0"
-        style="display: flex; flex-direction: column; align-items: center"
-      >
+      <div class="col-md-4 row m-0" style="display: flex; flex-direction: column; align-items: center">
         <div class="col-12">&nbsp;</div>
         <div class="col-12">INT: &nbsp;({{ item.int_bat_voltage }})</div>
         <div class="col-12">EXT: &nbsp;({{ item.ext_bat_voltage }})</div>
       </div>
-      <div
-        class="col-md-12 m-0 border-top mt-2"
-        style="display: flex; padding: 1.2rem 0px 0px !important"
-      >
-        <div
-          style="width: calc(100% / 3) !important; text-align: center"
-          class="border-right"
-        >
+      <div class="col-md-12 m-0 border-top mt-2" style="display: flex; padding: 1.2rem 0px 0px !important">
+        <div style="width: calc(100% / 3) !important; text-align: center" class="border-right">
           Speed: <br />{{ item.speed }} km/h
         </div>
-        <div
-          style="width: calc(100% / 3) !important; text-align: center"
-          class="border-right"
-        >
+        <div style="width: calc(100% / 3) !important; text-align: center" class="border-right">
           RPM: <br />{{ item.rpm }} R/min
         </div>
         <div style="width: calc(100% / 3) !important; text-align: center">
           Mileage: <br />{{ item.mileage_last_noted }}
         </div>
       </div>
-      <div
-      class="col-md-12 m-0 border-top mt-2" style="display: flex; justify-content: center; padding: 1rem 0px 0px !important;">
-    
-      <button
-      type="button"
-      class="closeBtn btn btn-sm"
-      (click)="closeDetails()"
-      >
-      Close
-    </button></div>
+      <div class="col-md-12 m-0 border-top mt-2"
+        style="display: flex; justify-content: center; padding: 1rem 0px 0px !important;">
+
+        <button type="button" class="closeBtn btn btn-sm" (click)="closeDetails()">
+          Close
+        </button>
+      </div>
     </div>
   </div>
 </div>
 <div class="vehicleCardLeafletMore col-md-12 m-0 row d-none rounded">
   <div *ngFor="let item of singleDeviceData; let i = index">
-    <div
-      class="col-md-12"
-      style="display: flex; justify-content: space-between"
-    >
-      <span class="carName"
-        >Device {{ item.device_id }}
-        <img
-          src="./assets/icons/Truck.png"
-          style="height: 34px !important"
-          alt="..."
-      /></span>
+    <div class="col-md-12" style="display: flex; justify-content: space-between">
+      <span class="carName">Device {{ item.device_id }}
+        <img src="./assets/icons/Truck.png" style="height: 34px !important" alt="..." /></span>
       <span>
-        <button
-        type="button"
-        class="showLessButton btn btn-sm"
-        (click)="toggleInfo()"
-      >
-        Show Less
-      </button>
-    </span>
+        <button type="button" class="showLessButton btn btn-sm" (click)="toggleInfo()">
+          Show Less
+        </button>
+      </span>
     </div>
     <div class="col-md-12 row m-0">
-      <div
-        class="col-md-12 row"
-        style="margin: 10px 0px !important; color: #18497d"
-      >
-        <div
-          class="col-md-2 row m-0 border-right"
-          style="
+      <div class="col-md-12 row" style="margin: 10px 0px !important; color: #18497d">
+        <div class="col-md-2 row m-0 border-right" style="
             display: flex;
             flex-direction: column;
             align-items: center;
             font-size: small !important;
-          "
-        >
-          <div
-            class="col-md-12 row m-0 p-0"
-            style="
+          ">
+          <div class="col-md-12 row m-0 p-0" style="
               display: flex;
               justify-content: space-between;
               padding: 5px 0px !important;
-            "
-          >
+            ">
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/GSM.png" />
             </div>
@@ -1532,14 +1100,11 @@
               GSM: &nbsp;({{ item.gsm_signal }})
             </div>
           </div>
-          <div
-            class="col-md-12 row m-0 p-0"
-            style="
+          <div class="col-md-12 row m-0 p-0" style="
               display: flex;
               justify-content: space-between;
               padding: 5px 0px !important;
-            "
-          >
+            ">
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/GPS.png" />
             </div>
@@ -1547,47 +1112,35 @@
               GPS: &nbsp;({{ item.gps_satelite }})
             </div>
           </div>
-          <div
-            class="col-md-12 row m-0 p-0"
-            style="
+          <div class="col-md-12 row m-0 p-0" style="
               display: flex;
               justify-content: space-between;
               padding: 5px 0px !important;
-            "
-          >
+            ">
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/HDOP.png" />
             </div>
             <div class="col-md-9 m-0 p-0">HDOP: &nbsp;({{ item.h_v_dop }})</div>
           </div>
         </div>
-        <div
-          class="col-md-2 row m-0 border-right"
-          style="
+        <div class="col-md-2 row m-0 border-right" style="
             display: flex;
             flex-direction: column;
             align-items: center;
             font-size: small !important;
-          "
-        >
-          <div
-            class="col-md-12 row m-0 p-0"
-            style="
+          ">
+          <div class="col-md-12 row m-0 p-0" style="
               display: flex;
               justify-content: space-between;
               padding: 5px 0px !important;
-            "
-          >
+            ">
             &nbsp;
           </div>
-          <div
-            class="col-md-12 row m-0 p-0"
-            style="
+          <div class="col-md-12 row m-0 p-0" style="
               display: flex;
               justify-content: space-between;
               padding: 5px 0px !important;
-            "
-          >
+            ">
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/GPS.png" />
             </div>
@@ -1595,47 +1148,35 @@
               GPS: &nbsp;({{ item.gps_status }})
             </div>
           </div>
-          <div
-            class="col-md-12 row m-0 p-0"
-            style="
+          <div class="col-md-12 row m-0 p-0" style="
               display: flex;
               justify-content: space-between;
               padding: 5px 0px !important;
-            "
-          >
+            ">
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/VDOP.png" />
             </div>
             <div class="col-md-9 m-0 p-0">VDOP: &nbsp;({{ item.h_v_dop }})</div>
           </div>
         </div>
-        <div
-          class="col-md-2 row m-0 border-right"
-          style="
+        <div class="col-md-2 row m-0 border-right" style="
             display: flex;
             flex-direction: column;
             align-items: center;
             font-size: small !important;
-          "
-        >
-          <div
-            class="col-md-12 row m-0 p-0"
-            style="
+          ">
+          <div class="col-md-12 row m-0 p-0" style="
               display: flex;
               justify-content: space-between;
               padding: 5px 0px !important;
-            "
-          >
+            ">
             &nbsp;
           </div>
-          <div
-            class="col-md-12 row m-0 p-0"
-            style="
+          <div class="col-md-12 row m-0 p-0" style="
               display: flex;
               justify-content: space-between;
               padding: 5px 0px !important;
-            "
-          >
+            ">
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/INT.png" />
             </div>
@@ -1643,14 +1184,11 @@
               INT: &nbsp;({{ item.int_bat_voltage }})
             </div>
           </div>
-          <div
-            class="col-md-12 row m-0 p-0"
-            style="
+          <div class="col-md-12 row m-0 p-0" style="
               display: flex;
               justify-content: space-between;
               padding: 5px 0px !important;
-            "
-          >
+            ">
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/EXT.png" />
             </div>
@@ -1661,86 +1199,58 @@
         </div>
         <div class="col-md-2 row m-0 border-right" style="text-align: center">
           <div class="col-12">
-            <img
-              src="./assets/icons/Speed1.png"
-              alt=""
-              style="height: 3em !important"
-            />
+            <img src="./assets/icons/Speed1.png" alt="" style="height: 3em !important" />
           </div>
           <div class="col-12">Speed:</div>
           <div class="col-12">{{ item.speed }} km/h </div>
         </div>
         <div class="col-md-2 row m-0 border-right" style="text-align: center">
           <div class="col-12">
-            <img
-              src="./assets/icons/RPM.png"
-              alt=""
-              style="height: 3em !important"
-            />
+            <img src="./assets/icons/RPM.png" alt="" style="height: 3em !important" />
           </div>
           <div class="col-12">RPM:</div>
           <div class="col-12">{{ item.rpm }} R/min </div>
         </div>
         <div class="col-md-2 row m-0 p-0" style="text-align: center">
           <div class="col-12">
-            <img
-              src="./assets/icons/MileAge.png"
-              alt=""
-              style="height: 3em !important"
-            />
+            <img src="./assets/icons/MileAge.png" alt="" style="height: 3em !important" />
           </div>
           <div class="col-12">Mileage:</div>
 
           <div class="col-12">{{ item.mileage_last_noted }}</div>
         </div>
       </div>
-      <div
-        class="col-md-12 row border-top m-0"
-        style="padding: 10px 0px !important"
-      >
+      <div class="col-md-12 row border-top m-0" style="padding: 10px 0px !important">
         <div class="col-md-6 row p-0 m-0 border-right">
-          <div
-            class="col-md-3 p-0 m-0"
-            style="
+          <div class="col-md-3 p-0 m-0" style="
               display: flex;
               flex-direction: column;
               justify-content: center;
               align-items: center;
               color: #00c190;
-            "
-          >
-            <img
-              src="./assets/icons/DeviceStatus.png"
-              style="height: 5rem !important"
-            />
+            ">
+            <img src="./assets/icons/DeviceStatus.png" style="height: 5rem !important" />
             <h4 style="text-align: center">Device Status</h4>
           </div>
           <div class="col-md-9 p-0 row m-0" style="color: #18497d; font-size: 1.2rem;">
             <div class="col-12 row" style="margin: 5px 0px !important">
               <div class="col-md-6">
-                <img
-                  src="./assets/icons/Coordinaate.png"
-                  style="height: 1.4em !important; margin: 0px 5px !important"
-                />
+                <img src="./assets/icons/Coordinaate.png"
+                  style="height: 1.4em !important; margin: 0px 5px !important" />
                 Coordinate:
               </div>
               <div class="col-md-6">{{ [item.lat, item.lng] }}</div>
             </div>
             <div class="col-12 row" style="margin: 5px 0px !important">
               <div class="col-md-6">
-                <img
-                  src="./assets/icons/GeoFence.png"
-                  style="height: 1.4em !important; margin: 0px 5px !important"
-                />GeoFence:
+                <img src="./assets/icons/GeoFence.png"
+                  style="height: 1.4em !important; margin: 0px 5px !important" />GeoFence:
               </div>
               <div class="col-md-6">{{ item.geo_status }}</div>
             </div>
             <div class="col-12 row" style="margin: 5px 0px !important">
               <div class="col-md-6">
-                <img
-                  src="./assets/icons/DriverName.png"
-                  style="height: 1.4em !important; margin: 0px 5px !important"
-                />
+                <img src="./assets/icons/DriverName.png" style="height: 1.4em !important; margin: 0px 5px !important" />
                 Route Status:
               </div>
               <div class="col-md-6">
@@ -1749,10 +1259,7 @@
             </div>
             <div class="col-12 row" style="margin: 5px 0px !important">
               <div class="col-md-6">
-                <img
-                  src="./assets/icons/Date.png"
-                  style="height: 1.4em !important; margin: 0px 5px !important"
-                />
+                <img src="./assets/icons/Date.png" style="height: 1.4em !important; margin: 0px 5px !important" />
                 Driver Name:
               </div>
               <div class="col-md-6">
@@ -1762,20 +1269,14 @@
           </div>
         </div>
         <div class="col-md-6 row p-0 m-0">
-          <div
-            class="col-md-3 p-0 m-0"
-            style="
+          <div class="col-md-3 p-0 m-0" style="
               display: flex;
               flex-direction: column;
               justify-content: center;
               align-items: center;
               color: #00c190;
-            "
-          >
-            <img
-              src="./assets/icons/info1.png"
-              style="height: 5rem !important"
-            />
+            ">
+            <img src="./assets/icons/info1.png" style="height: 5rem !important" />
             <h4>Asset Info</h4>
           </div>
           <div class="col-md-9 p-0 row m-0" style="color: #18497d; font-size: 1.2rem;">
@@ -1814,30 +1315,25 @@
           </div>
         </div>
       </div>
-      <div
-      class="col-md-12 row border-top m-0"
-      style="padding: 5px 0px !important; display: flex; justify-content: center; "
-    >
-    <button
-    type="button"
-    class="closeBtnLess btn btn-sm"
-    (click)="closeDetails()"
-    >
-    Close
-  </button></div>
+      <div class="col-md-12 row border-top m-0"
+        style="padding: 5px 0px !important; display: flex; justify-content: center; ">
+        <button type="button" class="closeBtnLess btn btn-sm" (click)="closeDetails()">
+          Close
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="createFence rounded shadow d-none">
-  <div style="display: flex; justify-content: space-between">
-    <h3>Geo Fence Information</h3>
-    <button mat-icon-button (click)="closeCreateFencing()">
-      <mat-icon>close</mat-icon>
-    </button>
+  <div class="createFenceHeader"> 
+    <h4>Geo Fence Information</h4>
+  <button mat-icon-button (click)="closeCreateFencing()">
+    <mat-icon>highlight_off</mat-icon>
+  </button>
   </div>
 
-  <div class="row m-0 p-0">
+  <div class="row m-0" style="padding: 10px !important;">
     <div class="col-12 p-0 m-0 pt-2">
       <label>Select Fence Type</label>
       <select class="fenceType" (change)="onInputChange($event)">
@@ -1851,17 +1347,11 @@
     </div>
     <div class="col-12 p-0 m-0 pt-2" *ngIf="fenceType === 'Circle'">
       <label>Circle Radius</label>
-      <input
-        class="fenceType border radius"
-        placeholder="Enter Circle Radius"
-      />
+      <input class="fenceType border radius" placeholder="Enter Circle Radius" />
     </div>
     <div class="col-12 p-0 m-0 pt-2">
       <label>Fence Name</label>
-      <input
-        class="fenceType border fenceName"
-        placeholder="Enter Fence Name"
-      />
+      <input class="fenceType border fenceName" placeholder="Enter Fence Name" />
     </div>
     <div class="col-12 p-0 m-0 pt-2">
       <label>Country</label>
@@ -1872,43 +1362,23 @@
       <input class="fenceType border city" placeholder="Enter City" />
     </div>
     <div class="col-12 p-0 m-0 confirmationBox">
-      <button
-        class="fenceDrawBtn"
-        *ngIf="fenceType === 'Rectangle'"
-        (click)="drawRectangle()"
-      >
+      <button class="fenceDrawBtn" *ngIf="fenceType === 'Rectangle'" (click)="drawRectangle()">
         Draw
       </button>
-      <button
-        class="fenceDrawBtn"
-        *ngIf="fenceType === 'Polygon'"
-        (click)="drawPolygon()"
-      >
+      <button class="fenceDrawBtn" *ngIf="fenceType === 'Polygon'" (click)="drawPolygon()">
         Draw
       </button>
       <span>
         <button class="fenceCancelBtn" (click)="closeCreateFencing()">
           Cancel
         </button>
-        <button
-          class="fenceDoneBtn"
-          *ngIf="fenceType === 'Circle'"
-          (click)="sendCircle()"
-        >
+        <button class="fenceDoneBtn" *ngIf="fenceType === 'Circle'" (click)="sendCircle()">
           Confirm
         </button>
-        <button
-          class="fenceDoneBtn"
-          *ngIf="fenceType === 'Rectangle'"
-          (click)="sendRectangle()"
-        >
+        <button class="fenceDoneBtn" *ngIf="fenceType === 'Rectangle'" (click)="sendRectangle()">
           Confirm
         </button>
-        <button
-          class="fenceDoneBtn"
-          *ngIf="fenceType === 'Polygon'"
-          (click)="sendPolygon()"
-        >
+        <button class="fenceDoneBtn" *ngIf="fenceType === 'Polygon'" (click)="sendPolygon()">
           Confirm
         </button>
       </span>

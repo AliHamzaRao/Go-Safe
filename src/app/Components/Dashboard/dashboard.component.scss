@@ -97,10 +97,21 @@
   z-index: 1111111;
   bottom: 4%;
   left: 30%;
-  background-color: rgb(255, 255, 255);
+  background-color: #F6F6F6;
   padding: 3px 2px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  border-radius: 10px;
+  border-radius: 10px; 
+&::before{
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;  
+  background-image:url("./assets/images/map.png") !important;
+  background-size: 50% !important;
+  background-position: center !important;
+  background-repeat: no-repeat;
+  filter: grayscale(100%);
+}
 }
 
 .carName {
@@ -119,11 +130,22 @@
   width: 90%;
   z-index: 1111111;
   bottom: 4%;
-  left: 5%;
-  background-color: rgb(255, 255, 255);
+  left: 5%; 
   padding: 7px 2px;
+  background-color: #F6F6F6;
   padding-bottom: 0px !important;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px; 
+&::before{
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;  
+  background-image:url("./assets/images/map.png") !important;
+  background-size: 50% !important;
+  background-position: center !important;
+  background-repeat: no-repeat;
+  filter: grayscale(100%);
+}
 }
 .vehicleCardMore i {
   color: #00c190 !important;
@@ -323,9 +345,19 @@
   position: absolute !important;
   right: 15px;
   top: 15px;
-  padding: 10px;
   background: white !important;
   outline: none;
+  border-radius: 5px;
+  .createFenceHeader{
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    padding-left: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    background-color: #18497D;
+  }
 }
 .createFenceGoogleMap h3 {
   margin: 0px !important;

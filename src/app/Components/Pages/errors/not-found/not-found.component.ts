@@ -14,12 +14,12 @@ export class NotFoundComponent implements OnInit{
     this.settings = this.appSettings.settings; 
   }
   ngOnInit(): void {
-    this.location  = window.location.pathname;
-    if(this.location == "/createfence/vehicles"|| "/showgeofence/vehicles"){
-      this.router.navigate(['/vehicles'])
-    } if(this.location == "/createfence/vehicles"|| "/showgeofence/vehicles"){
-      this.router.navigate(['/vehicles'])
-    }
+    // this.location  = window.location.pathname;
+    // if(this.location == "/createfence/vehicles"|| "/showgeofence/vehicles"){
+    //   this.router.navigate(['/vehicles'])
+    // } if(this.location == "/createfence/vehicles"|| "/showgeofence/vehicles"){
+    //   this.router.navigate(['/vehicles'])
+    // }
   }
   searchResult(): void {
     this.router.navigate(['/search']);

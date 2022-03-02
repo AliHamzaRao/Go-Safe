@@ -87,7 +87,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
         }
         else {
           this.Toast.clear()
-          this.Toast.error('Please Fill the Form', "Couldn't Request")
+          this.Toast.error('Please Select request channel', "Couldn't Request")
         }
       }
       if (this.settingName == 'Reset to Factory Default') {
@@ -130,7 +130,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
         }
         else {
           this.Toast.clear()
-          this.Toast.error('Please Fill the Form', "Couldn't Request")
+          this.Toast.error('Please Select request channel', "Couldn't Request")
         }
       }
       if (this.settingName == 'Change IP') {
@@ -176,7 +176,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
           }
           else {
             this.Toast.clear()
-            this.Toast.error('Please Fill the Form', "Couldn't Request")
+            this.Toast.error('Please Select request channel', "Couldn't Request")
           }
         }
         else {
@@ -227,7 +227,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
           }
           else {
             this.Toast.clear()
-            this.Toast.error('Please Fill the Form', "Couldn't Request")
+            this.Toast.error('Please Select request channel', "Couldn't Request")
           }
         }
         else {
@@ -277,7 +277,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
           }
           else {
             this.Toast.clear()
-            this.Toast.error('Please Fill the Form', "Couldn't Request")
+            this.Toast.error('Please Select request channel', "Couldn't Request")
           }
         }
         else {
@@ -328,7 +328,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
           }
           else {
             this.Toast.clear()
-            this.Toast.error('Please Fill the Form', "Couldn't Request")
+            this.Toast.error('Please Select request channel', "Couldn't Request")
           }
         }
         else {
@@ -378,7 +378,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
           }
           else {
             this.Toast.clear()
-            this.Toast.error('Please Fill the Form', "Couldn't Request")
+            this.Toast.error('Please Select request channel', "Couldn't Request")
           }
         }
         else {
@@ -428,7 +428,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
           }
           else {
             this.Toast.clear()
-            this.Toast.error('Please Fill the Form', "Couldn't Request")
+            this.Toast.error('Please Select request channel', "Couldn't Request")
           }
         }
         else {

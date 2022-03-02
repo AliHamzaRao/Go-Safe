@@ -9,8 +9,6 @@ import { MatDialog } from "@angular/material/dialog";
 import { markerService } from "src/app/_core/_AppServices/MarkerService";
 import { mapTypeService } from "src/app/_core/_AppServices/MapTypeService";
 import { AllDevicesDataService } from "src/app/_core/_AppServices/AllDevicesDataService";
-import { FormGroup } from "@angular/forms";
-import { historyService } from "src/app/_core/_AppServices/historyService";
 import { historyDataService } from "src/app/_core/_AppServices/HistoryDataService";
 import { DashboardComponent } from "../dashboard/dashboard.component";
 import { ToastrService } from "ngx-toastr";
@@ -31,7 +29,6 @@ import { AllSettingsDialogComponent } from "./Dialogs/AllSettingsDialog/AllSetti
 import { DeviceIdService } from '../../_core/_AppServices/DeviceId.service';
 import { AssetTripDialogComponent } from "./Dialogs/ReportsDialogs/AssetTripDialog/AssetTripDialog.component";
 import { historyDialogComponent } from './Dialogs/HistoryDialog/historyDialog.component';
-import { TimeInterval } from 'rxjs';
 // Global Variables
 declare var L;
 var map;
@@ -170,7 +167,9 @@ export class PagesComponent implements OnInit, OnDestroy {
   }
   //#region OnInit
   ngOnInit() {
+    
     this.ResetData();
+    console.log(this.markersData)
     if (window.location.pathname == "/vehicles") {
       this.isVehicles = true;
     }
@@ -220,14 +219,13 @@ export class PagesComponent implements OnInit, OnDestroy {
       map.off()
       this.RefreshMap()
     }
-    this.updateTree = setInterval(() => {
-      if(!this.isgeofence || !this.isHistory){
-        this.ResetData();
-        this.getVehTree()
-      }
-      }, 60000)
-      this.updateTree;
-
+    // this.updateTree = setInterval(() => {
+    //   if(!this.isgeofence || !this.isHistory){
+    //     this.ResetData();
+    //     this.getVehTree()
+    //   }
+    //   }, 60000)
+      // this.updateTree;
     this.currentMap = mapType;
     if (window.innerWidth <= 768) {
       this.settings.menu = "vertical";
@@ -272,6 +270,7 @@ export class PagesComponent implements OnInit, OnDestroy {
   }
 
   ResetData() {
+    this.notifications = []
     dataArr = [];
     this.offlineDevices = [];
     this.onlineDevices = []
@@ -325,9 +324,6 @@ export class PagesComponent implements OnInit, OnDestroy {
     ) {
       $(".createFence").toggleClass("d-none");
       $(".createFenceGoogleMap").addClass("d-none");
-    }
-    if (mapType == "Google Maps") {
-
     }
     if (mapType == "Open Street Maps") {
       this.RefreshMap();
@@ -445,7 +441,7 @@ export class PagesComponent implements OnInit, OnDestroy {
               var obj2 = dataArr.find(
                 (item: PacketParser) => item.device_id == refLo
               );
-              obj2 ? $(this).html(`${obj2.ref_location}`) : null;
+              obj2 ? $(this).html(`<abbr title=${obj2.ref_location}>${obj2.ref_location}</abbr>`) : null;
             })
             $(".speedCheck").each(function () {
               var vehicle = $(this).attr("data-idforspeed");
@@ -461,24 +457,24 @@ export class PagesComponent implements OnInit, OnDestroy {
               );
               object ? object.veh_status.length && object.alarm_status == '1'
                 ? $(this).html(
-                  `<img style="height:30px; transform:rotate(90deg)"  src="./assets/icons/RedArrow.png" alt=${object.veh_status}>`
+                  `<img style="height:100%; transform:rotate(90deg)"  src="./assets/icons/RedArrow.png" alt=${object.veh_status}>`
                 ) :
                 object.veh_status == "Idle"
                   ? $(this).html(
-                    `<img style="height:30px;"  src="./assets/icons/BlueArrow.png" alt=${object.veh_status}>`
+                    `<img style="height:100%;"  src="./assets/icons/BlueArrow.png" alt=${object.veh_status}>`
                   )
                   : object.veh_status == "Moving"
                     ? $(this).html(
-                      `<img style="height:30px; transform:rotate(90deg)"  src="./assets/icons/GreenArrow.png" alt=${object.veh_status}>`
+                      `<img style="height:100%; transform:rotate(90deg)"  src="./assets/icons/GreenArrow.png" alt=${object.veh_status}>`
                     )
                     : object.veh_status == "Parked"
                       ? $(this).html(
-                        `<img style="height:30px; transform:rotate(90deg)"  src="./assets/icons/YellowArrow.png" alt=${object.veh_status}>`
+                        `<img style="height:100%; transform:rotate(90deg)"  src="./assets/icons/YellowArrow.png" alt=${object.veh_status}>`
                       )
                       : object.veh_status == "Offline" ? $(this).html(
-                        `<img style="height:30px; transform:rotate(90deg)"  src="./assets/icons/Disconected.png" alt=${object.veh_status}>`
+                        `<img style="height:100%; transform:rotate(90deg)"  src="./assets/icons/Disconected.png" alt=${object.veh_status}>`
                       ) : $(this).html(
-                        `<img style="height:30px; transform:rotate(90deg)"  src="./assets/icons/Disconected.png" alt=${object.veh_status}>`)
+                        `<img style="height:100%; transform:rotate(90deg)"  src="./assets/icons/Disconected.png" alt=${object.veh_status}>`)
                 : null
             });
           })
@@ -1096,10 +1092,10 @@ export class PagesComponent implements OnInit, OnDestroy {
       } else if (mapType === "Open Street Maps") {
         $(".closeGeoFenceBtn").removeClass("d-none");
       }
-      let postdata = JSON.stringify({
+      let postdata = {
         gf_type: fenceData.gf_type,
         fenceParam: nestArray,
-      });
+      }
       this.GeoFencingService.newFence(postdata);
       map.fitBounds(nest);
       nest = [];
@@ -1125,10 +1121,10 @@ export class PagesComponent implements OnInit, OnDestroy {
       } else if (mapType === "Open Street Maps") {
         $(".closeGeoFenceBtn").removeClass("d-none");
       }
-      let postdata = JSON.stringify({
+      let postdata ={
         gf_type: fenceData.gf_type,
         fenceParam: nestArray,
-      });
+      }
       this.GeoFencingService.newFence(postdata);
       map.fitBounds(nest);
       nest = [];
@@ -1160,12 +1156,8 @@ export class PagesComponent implements OnInit, OnDestroy {
       } else if (mapType === "Open Street Maps") {
         $(".closeGeoFenceBtn").removeClass("d-none");
       }
-      this.GeoFencingService.newFence(
-        JSON.stringify({
-          gf_type: fenceData.gf_type,
-          fenceParam: nestArray,
-          gf_diff: fenceData.gf_diff,
-        })
+      this.GeoFencingService.newFence({gf_type: fenceData.gf_type,fenceParam: nestArray,gf_diff: fenceData.gf_diff,
+        }
       );
       nest = [];
     }
@@ -1609,11 +1601,17 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.markerData = [];
     this.markersData = [];
     this.checkedDevices = [];
+    this.notifications = [];
     $(".notificationsUnread").addClass("d-none");
     $(".notificationPanel").addClass("d-none");
     $(".notificationsRead").addClass("d-none");
     clearInterval(this.updateTree)
-  }
+    this.markersService.SetMarkers([])
+    this.AllDeviceDataService.SetDevices([])
+    this.RegistrationNoService.newRegNo('')
+    this.DeviceIdService.setId(0)
+    this.GeoFencingService.newFence({gf_type:"none", fenceParam:[{lat:0, lng:0}],gf_diff:''})
+   }
 }
 //#region Dialogs Component Declarations
 // @Component({

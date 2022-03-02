@@ -1,30 +1,36 @@
-<div mat-dialog-title class="dialogTitle">
-   <h2>{{commandType?commandType:'Test'}}</h2>
+<div mat-dialog-title class="dialogTitleInner">
+  <h3 class="m-0 p-0">{{commandType?commandType:'Test'}}</h3>
   <button mat-icon-button (click)="cancelRequest()">
     <mat-icon>highlight_off</mat-icon>
   </button>
 </div>
-<div class="m-0 p-0 dialogContent" mat-dialog-content>
+<div class="m-0 p-0 dialogContent dialogContentInner" mat-dialog-content>
   <!-- Alarm Reset Content -->
   <span class="alarmResetDialog" *ngIf="commandType =='Alarm Reset'">
-    <h3 class="m-0">Select Request Channel</h3>
+    <p
+      style="font-size: 2rem; margin-bottom: 30px !important; font-weight: bold"
+      class="m-0"
+    >
+      Select Request Channel
+    </p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
-      style="font-size: 15px; font-weight: 200"
+      style="font-size: 14px; font-weight: lighter"
       (change)="ChannelChange($event)"
     >
       <mat-radio-button value="GPRS">GPRS</mat-radio-button>
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
-      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
-        Cancel
-      </button>
-      &nbsp;
+    <span class="actionBtnGroup">
+      
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
+      </button>
+      &nbsp;
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
       </button>
     </span>
   </span>
@@ -34,45 +40,45 @@
     <span>
       <h3>Select Camera Channel</h3>
       <mat-radio-group color="primary" (change)="camChannelChange($event)">
-        <mat-radio-button class="camChannelRadio" value="1"
-          ><mat-icon>camera_alt</mat-icon>1</mat-radio-button
-        >
+        <mat-radio-button class="camChannelRadio" value="1">
+          <mat-icon>camera_alt</mat-icon>1
+        </mat-radio-button>
         <mat-divider></mat-divider>
-        <mat-radio-button class="camChannelRadio" value="2"
-          ><mat-icon>camera_alt</mat-icon>2</mat-radio-button
-        >
+        <mat-radio-button class="camChannelRadio" value="2">
+          <mat-icon>camera_alt</mat-icon>2
+        </mat-radio-button>
         <mat-divider></mat-divider>
-        <mat-radio-button class="camChannelRadio" value="3"
-          ><mat-icon>camera_alt</mat-icon>3</mat-radio-button
-        >
+        <mat-radio-button class="camChannelRadio" value="3">
+          <mat-icon>camera_alt</mat-icon>3
+        </mat-radio-button>
         <mat-divider></mat-divider>
-        <mat-radio-button class="camChannelRadio" value="4"
-          ><mat-icon>camera_alt</mat-icon>4</mat-radio-button
-        >
+        <mat-radio-button class="camChannelRadio" value="4">
+          <mat-icon>camera_alt</mat-icon>4
+        </mat-radio-button>
         <mat-divider></mat-divider>
-        <mat-radio-button class="camChannelRadio" value="5"
-          ><mat-icon>camera_alt</mat-icon>5</mat-radio-button
-        >
+        <mat-radio-button class="camChannelRadio" value="5">
+          <mat-icon>camera_alt</mat-icon>5
+        </mat-radio-button>
         <mat-divider></mat-divider>
-        <mat-radio-button class="camChannelRadio" value="6"
-          ><mat-icon>camera_alt</mat-icon>6</mat-radio-button
-        >
+        <mat-radio-button class="camChannelRadio" value="6">
+          <mat-icon>camera_alt</mat-icon>6
+        </mat-radio-button>
         <mat-divider></mat-divider>
-        <mat-radio-button class="camChannelRadio" value="7"
-          ><mat-icon>camera_alt</mat-icon>7</mat-radio-button
-        >
+        <mat-radio-button class="camChannelRadio" value="7">
+          <mat-icon>camera_alt</mat-icon>7
+        </mat-radio-button>
         <mat-divider></mat-divider>
-        <mat-radio-button class="camChannelRadio" value="8"
-          ><mat-icon>camera_alt</mat-icon>8</mat-radio-button
-        >
+        <mat-radio-button class="camChannelRadio" value="8">
+          <mat-icon>camera_alt</mat-icon>8
+        </mat-radio-button>
         <mat-divider></mat-divider>
-        <mat-radio-button class="camChannelRadio" value="9"
-          ><mat-icon>camera_alt</mat-icon>9</mat-radio-button
-        >
+        <mat-radio-button class="camChannelRadio" value="9">
+          <mat-icon>camera_alt</mat-icon>9
+        </mat-radio-button>
         <mat-divider></mat-divider>
-        <mat-radio-button class="camChannelRadio" value="10"
-          ><mat-icon>camera_alt</mat-icon>10</mat-radio-button
-        >
+        <mat-radio-button class="camChannelRadio" value="10">
+          <mat-icon>camera_alt</mat-icon>10
+        </mat-radio-button>
         <mat-divider></mat-divider>
       </mat-radio-group>
     </span>
@@ -88,11 +94,20 @@
     </span>
     <mat-divider></mat-divider>
     <span>
-      <h3 class="m-0">Select Request Channel</h3>
+      <p
+        style="
+          font-size: 2rem;
+          margin-bottom: 30px !important;
+          font-weight: bold;
+        "
+        class="m-0"
+      >
+        Select Request Channel
+      </p>
       <mat-radio-group
         aria-label="Select an option"
         color="primary"
-        style="font-size: 15px; font-weight: 200"
+        style="font-size: 14px; font-weight: lighter"
         (change)="ChannelChange($event)"
       >
         <mat-radio-button value="GPRS">GPRS</mat-radio-button>
@@ -114,18 +129,23 @@
   <!-- Take Picture Content -->
   <!-- Alarm Reset Content -->
   <span class="alarmResetDialog" *ngIf="commandType =='Canbus Data Upload'">
-    <h3 class="m-0">Select Request Channel</h3>
+    <p
+      style="font-size: 2rem; margin-bottom: 30px !important; font-weight: bold"
+      class="m-0"
+    >
+      Select Request Channel
+    </p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
-      style="font-size: 15px; font-weight: 200"
+      style="font-size: 14px; font-weight: lighter"
       (change)="ChannelChange($event)"
     >
       <mat-radio-button value="GPRS">GPRS</mat-radio-button>
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -138,18 +158,23 @@
   <!-- Alarm Reset Content -->
   <!-- Device Reboot Content -->
   <span class="alarmResetDialog" *ngIf="commandType =='Device Reboot'">
-    <h3 class="m-0">Select Request Channel</h3>
+    <p
+      style="font-size: 2rem; margin-bottom: 30px !important; font-weight: bold"
+      class="m-0"
+    >
+      Select Request Channel
+    </p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
-      style="font-size: 15px; font-weight: 200"
+      style="font-size: 14px; font-weight: lighter"
       (change)="ChannelChange($event)"
     >
       <mat-radio-button value="GPRS">GPRS</mat-radio-button>
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -162,18 +187,23 @@
   <!-- Device Reboot Content -->
   <!-- Output2 on Content -->
   <span class="alarmResetDialog" *ngIf="commandType =='Output2 on'">
-    <h3 class="m-0">Select Request Channel</h3>
+    <p
+      style="font-size: 2rem; margin-bottom: 30px !important; font-weight: bold"
+      class="m-0"
+    >
+      Select Request Channel
+    </p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
-      style="font-size: 15px; font-weight: 200"
+      style="font-size: 14px; font-weight: lighter"
       (change)="ChannelChange($event)"
     >
       <mat-radio-button value="GPRS">GPRS</mat-radio-button>
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -186,18 +216,23 @@
   <!-- Output2 on Content -->
   <!-- Output2 off Content -->
   <span class="alarmResetDialog" *ngIf="commandType =='Output2 off'">
-    <h3 class="m-0">Select Request Channel</h3>
+    <p
+      style="font-size: 2rem; margin-bottom: 30px !important; font-weight: bold"
+      class="m-0"
+    >
+      Select Request Channel
+    </p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
-      style="font-size: 15px; font-weight: 200"
+      style="font-size: 14px; font-weight: lighter"
       (change)="ChannelChange($event)"
     >
       <mat-radio-button value="GPRS">GPRS</mat-radio-button>
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -210,18 +245,23 @@
   <!-- Output2 off Content -->
   <!-- Output3 on Content -->
   <span class="alarmResetDialog" *ngIf="commandType =='Output3 on'">
-    <h3 class="m-0">Select Request Channel</h3>
+    <p
+      style="font-size: 2rem; margin-bottom: 30px !important; font-weight: bold"
+      class="m-0"
+    >
+      Select Request Channel
+    </p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
-      style="font-size: 15px; font-weight: 200"
+      style="font-size: 14px; font-weight: lighter"
       (change)="ChannelChange($event)"
     >
       <mat-radio-button value="GPRS">GPRS</mat-radio-button>
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -234,18 +274,23 @@
   <!-- Output3 on Content -->
   <!-- Output3 off Content -->
   <span class="alarmResetDialog" *ngIf="commandType =='Output3 off'">
-    <h3 class="m-0">Select Request Channel</h3>
+    <p
+      style="font-size: 2rem; margin-bottom: 30px !important; font-weight: bold"
+      class="m-0"
+    >
+      Select Request Channel
+    </p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
-      style="font-size: 15px; font-weight: 200"
+      style="font-size: 14px; font-weight: lighter"
       (change)="ChannelChange($event)"
     >
       <mat-radio-button value="GPRS">GPRS</mat-radio-button>
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -258,18 +303,23 @@
   <!-- Output3 off Content -->
   <!-- Output1(Imb) On Content -->
   <span class="alarmResetDialog" *ngIf="commandType =='Output1(Imb) On'">
-    <h3 class="m-0">Select Request Channel</h3>
+    <p
+      style="font-size: 2rem; margin-bottom: 30px !important; font-weight: bold"
+      class="m-0"
+    >
+      Select Request Channel
+    </p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
-      style="font-size: 15px; font-weight: 200"
+      style="font-size: 14px; font-weight: lighter"
       (change)="ChannelChange($event)"
     >
       <mat-radio-button value="GPRS">GPRS</mat-radio-button>
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -282,18 +332,23 @@
   <!-- Output1(Imb) On Content -->
   <!-- Output1(Imb) Off Content -->
   <span class="alarmResetDialog" *ngIf="commandType =='Output1(Imb) Off'">
-    <h3 class="m-0">Select Request Channel</h3>
+    <p
+      style="font-size: 2rem; margin-bottom: 30px !important; font-weight: bold"
+      class="m-0"
+    >
+      Select Request Channel
+    </p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
-      style="font-size: 15px; font-weight: 200"
+      style="font-size: 14px; font-weight: lighter"
       (change)="ChannelChange($event)"
     >
       <mat-radio-button value="GPRS">GPRS</mat-radio-button>
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -306,18 +361,23 @@
   <!-- Output1(Imb) Off Content -->
   <!-- Location Content -->
   <span class="alarmResetDialog" *ngIf="commandType =='Location'">
-    <h3 class="m-0">Select Request Channel</h3>
+    <p
+      style="font-size: 2rem; margin-bottom: 30px !important; font-weight: bold"
+      class="m-0"
+    >
+      Select Request Channel
+    </p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
-      style="font-size: 15px; font-weight: 200"
+      style="font-size: 14px; font-weight: lighter"
       (change)="ChannelChange($event)"
     >
       <mat-radio-button value="GPRS">GPRS</mat-radio-button>
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -331,7 +391,12 @@
   <!-- Voice Monitor Content -->
   <span class="alarmResetDialog" *ngIf="commandType =='Voice Monitor'">
     <!-- <span class="alarmResetDialog"> -->
-    <h3 class="m-0">Enter Phone Number:</h3>
+    <p
+      style="font-size: 2rem; margin-bottom: 30px !important; font-weight: bold"
+      class="m-0"
+    >
+      Enter Phone Number:
+    </p>
     <input
       type="text"
       placeholder="Enter Phone Number"
@@ -344,25 +409,30 @@
         padding: 5px 15px;
         color: black;
         font-size: 13px;
-        margin-bottom: 10px;
+        margin-bottom: 30px;
       "
       (change)="numberChange($event)"
       [value]="phoneNumber?phoneNumber:''"
       oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')"
     />
 
-    <h3 class="m-0">Select Request Channel</h3>
+    <p
+      style="font-size: 2rem; margin-bottom: 30px !important; font-weight: bold"
+      class="m-0"
+    >
+      Select Request Channel
+    </p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
-      style="font-size: 15px; font-weight: 200"
+      style="font-size: 14px; font-weight: lighter"
       (change)="ChannelChange($event)"
     >
       <mat-radio-button value="GPRS">GPRS</mat-radio-button>
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>

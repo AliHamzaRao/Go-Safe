@@ -9,40 +9,16 @@
   <mat-spinner></mat-spinner>
 </div>
 <div class="m-0 p-0 dialogContent" mat-dialog-content *ngIf="loading == false">
-  <mat-accordion>
-    <mat-expansion-panel class="ParentCheckBox">
-      <mat-expansion-panel-header>
-        <mat-panel-title> Commands </mat-panel-title>
-      </mat-expansion-panel-header>
       <div class="row m-0 p-0">
         <div class="col-md-12 settingType row mb-2 border-bottom" *ngFor="let command of AllCommands; let i = index">
-          <div class="col-md-11">
-            <h4 style="color: #18497d" class="m-0">{{command.Name}}</h4>
+          <div class="col-md-11 p-0 ">
+            <h5 style="color: #18497d" class="m-0">{{command.Name}}</h5>
           </div>
           <button [name]="command.Name" mat-button class="col-md-1 m-0 p-0 commandSendBtn"
             (click)="OpenCommandDialog( command.Name , command.p_cmd_id)">
-            <mat-icon style="font-size: 20px">send</mat-icon>
-            <p class="m-0 p-0" style="font-weight: 200;">Send</p>
+            <mat-icon style="font-size: 18px">send</mat-icon>
+            <!-- <p class="m-0 p-0" style="font-weight: 500;">Send</p> -->
           </button>
         </div>
       </div>
-    </mat-expansion-panel>
-    <mat-expansion-panel class="ParentCheckBox">
-      <mat-expansion-panel-header>
-        <mat-panel-title> Settings </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="row m-0 p-0">
-        <div class="col-md-12 settingType row mb-2 border-bottom" *ngFor="let Setting of AllSettings; let i = index">
-          <div class="col-md-11">
-            <h4 style="color: #18497d" class="m-0">{{Setting.Name}}</h4>
-          </div>
-          <button [name]="Setting.Name" mat-button class="col-md-1 m-0 p-0 commandSendBtn"
-            (click)="OpenSettingDialog( Setting.Name , Setting.p_cmd_id)">
-            <mat-icon style="font-size: 20px">send</mat-icon>
-            <p class="m-0 p-0" style="font-weight: 200;">Send</p>
-          </button>
-        </div>
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
 </div>

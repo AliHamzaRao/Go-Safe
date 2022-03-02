@@ -1,18 +1,18 @@
-<div mat-dialog-title class="dialogTitle">
-<h2>{{settingName?settingName:'Test'}}</h2>
+<div mat-dialog-title class="dialogTitleInner">
+<h3 class="m-0 p-0">{{settingName?settingName:'Test'}}</h3>
 
 <button mat-icon-button (click)="cancelRequest()">
   <mat-icon>highlight_off</mat-icon>
 </button>
 </div>
-<div class="m-0 p-0 dialogContent" mat-dialog-content>
+<div class="m-0 p-0 dialogContent dialogContentInner" mat-dialog-content>
   <!-- Set Message Center Number Content -->
   <span
     class="alarmResetDialog"
     *ngIf="settingName =='Set Message Center Number'"
   >
   <!-- <img src=".././assets/img/vendor/google-maps/car-marker.png" alt=""> -->
-    <h3 class="m-0">Enter Phone Number:</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Enter Phone Number:</p>
     <input
       type="text"
       placeholder="Enter Phone Number"
@@ -32,7 +32,7 @@
       oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')"
     />
 
-    <h3 class="m-0">Select Request Channel</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Select Request Channel</p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -43,7 +43,7 @@
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -59,7 +59,7 @@
     class="alarmResetDialog"
     *ngIf="settingName =='Reset to Factory Default'"
   >
-    <h3 class="m-0">Select Request Channel</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Select Request Channel</p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -70,7 +70,7 @@
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -83,7 +83,7 @@
   <!-- Reset to Factory Default Content -->
   <!-- Change IP Content -->
   <span class="alarmResetDialog" *ngIf="settingName =='Change IP'">
-    <h3 class="m-0">Enter IP Address and Port:</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Enter IP Address and Port:</p>
     <span>
       <input
         type="text"
@@ -93,7 +93,8 @@
         style="
           background: transparent;
           outline: none;
-          border: 1px solid black;
+          border:none;
+          border-bottom: 1px solid black;
           text-align: center;
           padding: 5px 15px;
           color: black;
@@ -110,7 +111,8 @@
         style="
           background: transparent;
           outline: none;
-          border: 1px solid black;
+          border:none;
+          border-bottom: 1px solid black;
           text-align: center;
           padding: 5px 15px;
           color: black;
@@ -121,7 +123,7 @@
       />
     </span>
     <!-- oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$3')" -->
-    <h3 class="m-0">Select Request Channel</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Select Request Channel</p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -132,7 +134,7 @@
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -145,7 +147,7 @@
   <!-- Change IP Content -->
   <!-- Change Domian Content -->
   <span class="alarmResetDialog" *ngIf="settingName =='Change Domain'">
-    <h3 class="m-0">Enter new URL and Port:</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Enter new URL and Port:</p>
     <span>
       <input
         type="url"
@@ -154,7 +156,8 @@
         style="
           background: transparent;
           outline: none;
-          border: 1px solid black;
+          border:none;
+          border-bottom: 1px solid black;
           text-align: center;
           padding: 5px 15px;
           color: black;
@@ -170,7 +173,8 @@
         style="
           background: transparent;
           outline: none;
-          border: 1px solid black;
+          border:none;
+          border-bottom: 1px solid black;
           text-align: center;
           padding: 5px 15px;
           color: black;
@@ -180,7 +184,7 @@
         "
       />
     </span>
-    <h3 class="m-0">Select Request Channel</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Select Request Channel</p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -191,7 +195,7 @@
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -204,7 +208,7 @@
   <!-- Change Domian Content -->
   <!-- Change APN Content -->
   <span class="alarmResetDialog" *ngIf="settingName =='Change APN'">
-    <h3 class="m-0">Enter APN:</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Enter APN:</p>
     <input
       type="text"
       class="apnInput"
@@ -220,7 +224,7 @@
         margin-bottom: 10px;
       "
     />
-    <h3 class="m-0">Select Request Channel</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Select Request Channel</p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -231,7 +235,7 @@
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -247,16 +251,18 @@
     class="alarmResetDialog"
     *ngIf="settingName =='Change APN User name and Password'"
   >
-    <h3 class="m-0">Enter Username and Password:</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Enter Username and Password:</p>
     <span style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
       <input
         type="text"
         class="usernameInput"
         placeholder="Please enter Username"
+        [autocomplete]="false"
         style="
           background: transparent;
           outline: none;
-          border: 1px solid black;
+          border: none;
+          border-bottom: 1px solid black;
           text-align: center;
           padding: 5px 15px;
           color: black;
@@ -268,10 +274,12 @@
         [type]="hidden?'password':'text'"
         class="passwordInput"
         placeholder="Please enter Password"
+        [autocomplete]="false"
         style="
           background: transparent;
           outline: none;
-          border: 1px solid black;
+          border: none;
+          border-bottom: 1px solid black;
           text-align: center;
           padding: 5px 15px;
           color: black;
@@ -286,7 +294,7 @@
       </button>
       </span>
     </span>
-    <h3 class="m-0">Select Request Channel</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Select Request Channel</p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -297,7 +305,7 @@
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -311,7 +319,7 @@
 
   <!-- Reset Odometer Content -->
   <span class="alarmResetDialog" *ngIf="settingName =='Reset Odometer'">
-    <h3 class="m-0">Enter Mileage:</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Enter Mileage:</p>
     <span>
 
       <input
@@ -321,7 +329,8 @@
       style="
         background: transparent;
         outline: none;
-        border: 1px solid black;
+        border: none;
+        border-bottom: 1px solid black;
         text-align: center;
         padding: 5px 15px;
         color: black;
@@ -332,7 +341,7 @@
       />
       km
     </span>
-    <h3 class="m-0">Select Request Channel</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Select Request Channel</p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -343,7 +352,7 @@
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>
@@ -360,7 +369,7 @@
     *ngIf="settingName =='Text Command(6600,7700,GS Series)'"
     >
     <!-- <span>
-      <h3 class="m-0">Enter Command:</h3>
+      <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Enter Command:</p>
       <textarea
         class="textCommandInput"
         placeholder="Enter Command"
@@ -378,7 +387,7 @@
       >
       </textarea>
     </span> -->
-    <h3 class="m-0">Select Request Channel</h3>
+    <p style="font-size: 2rem; margin-bottom: 10px !important; font-weight: bold" class="m-0">Select Request Channel</p>
     <mat-radio-group
       aria-label="Select an option"
       color="primary"
@@ -389,7 +398,7 @@
       <br />
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
-    <span>
+    <span class="actionBtnGroup">
       <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
         Cancel
       </button>

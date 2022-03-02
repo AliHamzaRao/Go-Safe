@@ -140,7 +140,7 @@ export class DashboardComponent implements OnInit {
       (data) => (this.AllDevices = data)
     );
     this.GeoFencingService.currentFence.subscribe((data) => {
-      this.geoFence = new fenceTypo(JSON.parse(data));
+      this.geoFence = new fenceTypo(data);
       this.geoFenceData = { ...this.geoFence };
       if (this.geoFence.fenceParam.length) {
         this.geoFence.fenceParam.forEach((item) => {
@@ -494,15 +494,9 @@ export class DashboardComponent implements OnInit {
   }
   closeCreateFencingGoogle() {
     $('.createFenceGoogleMap').addClass('d-none')
-    this.Router.navigateByUrl('/asset-trip-trip', { skipLocationChange: true }).then(() => {
-      this.Router.navigate(['/']);
-      $(".gmnoprint").addClass("d-none");
-    });
+    this.Router.navigateByUrl('/')
   }
   RemoveFencing() {
-    this.Router.navigateByUrl('/asset-trip-trip', { skipLocationChange: true }).then(() => {
-      this.Router.navigate(['/']);
-      $(".gmnoprint").addClass("d-none");
-    })
+    this.Router.navigateByUrl('/')
   }
 }

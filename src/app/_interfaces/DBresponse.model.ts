@@ -78,6 +78,16 @@ export class GeoFence {
   public FenceParam: string;
   public gf_diff: number;
 }
+export class FenceParam{
+  public lat: number;
+  public lng: number;
+}
+
+export class GeoFenceVM{
+  public gf_type:string;
+  public fenceParam:FenceParam[]
+  public gf_diff?:string;
+}
 export class Data {
 
   public History?: History[];

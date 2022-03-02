@@ -592,15 +592,15 @@
   Close Geo Fencing
 </button>
 
-<div class="createFenceGoogleMap rounded shadow d-none">
-  <div style="display: flex; justify-content: space-between">
-    <h3>Geo Fence Information</h3>
+<div class="createFenceGoogleMap shadow d-none">
+  <div class="createFenceHeader">
+    <h4>Geo Fence Information</h4>
     <button mat-icon-button (click)="closeCreateFencingGoogle()">
-      <mat-icon>close</mat-icon>
+      <mat-icon>highlight_off</mat-icon>
     </button>
   </div>
 
-  <div class="row m-0 p-0">
+  <div class="row m-0" style="padding: 10px;" >
     <div class="col-12 p-0 m-0 pt-2">
       <label>Select Fence Type</label>
       <select
