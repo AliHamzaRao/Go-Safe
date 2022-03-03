@@ -219,13 +219,13 @@ export class PagesComponent implements OnInit, OnDestroy {
       map.off()
       this.RefreshMap()
     }
-    // this.updateTree = setInterval(() => {
-    //   if(!this.isgeofence || !this.isHistory){
-    //     this.ResetData();
-    //     this.getVehTree()
-    //   }
-    //   }, 60000)
-      // this.updateTree;
+    this.updateTree = setInterval(() => {
+      if(!this.isgeofence || !this.isHistory){
+        this.ResetData();
+        this.getVehTree()
+      }
+      }, 60000)
+      this.updateTree;
     this.currentMap = mapType;
     if (window.innerWidth <= 768) {
       this.settings.menu = "vertical";
@@ -1737,3 +1737,4 @@ export class PagesComponent implements OnInit, OnDestroy {
 //     }
 //   }
 // }
+// #endregion

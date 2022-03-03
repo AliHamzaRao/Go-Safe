@@ -189,11 +189,6 @@
     transform: rotate(360deg);
   }
 }
-abbr{
-  border: none;
-  text-decoration: none;
-  cursor: default;
-}
 ::ng-deep.spinner:before {
   content: "";
   box-sizing: border-box;

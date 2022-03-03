@@ -14,7 +14,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
         data: { breadcrumb: 'Dashboard' },
-        resolve: { model: VehicleListResolver },
+        // resolve: { model: VehicleListResolver },
         children: [
             { path: '', loadChildren: () => import('./Components/dashboard/dashboard.module').then(m => m.DashboardModule) },
             { path: 'asset-trip-report', data: { breadcrumb: 'Asset Trip Report' }, loadChildren: () => import('./Components/Reporting/asset-trip-report/asset-trip-report.module').then(m => m.AssetTripReportModule) },
@@ -25,7 +25,7 @@ export const routes: Routes = [
         component: PagesComponent,
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
-        resolve: { model: VehicleListResolver },
+        // resolve: { model: VehicleListResolver },
         children: [
             { path: '',
         data: { breadcrumb: 'Vehicles' }, loadChildren: () => import('./Components/dashboard/dashboard.module').then(m => m.DashboardModule) }
@@ -36,7 +36,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
         data: { breadcrumb: 'Geo Fence' },
-        resolve: { model: VehicleListResolver },
+        // resolve: { model: VehicleListResolver },
         children: [
             { path: '', loadChildren: () => import('./Components/dashboard/dashboard.module').then(m => m.DashboardModule) }
         ],
@@ -46,7 +46,7 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
         data: { breadcrumb: 'Geo Fence' },
-        resolve: { model: VehicleListResolver },
+        // resolve: { model: VehicleListResolver },
         children: [
             { path: '', loadChildren: () => import('./Components/dashboard/dashboard.module').then(m => m.DashboardModule) }
         ],

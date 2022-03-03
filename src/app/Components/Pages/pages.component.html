@@ -45,7 +45,7 @@
         Reports <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
       <mat-menu #reportsMenu="matMenu">
-        <button mat-menu-item [matMenuTriggerFor]="trackingReportsMenu" class="mat-child ">
+        <button mat-menu-item [matMenuTriggerFor]="trackingReportsMenu" class="mat-child">
           Tracking Reports
         </button>
         <button mat-menu-item class="mat-child ">
@@ -129,158 +129,13 @@
           <mat-icon>notifications</mat-icon>
         </button>
       </span>
-      <span style="font-size: small; margin-left: 10px">Welcome! {{ username.toUpperCase() }}</span>
+      <span style="font-size: 12px; margin-left: 10px">Welcome! {{ username.toUpperCase() }}</span>
       <button mat-button class="mat-hover" [matMenuTriggerFor]="userAccessablilityMenu">
         <mat-icon>person_outline</mat-icon>
         <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
       <mat-menu #userAccessablilityMenu="matMenu">
-        <button mat-menu-item (click)="Logout()">Sign Out</button>
-      </mat-menu>
-    </div>
-  </div>
-</mat-toolbar>
-<mat-toolbar  [fxShow.md]="true" [fxHide.lg]="true"  style="font-size:12px;background-color: #18497d; color: white" class="flex-p-x">
-  
-  <a class="logo" routerLink="/" (click)="closeSubMenus()">
-    <img src="{{ logo }}" alt="" style="width: 200px !important" />
-  </a>
-  <a mat-raised-button color="accent" routerLink="/" (click)="closeSubMenus()"
-    class="small-logo"></a>
-  <div fxLayout="row" fxLayoutAlign="space-between" class="w-100">
-    <div fxLayout="row" style="align-items: center">
-      <button mat-button class="mat-hover" routerLink="" [class.nav-link-active]="location == '/'">
-        Live Tacking
-      </button>
-      <button mat-button class="mat-hover" routerLink="/vehicles" [class.nav-link-active]="location == '/vehicles'">
-        Vehicles
-      </button>
-      <button mat-button [matMenuTriggerFor]="GeoFenceMenu" [class.nav-link-active]="isgeofence" class="mat-hover">
-        Geofence <mat-icon>keyboard_arrow_down </mat-icon>
-      </button>
-      <button mat-button class="mat-hover" [matMenuTriggerFor]="routeMenu">
-        Route <mat-icon>keyboard_arrow_down</mat-icon>
-      </button>
-      <mat-menu #routeMenu="matMenu">
-        <button mat-menu-item class="mat-child">Add Route</button>
-        <button mat-menu-item class="mat-child">Check Ruote</button>
-      </mat-menu>
-      <button mat-button class="mat-hover" [matMenuTriggerFor]="mapMenu">
-        {{currentMap}} <mat-icon>keyboard_arrow_down</mat-icon>
-      </button>
-
-      <mat-menu #GeoFenceMenu="matMenu">
-        <button mat-menu-item class="mat-child" routerLink="/showgeofence"
-          [class.mat-child-active]="location == '/showgeofence'">
-          Show Fence
-        </button>
-        <button mat-menu-item class="mat-child" routerLink="/createfence"
-          [class.mat-child-active]="location == '/createfence'">
-          Create Fence
-        </button>
-      </mat-menu>
-      <mat-menu #mapMenu="matMenu">
-        <button mat-menu-item [class.mat-child-active]="currentMap === 'Open Street Maps'"
-          (click)="MapType($event)" value="Open Street Maps">Open Street Maps</button>
-        <button mat-menu-item [class.mat-child-active]="currentMap === 'Google Maps'"
-          (click)="MapType($event)" value="Google Maps">Google Maps</button>
-      </mat-menu>
-
-      <button mat-button class="mat-hover" [matMenuTriggerFor]="reportsMenu">
-        Reports <mat-icon>keyboard_arrow_down</mat-icon>
-      </button>
-      <mat-menu #reportsMenu="matMenu">
-        <button mat-menu-item [matMenuTriggerFor]="trackingReportsMenu" class="mat-child ">
-          Tracking Reports
-        </button>
-        <button mat-menu-item class="mat-child ">
-          Fuel Reports
-        </button>
-        <button mat-menu-item class="mat-child">
-          Temprature Reports
-        </button>
-        <button mat-menu-item class="mat-child">
-          Management Reports
-        </button>
-      </mat-menu>
-      <mat-menu #trackingReportsMenu="matMenu">
-        <button mat-menu-item class="mat-child">
-          Asset History
-        </button>
-        <button mat-menu-item class="mat-child" (click)="openAssetTripDialog()">
-          Asset Trips
-        </button>
-        <button mat-menu-item class="mat-child">
-          Multi Assets Kilometer
-        </button>
-        <button mat-menu-item class="mat-child">
-          Asset Activity
-        </button>
-        <button mat-menu-item class="mat-child">
-          Asset Alarm
-        </button>
-        <button mat-menu-item class="mat-child">
-          Asset Commands
-        </button>
-        <button mat-menu-item class="mat-child">
-          Accumulative Trips Fuel
-        </button>
-        <button mat-menu-item class="mat-child">
-          Alarms Close Report
-        </button>
-        <button mat-menu-item class="mat-child">
-          Asset Route Report
-        </button>
-        <button mat-menu-item class="mat-child">
-          Asset Sensor History
-        </button>
-        <button mat-menu-item class="mat-child">
-          Driver Activity
-        </button>
-        <button mat-menu-item class="mat-child">
-          Driver Activity Summary
-        </button>
-        <button mat-menu-item class="mat-child">
-          Asset Driver Trips
-        </button>
-        <button mat-menu-item class="mat-child">
-          Asset Engine RPM History
-        </button>
-        <button mat-menu-item class="mat-child">
-          Over Speed Report
-        </button>
-        <button mat-menu-item class="mat-child">
-          Driver Behaviour Report
-        </button>
-        <button mat-menu-item class="mat-child">
-          Container Trip Report
-        </button>
-        <button mat-menu-item class="mat-child">
-          Alarm Audit Report
-        </button>
-      </mat-menu>
-    </div>
-
-    <div fxLayout="row" fxLayoutAlign="center center" style="width: max-content !important">
-      <span class="border-right">
-        <button [class.d-none]="AllDevices.length == 0" mat-icon-button class="notificationsUnread"
-          (click)="fetchNotifications()">
-
-          <mat-icon [matBadge]="notifications.length > 100 ? '99+':notifications.length" matBadgePosition="after"
-            matBadgeColor="accent">notifications
-          </mat-icon>
-        </button>
-        <button class="d-none notificationsRead" mat-icon-button (click)="unReadNotifications()">
-          <mat-icon>notifications</mat-icon>
-        </button>
-      </span>
-      <span style="font-size: small; margin-left: 10px">Welcome! {{ username.toUpperCase() }}</span>
-      <button mat-button class="mat-hover" [matMenuTriggerFor]="userAccessablilityMenu">
-        <mat-icon>person_outline</mat-icon>
-        <mat-icon>keyboard_arrow_down</mat-icon>
-      </button>
-      <mat-menu #userAccessablilityMenu="matMenu">
-        <button mat-menu-item (click)="Logout()">Sign Out</button>
+        <button mat-menu-item class="mat-child" (click)="Logout()">Sign Out</button>
       </mat-menu>
     </div>
   </div>
@@ -289,7 +144,6 @@
   (psScrollY)="onPsScrollY($event)">
   <!-- <app-breadcrumb></app-breadcrumb> -->
   <div [class.has-footer]="settings.hasFooter">
-    <!-- Sidebar -->
     <div class="col-md-12 row p-1 m-0" style="padding-bottom: 0px !important">
       <div class="col-md-2 p-1">
         <div class="shadow p-1 rounded" style="
@@ -424,23 +278,23 @@
                       {{ item.speed }} <br />
                       <small style="font-size: 12px">km/h</small>
                     </p>
-                    <div style="width: 25px; height: 25px; position:absolute; right:20px; z-index: 1 !important;"
+                    <div style="width: 25px; height: 25px; position:absolute; right:0px; z-index: 1 !important;"
                       [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status.length && item.alarm_status == '1'">
                       <img style="height: 100%;" src="./assets/icons/RedArrow.png" [alt]="item.veh_status" />
                     </div>
-                    <div style="width: 25px; height: 25px; position:absolute; right:20px;"
+                    <div style="width: 25px; height: 25px; position:absolute; right:0px;"
                       [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status == 'Idle'">
                       <img style="height: 100%" src="./assets/icons/BlueArrow.png" ` [alt]="item.veh_status" />
                     </div>
-                    <div style="width: 25px; height: 25px; position:absolute; right:20px;"
+                    <div style="width: 25px; height: 25px; position:absolute; right:0px;"
                       [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status == 'Parked'">
                       <img style="height: 100%" src="./assets/icons/YellowArrow.png" [alt]="item.veh_status" />
                     </div>
-                    <div style="width: 25px; height: 25px; position:absolute; right:20px;"
+                    <div style="width: 25px; height: 25px; position:absolute; right:0px;"
                       [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status == 'Moving'">
                       <img style="height: 100%" src="./assets/icons/GreenArrow.png" [alt]="item.veh_status" />
                     </div>
-                    <div style="width: 25px; height: 25px; position:absolute; right:20px;"
+                    <div style="width: 25px; height: 25px; position:absolute; right:0px;"
                       [attr.device-Id-Vrn]="item.device_id" *ngIf="item.veh_status == ''">
                       <img style="height: 100%" src="./assets/icons/Disconected.png" [alt]="item.veh_status" />
                     </div>
@@ -606,7 +460,7 @@
                     <span>Assets ({{ AllVehicles.length }})</span>
                   </ng-template>
                   <div class="AlldevicesData">
-                    <div class="m-0 singleDevice border-bottom" *ngFor="let vehicle of AllVehicles; let i = index">
+                    <div class="m-0 singleDevice border-bottom" style="padding: 1px !important;" *ngFor="let vehicle of AllVehicles; let i = index">
                       <input id="{{ vehicle.device_id }}" type="checkbox" [attr.data-dataTrack]="vehicle.dataTrack"
                         [attr.data-device_id]="vehicle.device_id" (change)="
                       onCheck($event, vehicle.dataTrack, vehicle.device_id)

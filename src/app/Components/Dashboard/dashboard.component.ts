@@ -158,9 +158,11 @@ export class DashboardComponent implements OnInit {
         (data) => (this.AllDevices = data)
       );
     }
+    if(window.location.pathname != '/createfence' ){
     setTimeout(() => {
       $(".gmnoprint").addClass("d-none");
     }, 3000);
+  }
   }
   //#endregion
 
@@ -169,7 +171,9 @@ export class DashboardComponent implements OnInit {
   }
   mapLoad(e) {
     this.map = e;
-    $(".gmnoprint").removeClass("d-none");
+    if (window.location.pathname != '/createfence') {
+      $(".gmnoprint").removeClass("d-none");
+    }
   }
   drawCircle(e) {
     if (this.circle) {
@@ -219,9 +223,9 @@ export class DashboardComponent implements OnInit {
   }
   drawPolygon(e) {
     this.managerOptions.drawingMode = null;
-    this.Router.navigateByUrl('/asset-trip-trip', { skipLocationChange: true }).then(() => {
-      this.Router.navigate(['/']);
-    });
+    // this.Router.navigateByUrl('/asset-trip-trip', { skipLocationChange: true }).then(() => {
+    //   this.Router.navigate(['/']);
+    // });
     if (this.circle) {
       this.circle.setMap(null)
     }
@@ -235,7 +239,7 @@ export class DashboardComponent implements OnInit {
       const vertex = this.polygon.getPath().getAt(i);
       const vertexLatLng = [vertex.lat(), vertex.lng()];
       polyArrayLatLng.push(vertexLatLng);
-    }
+    } 
     polyArrayLatLng.push(polyArrayLatLng[0]);
     if (polyArrayLatLng.length > 2) {
       $(".GooglefenceTypeSelect").val("Polygon");
@@ -404,7 +408,7 @@ export class DashboardComponent implements OnInit {
       this.markersData = data
     });
 
-    this.markersData.forEach((element , index) => {
+    this.markersData.forEach((element, index) => {
       this.markerData.push({
         latitude: parseFloat(element.Latitude),
         longitude: parseFloat(element.Longitude),
@@ -493,10 +497,11 @@ export class DashboardComponent implements OnInit {
     $(".shapeSelect").toggleClass("d-none");
   }
   closeCreateFencingGoogle() {
-    $('.createFenceGoogleMap').addClass('d-none')
-    this.Router.navigateByUrl('/')
+    this.Router.navigate(['/'])
   }
   RemoveFencing() {
-    this.Router.navigateByUrl('/')
+    this.Router.navigate(['/']).then(() => {
+      this.Router.navigate(['/showgeofence'])
+    })
   }
 }
