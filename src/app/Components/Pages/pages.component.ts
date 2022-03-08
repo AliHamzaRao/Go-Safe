@@ -122,7 +122,7 @@ export class PagesComponent implements OnInit, OnDestroy {
   };
   CarMarker = L.icon({
     iconUrl: './assets/img/vendor/google-maps/car-marker.png',
-    // iconSize:     [38, 95], 
+    iconSize:     [23, 50], 
     iconAnchor:   [ 0, 0], 
     // popupAnchor: [, ]
   });
@@ -167,9 +167,7 @@ export class PagesComponent implements OnInit, OnDestroy {
   }
   //#region OnInit
   ngOnInit() {
-    
     this.ResetData();
-    console.log(this.markersData)
     if (window.location.pathname == "/vehicles") {
       this.isVehicles = true;
     }
@@ -215,10 +213,10 @@ export class PagesComponent implements OnInit, OnDestroy {
       });
     this.AllDeviceDataService.AllDevices.subscribe((data) => (this.AllDevices = data));
     this.getVehTree();
-    if (map) {
+    if(map){
       map.off()
-      this.RefreshMap()
-    }
+    this.RefreshMap();
+  }
     this.updateTree = setInterval(() => {
       if(!this.isgeofence || !this.isHistory){
         this.ResetData();
@@ -243,7 +241,6 @@ export class PagesComponent implements OnInit, OnDestroy {
 
     if (devices.length) {
       this.listLoading = true;
-      setTimeout(() => {
         devices.forEach((item) => {
           $(`[data-device_id]`).each((param, el) => {
             if (item.id == el.id) {
@@ -256,7 +253,6 @@ export class PagesComponent implements OnInit, OnDestroy {
           })
         })
       this.listLoading = false;
-      },4000);
     }
   }
   expandedPanel(e) {
@@ -280,8 +276,6 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.AllDevices = [];
     this.AllVehicles = [];
     this.AllMarkers = [];
-    this.markerData = [];
-    this.markersData = [];
     $('.notificationsUnread').addClass('d-none')
     $(".notificationPanel").addClass("d-none");
     $(".notificationsRead").addClass("d-none")
@@ -290,10 +284,12 @@ export class PagesComponent implements OnInit, OnDestroy {
 
   //#region MapType change Event
   MapType(e) {
-    this.ResetData()
     mapType = e.target.innerText;
     this.mapTypeService.SetMap(mapType);
     this.currentMap = mapType;
+    if(mapType == 'Google Maps'){
+      map.off()
+    }
     $(".selectionList").addClass("d-none");;
     $(".vehicleCard").addClass("d-none");
     $(".vehicleCardMore").addClass("d-none");
@@ -315,14 +311,14 @@ export class PagesComponent implements OnInit, OnDestroy {
       }, 1000);
     }
     if (mapType === "Google Maps" && $(".createFence").is(":visible")) {
-      $(".createFenceGoogleMap").addClass("d-none");
-      $(".createFence").toggleClass("d-none");
+      $(".createFenceGoogleMap").remove("d-none");
+      $(".createFence").addClass("d-none");
     }
     if (
       mapType === "Open Street Maps" &&
       $(".createFenceGoogleMap").is(":visible")
     ) {
-      $(".createFence").toggleClass("d-none");
+      $(".createFence").removeClass("d-none");
       $(".createFenceGoogleMap").addClass("d-none");
     }
     if (mapType == "Open Street Maps") {
@@ -339,7 +335,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       this.SearchedDevices = this.AllVehicles.filter((item: PacketParser) => item.veh_reg_no.includes(query.toUpperCase()))
     }
     else {
-      this.SearchedDevices = []
+      this.SearchedDevices = [];
     }
   }
   //#region Get Veh Data
@@ -679,7 +675,6 @@ export class PagesComponent implements OnInit, OnDestroy {
   }
   play() {
     this.drawLine();
-    console.log(this.markerData)
     $(".pauseBtn").removeClass("d-none");
     $(".playBtn").addClass("d-none");
     if (this.currentState !== this.markerData.length - 1) {
@@ -698,7 +693,8 @@ export class PagesComponent implements OnInit, OnDestroy {
           ".leaflet-marker-icon.leaflet-zoom-animated.leaflet-clickable"
         ).remove();
         $(".leaflet-marker-shadow.leaflet-zoom-animated").remove();
-        this.marker = L.marker([this.latitude, this.longitude], { icon: this.CarMarker }).addTo(map);
+        this.marker = L.marker([this.latitude, this.longitude], { icon: this.CarMarker, rotationAngle: this.historyInfo.Dir}).addTo(map)
+        
         map.setView([this.latitude, this.longitude], 17);
       }, this.interval);
     }
@@ -772,6 +768,19 @@ export class PagesComponent implements OnInit, OnDestroy {
           this.AllMarkers.push(currentMarker);
         }
       }) : this.RefreshMap();
+      
+      if (this.markersData.length) {
+        this.markersData.forEach((el, i) => {
+          this.polylineMarkers.push([
+            parseFloat(el.Latitude),
+            parseFloat(el.Longitude),
+          ]);
+          this.lat = parseFloat(el.Latitude);
+          this.lng = parseFloat(el.Longitude);
+        });
+        map.setView([this.lat, this.lng], 10);
+        L.polyline(this.polylineMarkers).addTo(map);
+      }
   }
   //#endregion
 
@@ -1072,7 +1081,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       nest.push(tempArr);
     });
     if (fenceData.gf_type == "Polygon") {
-      map.setView(nest[nest.length - 1], 14);
+      map.setView(nest[nest.length - 1], 10);
       if (plgn) {
         map.removeLayer(plgn);
       }
@@ -1101,7 +1110,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       nest = [];
     }
     if (fenceData.gf_type == "Rectangle") {
-      map.setView(nest[0], 14);
+      map.setView(nest[0], 10);
       if (rect) {
         map.removeLayer(rect);
       }
@@ -1130,7 +1139,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       nest = [];
     }
     if (fenceData.gf_type == "Circle") {
-      map.setView(nest[0], 14);
+      map.setView(nest[0], 10);
       if (circle) {
         map.removeLayer(circle);
       }
@@ -1180,7 +1189,7 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.GeoFence.geoFence().subscribe((data) => {
       this.geoFences = data.data.sort();
       this.fenceListLoaded = true;
-    });
+    }); 
     $(".selectionList").removeClass("d-none");
   }
   geofenceQuery(e) {
@@ -1422,6 +1431,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       ) {
         this.PostFence.addGeoFence(circleParams).subscribe((data) => {
           if (data.status) {
+            console.log()
             this.Toast.success(data.message, "Created Successfully");
           } else {
             this.Toast.error(
@@ -1588,7 +1598,6 @@ export class PagesComponent implements OnInit, OnDestroy {
   //#endregion
 
   ngOnDestroy(): void {
-    console.log("destroyCalled");
     dataArr = [];
     this.offlineDevices = [];
     this.onlineDevices = []
@@ -1598,7 +1607,6 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.AllDevices = [];
     this.AllVehicles = [];
     this.AllMarkers = [];
-    this.markerData = [];
     this.markersData = [];
     this.checkedDevices = [];
     this.notifications = [];
@@ -1612,129 +1620,7 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.DeviceIdService.setId(0)
     this.GeoFencingService.newFence({gf_type:"none", fenceParam:[{lat:0, lng:0}],gf_diff:''})
    }
+   if (map) {
+    map.off()
+  }
 }
-//#region Dialogs Component Declarations
-// @Component({
-//   selector: "app-history-dialog",
-//   templateUrl: "./Dialogs/historyDialog.html",
-//   styleUrls: ["../pages/pages.component.scss"],
-// })
-// export class historyDialogComponent implements OnInit {
-//   loading: boolean = false;
-//   markerData = [];
-//   response: any;
-//   history: any;
-//   speed: boolean;
-//   lat: any;
-//   lng: any;
-//   currentState: number = 0;
-//   setTime: any;
-//   interval: number = 500;
-//   formValid: boolean = false;
-//   dateValid: boolean = false;
-//   public form: FormGroup;
-//   constructor(
-//     public dialog: MatDialog,
-//     public historyService: historyService,
-//     public historyDataService: historyDataService,
-//     public Toast: ToastrService,
-//   ) { }
-//   ngOnInit() { }
-//   onCheck(e) {
-//     this.speed = e.target.checked;
-//   }
-
-//   closeDialog() {
-//     this.dialog.closeAll();
-//   }
-//   onSubmit() {
-//     let History_type = $("#historyType").val();
-//     let dateStart = $("#de_start").val().toLocaleString().replace("T", " ");
-//     let dateEnd = $("#de_end").val().toLocaleString().replace("T", " ");
-//     let speed = this.speed;
-//     let veh_reg_no = reg_no;
-//     // var data = {
-//     //   veh_reg_no: "G1C-2424",
-//     //   History_type: "Replay",
-//     //   de_start: "2021-04-01 00:00:00.000",
-//     //   de_end: "2021-04-15 00:00:00.000",
-//     //   speed: false,
-//     // };
-//     if (History_type && dateStart && dateEnd && speed && veh_reg_no) {
-//       this.formValid = true;
-//       if (Date.parse(dateStart) > Date.parse(dateEnd)) {
-//         this.dateValid = false;
-//         this.formValid = false;
-//         this.Toast.clear()
-//         this.Toast.error('Start Date cannot be bigger than End Date')
-//       }
-//       if (Date.parse(dateStart) < Date.parse(dateEnd)) {
-//         this.dateValid = true;
-//         this.formValid = true;
-//       }
-//       if (this.dateValid) {
-//         if (this.formValid) {
-//           this.loading = true;
-//           var data = {
-//             veh_reg_no: veh_reg_no,
-//             History_type: History_type,
-//             de_start: dateStart,
-//             de_end: dateEnd,
-//             speed: speed,
-//           };
-//           this.historyService.DeviceHistory(data).subscribe((res) => {
-//             if (res.status) {
-//             this.historyDataService.setNewMarkers(res.data.History);
-//               Historydata = res.data.History;
-//               if (res.data.History.length) {
-//                 // res.data.History.forEach((el, i) => {
-//                 //   this.markerData.push([
-//                 //     parseFloat(el.Latitude),
-//                 //     parseFloat(el.Longitude),
-//                 //   ]);
-//                 //   this.lat = parseFloat(el.Latitude);
-//                 //   this.lng = parseFloat(el.Longitude);
-//                 // });
-//                 this.Toast.clear()
-//                 this.Toast.success(res.data.ErrorMessage, res.message);
-//                 // map.setView([this.lat, this.lng], 10);
-//                 // L.polyline(this.markerData).addTo(map);
-//                 this.dialog.closeAll();
-//                 if (mapType == "Google Maps") {
-//                   $(".googleMapRecord").removeClass("d-none");
-//                   $('.closeHistoryGoogle').removeClass('d-none')
-//                 } else {
-//                   $(".recordDialogOffset").removeClass("d-none");
-//                   $('.closeHistory').removeClass('d-none')
-//                 }
-//                 $(".vehicleCard").addClass("d-none");
-//                 $(".vehicleCardMore").addClass("d-none");
-//                 $(".vehicleCardLeaflet").addClass("d-none");
-//                 $(".vehicleCardLeafletMore").addClass("d-none");
-//               } else {
-//                 this.Toast.clear()
-//                 this.Toast.error(res.data.ErrorMessage, res.message);
-//                 this.loading = false;
-//               }
-//             } else {
-//               this.Toast.clear()
-//               this.Toast.error(
-//                 "We cannot proceed to your request now please check your network connection",
-//                 "Error Drawing Route"
-//               );
-//             }
-//           });
-//         }
-//         else {
-//           this.Toast.clear()
-//           this.Toast.error('Please fillout all the fields')
-//         }
-//       }
-//     }
-//     else {
-//       this.Toast.clear()
-//       this.Toast.error('Please Fill out all the fields')
-//     }
-//   }
-// }
-// #endregion

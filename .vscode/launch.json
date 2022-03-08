@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "command": "ng serve",
+            "command": "ng serve --open",
             "name": "Run ng serve",
             "request": "launch",
             "type": "node-terminal"

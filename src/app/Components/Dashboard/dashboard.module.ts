@@ -28,10 +28,7 @@ export const routes = [
     MatButtonModule,
     AgmDrawingModule,
     AgmCoreModule.forRoot({
-      // please get your own API key here:
-      // https://developers.google.com/maps/documentation/javascript/get-api-key?hl=en
-      // apiKey: 'AIzaSyAvcDy5ZYc2ujCS6TTtI3RYX5QmuoV8Ffw'
-      // apiKey: 'AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg',
+      apiKey: 'AIzaSyBc7ZR2g0xCZD881nyphW7hCe2OsUvBIw8',
       libraries: ['drawing', 'places', 'geometry']
     })
   ],

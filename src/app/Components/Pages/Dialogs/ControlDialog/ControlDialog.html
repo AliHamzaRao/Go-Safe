@@ -37,9 +37,12 @@
   <!-- Alarm Reset Content -->
   <!-- Take Picture Content -->
   <span class="takePictureDialog" *ngIf="commandType =='Take Picture'">
-    <span>
-      <h3>Select Camera Channel</h3>
-      <mat-radio-group color="primary" (change)="camChannelChange($event)">
+    <span class="border-bottom">
+    <span class="col-md-5">
+      <h3 class="m-0">Camera Channel</h3>
+    </span>
+      <mat-radio-group color="primary" (change)="camChannelChange($event)" class="col-md-7 m-0 p-0 border-left">
+        <mat-divider></mat-divider>
         <mat-radio-button class="camChannelRadio" value="1">
           <mat-icon>camera_alt</mat-icon>1
         </mat-radio-button>
@@ -82,9 +85,12 @@
         <mat-divider></mat-divider>
       </mat-radio-group>
     </span>
-    <span>
-      <h3>Select Picture Quality</h3>
-      <mat-radio-group color="primary" (change)="picQualityChange($event)">
+    <span style="margin: 20px 0px;" class="border-bottom">
+      <span class="col-md-5">
+        <h3 class="m-0">Picture Quality</h3>
+      </span>
+      <mat-radio-group color="primary" (change)="picQualityChange($event)" class="col-md-7 m-0 p-0 border-left">
+        <mat-divider></mat-divider>
         <mat-radio-button value="High">High</mat-radio-button>
         <mat-divider></mat-divider>
         <mat-radio-button value="Medium">Medium</mat-radio-button>
@@ -92,7 +98,6 @@
         <mat-radio-button value="Low">Low</mat-radio-button>
       </mat-radio-group>
     </span>
-    <mat-divider></mat-divider>
     <span>
       <p
         style="
@@ -146,14 +151,13 @@
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
     <span class="actionBtnGroup">
-      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
-        Cancel
-      </button>
-      &nbsp;
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
       </button>
     </span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
   </span>
   <!-- Alarm Reset Content -->
   <!-- Device Reboot Content -->
@@ -175,14 +179,13 @@
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
     <span class="actionBtnGroup">
-      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
-        Cancel
-      </button>
-      &nbsp;
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
       </button>
     </span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
   </span>
   <!-- Device Reboot Content -->
   <!-- Output2 on Content -->
@@ -204,14 +207,13 @@
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
     <span class="actionBtnGroup">
-      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
-        Cancel
-      </button>
-      &nbsp;
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
       </button>
     </span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
   </span>
   <!-- Output2 on Content -->
   <!-- Output2 off Content -->
@@ -233,14 +235,13 @@
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
     <span class="actionBtnGroup">
-      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
-        Cancel
-      </button>
-      &nbsp;
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
       </button>
     </span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
   </span>
   <!-- Output2 off Content -->
   <!-- Output3 on Content -->
@@ -262,14 +263,13 @@
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
     <span class="actionBtnGroup">
-      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
-        Cancel
-      </button>
-      &nbsp;
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
       </button>
     </span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
   </span>
   <!-- Output3 on Content -->
   <!-- Output3 off Content -->
@@ -291,14 +291,13 @@
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
     <span class="actionBtnGroup">
-      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
-        Cancel
-      </button>
-      &nbsp;
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
       </button>
     </span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
   </span>
   <!-- Output3 off Content -->
   <!-- Output1(Imb) On Content -->
@@ -320,14 +319,13 @@
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
     <span class="actionBtnGroup">
-      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
-        Cancel
-      </button>
-      &nbsp;
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
       </button>
     </span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
   </span>
   <!-- Output1(Imb) On Content -->
   <!-- Output1(Imb) Off Content -->
@@ -349,14 +347,13 @@
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
     <span class="actionBtnGroup">
-      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
-        Cancel
-      </button>
-      &nbsp;
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
       </button>
     </span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
   </span>
   <!-- Output1(Imb) Off Content -->
   <!-- Location Content -->
@@ -378,14 +375,13 @@
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
     <span class="actionBtnGroup">
-      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
-        Cancel
-      </button>
-      &nbsp;
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
       </button>
     </span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
   </span>
   <!-- Location Content -->
   <!-- Voice Monitor Content -->
@@ -433,14 +429,13 @@
       <mat-radio-button value="SMS">SMS</mat-radio-button>
     </mat-radio-group>
     <span class="actionBtnGroup">
-      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
-        Cancel
-      </button>
-      &nbsp;
       <button mat-button class="CommandSendButton" (click)="sendRequest()">
         Send
       </button>
     </span>
+      <button mat-button class="CommandCancelButton" (click)="cancelRequest()">
+        Cancel
+      </button>
   </span>
   <!-- Voice Monitor Content -->
 

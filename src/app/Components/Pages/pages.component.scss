@@ -165,10 +165,10 @@
     transform: rotate(360deg);
   }
 }
-.mat-hover{
+.mat-hover {
   font-size: 12px;
 }
-.mat-child{
+.mat-child {
   font-size: 12px !important;
 }
 .mat-hover:hover {
@@ -179,7 +179,7 @@
   background-color: rgb(251, 182, 42) !important;
   color: #283593 !important;
 }
-.mat-child-active{
+.mat-child-active {
   background-color: rgb(251, 182, 42) !important;
   color: #283593 !important;
 }
@@ -272,7 +272,7 @@
   padding: 5px 10px;
   border-radius: 20px;
 }
-.SearchInput::placeholder{
+.SearchInput::placeholder {
   font-size: 1rem !important;
 }
 .sideList {
@@ -310,7 +310,7 @@
 
 .dialogTitle {
   background: #18497d !important;
-  padding: 15px 10px !important;
+  padding: 5px 10px !important;
   color: white !important;
   margin: 0px !important;
   display: flex;
@@ -338,13 +338,13 @@
   box-shadow: 0px 0px 4px 0px #000;
   color: black;
 }
-.historyInput::placeholder{
+.historyInput::placeholder {
   color: grey !important;
 }
 .historyInputDate {
   border: none !important;
   outline: none;
-  border-radius: 20px;  
+  border-radius: 20px;
   padding: 5px 10px;
   box-shadow: 0px 0px 4px 0px #000;
   color: black;
@@ -469,7 +469,7 @@
   height: 30vh;
   overflow-y: scroll;
 }
-.SearchedDevices::-webkit-scrollbar{
+.SearchedDevices::-webkit-scrollbar {
   display: none;
 }
 .notificationPanel::-webkit-scrollbar {
@@ -482,8 +482,7 @@
   margin: 5px;
 }
 
-
-.selectionList{
+.selectionList {
   position: absolute;
   z-index: 1000;
   background: white;
@@ -492,10 +491,10 @@
   margin: 4px;
   overflow-y: scroll;
 }
-.geofenceQuery{
+.geofenceQuery {
   border-radius: 20px;
   padding: 5px 10px;
-  background: rgba(0,0,0,0.06);
+  background: rgba(0, 0, 0, 0.06);
   height: 38px;
   border: none;
   width: 90%;
@@ -503,9 +502,9 @@
   margin-top: 24px;
   margin-bottom: 2px;
 }
-.geofenceQuery:focus{
-border: none;
-outline: none;
+.geofenceQuery:focus {
+  border: none;
+  outline: none;
 }
 .vehicleCardLeaflet {
   position: absolute;
@@ -514,20 +513,22 @@ outline: none;
   z-index: 1111111;
   bottom: 12%;
   left: 39%;
-  background-color:#f6f6f6;
+  background-color: #f6f6f6;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 10px;
-&::before{
-  content: "";
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;  
-  background-image:url("./assets/images/map.png") !important;
-  background-size: 50% !important;
-  background-position: center !important;
-  background-repeat: no-repeat;
-  filter: grayscale(100%);
-}
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("./assets/images/map.png") !important;
+    background-size: 50% !important;
+    background-position: center !important;
+    background-repeat: no-repeat;
+    filter: opacity(0.3);
+  }
 }
 
 .carName {
@@ -555,20 +556,22 @@ outline: none;
   z-index: 1111111;
   bottom: 12%;
   right: 9%;
-  background-color:#f6f6f6;
+  background-color: #f6f6f6;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  border-radius: 10px; 
-&::before{
-  content: "";
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;  
-  background-image:url("./assets/images/map.png") !important;
-  background-size: 50% !important;
-  background-position: center !important;
-  background-repeat: no-repeat;
-  filter: grayscale(100%);
-}
+  border-radius: 10px;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("./assets/images/map.png") !important;
+    background-size: 50% !important;
+    background-position: center !important;
+    background-repeat: no-repeat;
+    filter: opacity(0.3);
+  }
 }
 .vehicleCardMore i {
   color: #00c190 !important;
@@ -633,9 +636,15 @@ outline: none;
   position: absolute;
   right: 17px;
   top: 72px;
-  background: white;
+  background-color: rgb(246, 246, 246);
   outline: none;
-  .createFenceHeader{
+  border-radius: 5px;
+  background-image: url("./assets/images/map.png") !important;
+  background-size: contain;
+  background-position: center !important;
+  background-repeat: no-repeat;
+  background-blend-mode: luminosity;
+  .createFenceHeader {
     border-top-right-radius: 5px;
     border-top-left-radius: 5px;
     padding-left: 5px;
@@ -643,50 +652,52 @@ outline: none;
     justify-content: space-between;
     align-items: center;
     color: white;
-    background-color: #18497D;
+    background-color: #18497d;
   }
-}
-.createFence h3 {
-  margin: 0px !important;
-}
-.createFence .fenceType {
-  width: 100%;
-  padding: 5px 20px;
-  border-radius: 10px;
-}
-.createFence .fenceType:focus {
-  box-shadow: none;
-  outline: none;
-}
-.createFence .confirmationBox {
-  padding: 10px !important;
-  display: flex;
-  justify-content: space-between;
-}
-.createFence .confirmationBox .fenceDrawBtn {
-  border: none;
-  outline: none;
-  background: rgb(185, 125, 11);
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: white;
-  margin-right: 5px;
-}
-.createFence .confirmationBox .fenceCancelBtn {
-  border: none;
-  outline: none;
-  background: #bb2424;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: white;
-  margin-right: 5px;
-}
-
-.createFence .confirmationBox .fenceDoneBtn {
-  border: none;
-  outline: none;
-  background: rgb(24, 131, 24);
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: white;
+  label {
+    font-weight: 300;
+  }
+  .inputSettings {
+    border: none !important;
+    outline: none;
+    border-radius: 20px;
+    padding: 7px 10px;
+    box-shadow: 0px 0px 4px 0px rgb(129, 127, 127);
+    color: rgb(129, 127, 127);
+    width: 100%;
+  }
+  h3 {
+    margin: 0px !important;
+  }
+  .confirmationBox {
+    padding: 10px !important;
+    display: flex;
+    justify-content: space-between;
+    .fenceDrawBtn {
+      border: none;
+      outline: none;
+      background: rgb(185, 125, 11);
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: white;
+      margin-right: 5px;
+    }
+    .fenceCancelBtn {
+      border: none;
+      outline: none;
+      background: #bb2424;
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: white;
+      margin-right: 5px;
+    }
+    .fenceDoneBtn {
+      border: none;
+      outline: none;
+      background: rgb(24, 131, 24);
+      padding: 5px 10px;
+      border-radius: 5px;
+      color: white;
+    }
+  }
 }

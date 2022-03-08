@@ -1,4 +1,4 @@
-import { PacketParser } from '../Components/dashboard/PacketParser';
+import { PacketParser } from "../Components/dashboard/PacketParser";
 export class Response {
   code: number;
   status: boolean;
@@ -45,30 +45,19 @@ export class Alarm {
 }
 export class History {
   public GPSDateTime: string;
-  public Speed: string
-  public RPM: string
-  public ACC: string
-  public Alarm: string
-  public Status: string
-  public Dir: string
-  public Distance: string
-  public Latitude: string
-  public Longitude: string
-  public Location: string
+  public Speed: string;
+  public RPM: string;
+  public ACC: string;
+  public Alarm: string;
+  public Status: string;
+  public Dir: string;
+  public Distance: string;
+  public Latitude: string;
+  public Longitude: string;
+  public Location: string;
   public RECDateTime: string;
   public Index: number;
 }
-// export class GeoFencePost {
-//   public cust_id: number;
-//   public gf_name: string;
-//   public gf_type: string;
-//   public gf_type_name: string;
-//   public cnt_id: number;
-//   public cty_id: number;
-//   public FenceParam: string;
-//   public gf_diff: number;
-//   public CityNCountry: string;
-// }
 export class GeoFence {
   public gf_id: number;
   public gf_name: string;
@@ -78,18 +67,16 @@ export class GeoFence {
   public FenceParam: string;
   public gf_diff: number;
 }
-export class FenceParam{
+export class cords {
   public lat: number;
   public lng: number;
 }
-
-export class GeoFenceVM{
-  public gf_type:string;
-  public fenceParam:FenceParam[]
-  public gf_diff?:string;
+export class GeoFenceVM {
+  public gf_type: string = "";
+  public fenceParam: cords[] = [{ lat: 31, lng: 74 }];
+  public gf_diff?: string = "";
 }
 export class Data {
-
   public History?: History[];
   public GeoFence?: GeoFence[];
   public History_Period: string;
@@ -101,7 +88,7 @@ export class RecordsInterval {
   public start_date: string;
   public end_date: string;
 }
-export class GeoFenceResponse{
+export class GeoFenceResponse {
   code: number;
   status: boolean;
   message: string;
@@ -123,7 +110,7 @@ export class NetworkConfig {
   public port: string;
 }
 export class img {
-  public src: string
+  public src: string;
 }
 export class Root {
   public version: Version;
@@ -205,8 +192,8 @@ export class Setting {
 }
 export class commandPostResponse {
   _object: {
-    Message: number
-    code: number
-    _data: string
-  }
+    Message: number;
+    code: number;
+    _data: string;
+  };
 }

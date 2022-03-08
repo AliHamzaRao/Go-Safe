@@ -9,7 +9,7 @@ import { mapTypeService } from '../../../../_core/_AppServices/MapTypeService';
 @Component({
     selector: "app-history-dialog",
     templateUrl: "./historyDialog.html",
-    styleUrls: ["../../../pages/pages.component.scss"],
+    styleUrls: ["./historyDialog.component.scss"],
   })
   export class historyDialogComponent implements OnInit {
     loading: boolean = false;
@@ -45,6 +45,30 @@ import { mapTypeService } from '../../../../_core/_AppServices/MapTypeService';
   
     closeDialog() {
       this.dialog.closeAll();
+    }
+    periodTypeChange(e){
+      let date: Date = new Date;
+        console.log(e.target.value);
+        let currentPeriod: string = e.target.value;
+        switch(currentPeriod){
+        case "Today":
+          $("#de_start").val(date.toLocaleDateString()+ ' '+ date.toLocaleTimeString()).prop('disabled');
+          $("#de_end").val(date.toLocaleDateString()+ ' '+ date.toLocaleTimeString()).prop('disabled');
+          break;
+        case "Monthly":
+          let firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+          $("#de_start").val(firstDay.toLocaleDateString()+ ' ' + firstDay.toLocaleTimeString()).prop('disabled');
+          $("#de_end").val(date.toLocaleDateString()+ ' '+ date.toLocaleTimeString()).prop('disabled');
+          break;
+        case 'Weekly':
+        var first = date.getDate() - date.getDay();
+        var firstDayofWeek = new Date(date.setDate(first));
+        $("#de_start").val(firstDayofWeek.toLocaleDateString()+ ' ' + firstDayofWeek.toLocaleTimeString()).prop('disabled');
+        $("#de_end").val(date.toLocaleDateString()+ ' '+ date.toLocaleTimeString()).prop('disabled');
+        break;
+        default:
+          break;
+      }
     }
     onSubmit() {
       let History_type = $("#historyType").val();

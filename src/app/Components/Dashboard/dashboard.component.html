@@ -1,4 +1,3 @@
-
 <div class="vehicleCard d-none">
   <div
     class="col-md-12"
@@ -594,7 +593,7 @@
 
 <div class="createFenceGoogleMap shadow d-none">
   <div class="createFenceHeader">
-    <h4>Geo Fence Information</h4>
+    <h4>Create New Fence</h4>
     <button mat-icon-button (click)="closeCreateFencingGoogle()">
       <mat-icon>highlight_off</mat-icon>
     </button>
@@ -604,7 +603,7 @@
     <div class="col-12 p-0 m-0 pt-2">
       <label>Select Fence Type</label>
       <select
-        class="GooglefenceType GooglefenceTypeSelect"
+        class="inputSettings GooglefenceTypeSelect"
         disabled
         (change)="onInputChange($event)"
       >
@@ -619,7 +618,8 @@
     <div class="col-12 p-0 m-0 pt-2" *ngIf="fenceType === 'Circle'">
       <label>Circle Radius</label>
       <input
-        class="GooglefenceType border radius circleField"
+        class="inputSettings circleField"
+        
         disabled
         placeholder="Enter Circle Radius"
       />
@@ -627,21 +627,21 @@
     <div class="col-12 p-0 m-0 pt-2">
       <label>Fence Name</label>
       <input
-        class="GooglefenceType border fenceNameGoogle"
+        class="inputSettings fenceNameGoogle"
         placeholder="Enter Fence Name"
       />
     </div>
     <div class="col-12 p-0 m-0 pt-2">
       <label>Country</label>
       <input
-        class="GooglefenceType border countryGoogle"
+        class="inputSettings countryGoogle"
         placeholder="Enter Country"
       />
     </div>
     <div class="col-12 p-0 m-0 pt-2">
       <label>City</label>
       <input
-        class="GooglefenceType border cityGoogle"
+        class="inputSettings cityGoogle"
         placeholder="Enter City"
       />
     </div>

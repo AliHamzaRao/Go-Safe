@@ -9,11 +9,11 @@ import { historyDataService } from "src/app/_core/_AppServices/HistoryDataServic
 import { SingleDeviceDataService } from "src/app/_core/_AppServices/SingleDeviceDataService";
 import { ToastrService } from "ngx-toastr";
 import { GeoFencingService } from "src/app/_core/_AppServices/GeoFencingService";
-import { fenceTypo } from "src/app/_interfaces/fenceTypo.model";
 import { GeoFencePostService } from "src/app/_core/_AppServices/GeoFencePostingService";
 import { ExportService } from "src/app/_core/_AppServices/exportService";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
 import { Router } from "@angular/router";
+import { GeoFenceVM } from '../../_interfaces/DBresponse.model';
 declare const google: any;
 var Historydata = [];
 @Component({
@@ -43,8 +43,7 @@ export class DashboardComponent implements OnInit {
   setTime: any;
   gpsTime: any;
   currentState: number = 0;
-  geoFence: any;
-  geoFenceData: [];
+  geoFenceData:GeoFenceVM;
   fenceType: any;
   polygon: any;
   rectangle: any;
@@ -139,11 +138,10 @@ export class DashboardComponent implements OnInit {
     this.AllDeviceDataService.AllDevices.subscribe(
       (data) => (this.AllDevices = data)
     );
-    this.GeoFencingService.currentFence.subscribe((data) => {
-      this.geoFence = new fenceTypo(data);
-      this.geoFenceData = { ...this.geoFence };
-      if (this.geoFence.fenceParam.length) {
-        this.geoFence.fenceParam.forEach((item) => {
+    this.GeoFencingService.currentFence.subscribe((data: GeoFenceVM) => { 
+      this.geoFenceData = data;
+      if (data.fenceParam.length) {
+        data.fenceParam.forEach((item) => {
           this.lat = item.lat;
           this.lng = item.lng;
         });

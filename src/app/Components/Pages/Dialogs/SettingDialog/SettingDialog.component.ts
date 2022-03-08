@@ -1,10 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { ToastrService } from "ngx-toastr";
-import { AllControlsDialogComponent } from "../AllControlsDialog/AllControlsDialog.component";
 import { DeviceIdService } from '../../../../_core/_AppServices/DeviceId.service';
 import {SettingsService} from "../../../../_core/_AppServices/SettingsService"
 import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeService"
+import { AllSettingsDialogComponent } from '../AllSettingsDialog/AllSettingsDialog.component';
 
 @Component({
     selector: 'app-settings-dialog',
@@ -48,6 +48,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
     //#region Send Request
     sendRequest() {
       if (this.settingName == 'Set Message Center Number') {
+        if(this.phoneNumber != ''){
         let data = {
           check_status: false,
           fb_id: 1,
@@ -65,7 +66,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
           p_dev_id: this.deviceId.toString(),
           channel: this.channel
         }
-        if (this.channel && this.phoneNumber) {
+        if (this.channel) {
           this.SettingsService.SendSettings(data).subscribe(res => {
             if (isNaN(res._object.Message) ){
               this.Toast.clear()
@@ -79,7 +80,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
                   this.Toast.clear()
                   this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                   this.dialog.closeAll();
-                  this.dialog.open(AllControlsDialogComponent)
+                  this.dialog.open(AllSettingsDialogComponent)
                 }
               })
             }
@@ -88,6 +89,11 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
         else {
           this.Toast.clear()
           this.Toast.error('Please Select request channel', "Couldn't Request")
+        }
+      }
+        else{
+          this.Toast.clear();
+          this.Toast.error('Please Enter Phone Number')
         }
       }
       if (this.settingName == 'Reset to Factory Default') {
@@ -122,7 +128,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
                   this.Toast.clear()
                   this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                   this.dialog.closeAll();
-                  this.dialog.open(AllControlsDialogComponent)
+                  this.dialog.open(AllSettingsDialogComponent)
                 }
               })
             }
@@ -168,7 +174,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
                     this.Toast.clear()
                     this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                     this.dialog.closeAll();
-                    this.dialog.open(AllControlsDialogComponent)
+                    this.dialog.open(AllSettingsDialogComponent)
                   }
                 })
               }
@@ -219,7 +225,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
                     this.Toast.clear()
                     this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                     this.dialog.closeAll();
-                    this.dialog.open(AllControlsDialogComponent)
+                    this.dialog.open(AllSettingsDialogComponent)
                   }
                 })
               }
@@ -269,7 +275,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
                     this.Toast.clear()
                     this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                     this.dialog.closeAll();
-                    this.dialog.open(AllControlsDialogComponent)
+                    this.dialog.open(AllSettingsDialogComponent)
                   }
                 })
               }
@@ -320,7 +326,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
                     this.Toast.clear()
                     this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                     this.dialog.closeAll();
-                    this.dialog.open(AllControlsDialogComponent)
+                    this.dialog.open(AllSettingsDialogComponent)
                   }
                 })
               }
@@ -370,7 +376,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
                     this.Toast.clear()
                     this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                     this.dialog.closeAll();
-                    this.dialog.open(AllControlsDialogComponent)
+                    this.dialog.open(AllSettingsDialogComponent)
                   }
                 })
               }
@@ -387,8 +393,6 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
         }
       }
       if (this.settingName == 'Text Command(6600,7700,GS Series)') {
-        this.textCommand = $('.textCommandInput').val().toString();
-        if (this.textCommand) {
           let data = {
             check_status: false,
             fb_id: 1,
@@ -402,7 +406,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
             user_name: '',
             pwd: '',
             mileage: '',
-            cmd_type: this.textCommand,
+            cmd_type: '',
             p_dev_id: this.deviceId.toString(),
             channel: this.channel
           }
@@ -420,7 +424,7 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
                     this.Toast.clear()
                     this.Toast.success(`${this.settingName} command successfully executed`, "Success")
                     this.dialog.closeAll();
-                    this.dialog.open(AllControlsDialogComponent)
+                    this.dialog.open(AllSettingsDialogComponent)
                   }
                 })
               }
@@ -430,16 +434,11 @@ import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeServ
             this.Toast.clear()
             this.Toast.error('Please Select request channel', "Couldn't Request")
           }
-        }
-        else {
-          this.Toast.clear()
-          this.Toast.error("Please Enter Milage to Reset the Odometer")
-        }
       }
     }
     //#endregion
     cancelRequest() {
       this.dialog.closeAll();
-      this.dialog.open(AllControlsDialogComponent)
+      this.dialog.open(AllSettingsDialogComponent)
     }
   }

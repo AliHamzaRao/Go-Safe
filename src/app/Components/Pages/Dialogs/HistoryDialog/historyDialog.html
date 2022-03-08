@@ -1,39 +1,29 @@
 <div mat-dialog-title class="dialogTitle">
   <h2 style="margin: 0">History</h2>
-  <button mat-icon-button (click)="closeDialog()">
+  <button mat-icon-button mat-dialog-close class="closeBtn">
     <mat-icon>highlight_off</mat-icon>
   </button>
 </div>
 <div class="m-0 p-0 row dialogContent">
-  <div class="col-md-7 m-0 p-0">
+  <div class="col-md-6 m-0 p-0">
     <form class="row m-0 p-0" style="padding: 10px !important" (ngSubmit)="onSubmit()">
-      <div class="col-md-12 m-0 p-0 row" style="
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-bottom: 25px !important;
-        ">
+      <div class="col-md-12 m-0 p-0 row inputSettings">
         <div class="col-md-3">
           <label>View Type</label>
         </div>
-        <div class="col-md-9">
+        <div class="col-md-9 p-0">
           <select class="historyInput" name="History_type" id="historyType" value="View Type">
             <option value="View Type" selected disabled>View Type</option>
             <option value="Replay">Replay</option>
           </select>
         </div>
       </div>
-      <div class="col-md-12 m-0 p-0 row" style="
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-bottom: 25px !important;
-        ">
+      <div class="col-md-12 m-0 p-0 row inputSettings">
         <div class="col-md-3">
           <label>Period Type</label>
         </div>
-        <div class="col-md-9">
-          <select class="historyInput" name="Period_type" id="periodType" value="Period Type">
+        <div class="col-md-9 p-0">
+          <select class="historyInput" name="Period_type" id="periodType" value="Period Type" (change)="periodTypeChange($event)">
             <option value="Period Type" selected disabled>Period Type</option>
             <option value="Custom Date">Custom Date</option>
             <option value="Today">Today</option>
@@ -42,85 +32,45 @@
           </select>
         </div>
       </div>
-      <div class="col-md-12 m-0 p-0 row" style="
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-bottom: 25px !important;
-        ">
+      <div class="col-md-12 m-0 p-0 row inputSettings">
         <div class="col-md-3">
           <label>Date</label>
         </div>
-        <div class="col-md-9 row m-0">
-          <div class="col-md-12 p-0 m-0">
-            <label style="font-weight: light !important;">Start Date</label> {{" "}}
-            <input type="datetime-local" class="historyInputDate" name="de_Start" id="de_start"
-              placeholder="Start Date" />
+        <div class="col-md-9 p-0 row m-0" style="display: flex; justify-content: space-between; align-items: center;">
+          <div class=" col-md-6 m-0 p-0" style="padding-right: 15px !important;">
+            <input placeholder="Start Date" type="text" onfocus="(this.type='datetime-local')" class="historyInputDate" name="de_Start" id="de_start" /> 
           </div>
-          <div class="col-md-12 p-0 m-0" style="margin-top: 10px !important">
-            <label style="font-weight: light !important;">End Date</label>&nbsp;
-            <input type="datetime-local" class="historyInputDate" name="de_end" id="de_end" placeholder="End Date" />
-          </div>
+          <div class=" col-md-6 m-0 p-0" style="padding-left: 15px !important;">
+            <input placeholder="End Date" type="text" onfocus="(this.type='datetime-local')" class="historyInputDate" name="de_end" id="de_end"/></div>
         </div>
       </div>
-      <div class="col-md-12 m-0 p-0 row" style="
-          display: flex;
-          justify-content: center;
-          align-items: center;
-        ">
+      <div class="col-md-12 m-0 p-0 row inputSettings">
         <div class="col-md-3">
           <label>Speed</label>
         </div>
-        <div class="col-md-9">
-          <input type="checkbox" id="speed" name="Speed" (change)="onCheck($event)" />
-          <label for="speed">Speed >0km</label>
+        <div class="col-md-9 checkboxInput">
+          <label class="m-0" for="speed">Speed >0km</label>
+          <input class="m-0" type="checkbox" id="speed" name="Speed" (change)="onCheck($event)" /> {{" "}}
         </div>
       </div>
-      <div class="col-md-12 m-0 p-0 row" style="
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-bottom: 25px !important;
-        ">
+      <div class="col-md-12 m-0 p-0 row inputSettings">
         <div class="col-md-3">
-          <label>Show Alarm Trace</label>
+          <label>Alarm Trace</label>
         </div>
-        <div class="col-md-9">
-          <input type="checkbox" id="alarmTrace" name="alarmTrace" (change)="onCheck($event)" />
-          <label for="alarmTrace">Show Alarm Trace</label>
+        <div class="col-md-9 checkboxInput">
+          <label class="m-0" for="alarmTrace">Show Alarm Trace</label>
+          <input class="m-0" type="checkbox" id="alarmTrace" name="alarmTrace" (change)="onCheck($event)" /> {{" "}}
         </div>
       </div>
-      <div class="col-md-12 m-0 p-0 row" style="display: flex; justify-content: center; align-items: center">
-        <div class="col-md-2">
-          <button style="
-              border: none;
-              outline: none;
-              color: white;
-              font-size: 15px;
-              background: #18497d !important;
-              border-radius: 20px !important;
-              /* padding: 5px 20px; */
-            " mat-button [disabled]="loading" [class.disabled]="loading">
+      <div class="col-md-12 m-0 p-0 row inputSettings" style="justify-content: flex-end !important;">
+          <button class="HistoryBtn" mat-button [disabled]="loading" [class.disabled]="loading">
             Search
           </button>
-        </div>
       </div>
     </form>
   </div>
-  <div class="col-md-5 m-0 p-0" *ngIf="loading == false" style="
-      overflow: hidden !important;
-      background-image: url('./assets/images/loginleftimage.png');
-      background-size: cover;
-      background-position: center;
-    height: 100vh !important;
-    max-height: 53vh !important;
-    "></div>
-  <div class="col-md-5 m-0 p-0" *ngIf="loading == true" style="
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 43.8vh !important;
-    ">
+  <div class="col-md-6 m-0 p-0 bgImageCol" *ngIf="loading == false"></div>
+  <div class="col-md-6 m-0 p-0 loading" *ngIf="loading == true">
     <mat-spinner>
     </mat-spinner>
   </div>

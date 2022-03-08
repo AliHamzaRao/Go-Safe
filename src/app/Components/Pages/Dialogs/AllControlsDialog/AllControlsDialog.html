@@ -1,5 +1,5 @@
 <div mat-dialog-title class="dialogTitle">
-  <h2 style="margin: 0">Controls</h2>
+  <h3 style="margin: 0">Controls</h3>
   <button mat-icon-button (click)="closeDialog()">
     <mat-icon>highlight_off</mat-icon>
   </button>
@@ -12,7 +12,7 @@
       <div class="row m-0 p-0">
         <div class="col-md-12 settingType row mb-2 border-bottom" *ngFor="let command of AllCommands; let i = index">
           <div class="col-md-11 p-0 ">
-            <h5 style="color: #18497d" class="m-0">{{command.Name}}</h5>
+            <h5 style="color: #18497d; font-weight: bold;" class="m-0">{{command.Name}}</h5>
           </div>
           <button [name]="command.Name" mat-button class="col-md-1 m-0 p-0 commandSendBtn"
             (click)="OpenCommandDialog( command.Name , command.p_cmd_id)">
