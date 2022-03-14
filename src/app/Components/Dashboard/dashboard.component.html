@@ -118,21 +118,10 @@
         style="margin: 10px 0px !important; color: #18497d"
       >
         <div
-          class="col-md-2 row m-0 border-right"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: small !important;
-          "
+          class="col-md-2 row m-0 border-right carinfoitems"
         >
           <div
-            class="col-md-12 row m-0 p-0"
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 5px 0px !important;
-            "
+            class="col-md-12 row m-0 p-0 moreinfoitems"
           >
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/GSM.png" />
@@ -142,12 +131,7 @@
             </div>
           </div>
           <div
-            class="col-md-12 row m-0 p-0"
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 5px 0px !important;
-            "
+            class="col-md-12 row m-0 p-0 moreinfoitems"
           >
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/GPS.png" />
@@ -157,12 +141,7 @@
             </div>
           </div>
           <div
-            class="col-md-12 row m-0 p-0"
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 5px 0px !important;
-            "
+            class="col-md-12 row m-0 p-0 moreinfoitems"
           >
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/HDOP.png" />
@@ -171,31 +150,15 @@
           </div>
         </div>
         <div
-          class="col-md-2 row m-0 border-right"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: small !important;
-          "
+          class="col-md-2 row m-0 border-right carinfoitems"
         >
           <div
-            class="col-md-12 row m-0 p-0"
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 5px 0px !important;
-            "
+            class="col-md-12 row m-0 p-0 moreinfoitems"
           >
             &nbsp;
           </div>
           <div
-            class="col-md-12 row m-0 p-0"
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 5px 0px !important;
-            "
+            class="col-md-12 row m-0 p-0 moreinfoitems"
           >
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/GPS.png" />
@@ -205,12 +168,7 @@
             </div>
           </div>
           <div
-            class="col-md-12 row m-0 p-0"
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 5px 0px !important;
-            "
+            class="col-md-12 row m-0 p-0 moreinfoitems"
           >
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/VDOP.png" />
@@ -219,31 +177,15 @@
           </div>
         </div>
         <div
-          class="col-md-2 row m-0 border-right"
-          style="
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            font-size: small !important;
-          "
+          class="col-md-2 row m-0 border-right carinfoitems"
         >
           <div
-            class="col-md-12 row m-0 p-0"
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 5px 0px !important;
-            "
+            class="col-md-12 row m-0 p-0 moreinfoitems"
           >
             &nbsp;
           </div>
           <div
-            class="col-md-12 row m-0 p-0"
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 5px 0px !important;
-            "
+            class="col-md-12 row m-0 p-0 moreinfoitems"
           >
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/INT.png" />
@@ -253,12 +195,7 @@
             </div>
           </div>
           <div
-            class="col-md-12 row m-0 p-0"
-            style="
-              display: flex;
-              justify-content: space-between;
-              padding: 5px 0px !important;
-            "
+            class="col-md-12 row m-0 p-0 moreinfoitems"
           >
             <div class="col-md-3 m-0 p-0">
               <img style="height: 1.4em" src="./assets/icons/EXT.png" />
@@ -479,10 +416,7 @@
         </agm-marker>
         </span>
       </agm-polyline>
-      <span *ngIf="geoFenceData.gf_type == 'Polygon'">
-        <!-- <agm-marker *ngFor="let data of geoFenceData.fenceParam; let i = index;" [latitude]="data.lat"
-          [longitude]="data.lng" [agmFitBounds]="true">
-        </agm-marker> -->
+      <span *ngIf="geoFenceData.gf_type == 'Polygon'">=
         <agm-polygon
           fillColor="#FF0000"
           [fillOpacity]="0.5"
@@ -494,10 +428,7 @@
           [zIndex]="1"
         ></agm-polygon>
       </span>
-      <span *ngIf="geoFenceData.gf_type == 'Rectangle'">
-        <!-- <agm-marker *ngFor="let data of geoFenceData.fenceParam; let i = index;" [latitude]="data.lat"
-          [longitude]="data.lng" [agmFitBounds]="true">
-        </agm-marker> -->
+      <span *ngIf="geoFenceData.gf_type == 'Rectangle'">=
         <agm-rectangle
           fillColor="#2876FC"
           [fillOpacity]="0.5"
@@ -512,10 +443,7 @@
           [zIndex]="1"
         ></agm-rectangle>
       </span>
-      <span *ngIf="geoFenceData.gf_type == 'Circle'">
-        <!-- <agm-marker [latitude]="geoFenceData.fenceParam[0].lat" [longitude]="geoFenceData.fenceParam[0].lng"
-          [agmFitBounds]="true">
-        </agm-marker> -->
+      <span *ngIf="geoFenceData.gf_type == 'Circle'">=
         <agm-circle
           [latitude]="geoFenceData.fenceParam[0].lat"
           [longitude]="geoFenceData.fenceParam[0].lng"
@@ -756,15 +684,7 @@
     style="position: absolute; bottom: 60px !important"
   >
     <div
-      class="card-header rounded"
-      style="
-        color: white !important;
-        padding: 5px;
-        font-weight: lighter !important;
-        background-color: #18497d !important;
-        border-bottom-right-radius: 0px !important;
-        border-bottom-left-radius: 0px !important;
-      "
+      class="card-header rounded historyInfoHead"
     >
       <h3 class="m-0">Information</h3>
     </div>

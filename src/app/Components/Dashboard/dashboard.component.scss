@@ -324,7 +324,25 @@
 .export button img {
   height: 100% !important;
 }
-
+.historyInfoHead{
+  color: white !important;
+  padding: 5px;
+  font-weight: lighter !important;
+  background-color: #18497d !important;
+  border-bottom-right-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+}
+.carinfoitems{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: small !important;
+}
+.moreinfoitems{
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0px !important;
+}
 .createFenceGoogleMap {
   height: max-content !important;
   width: 400px !important;
