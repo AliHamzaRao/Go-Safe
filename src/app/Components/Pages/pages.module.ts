@@ -18,7 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { DashboardModule } from '../dashboard/dashboard.module';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatRadioModule } from '@angular/material/radio';
-// import { GeoFenceComponent } from './Dialogs/GeoFenceDialog/GeoFenceDialog.component';
+import {InfiniteScrollModule} from "ngx-infinite-scroll"
 
 export const routes = [
   { path: '', component: PagesComponent, pathMatch: 'full' },
@@ -30,6 +30,7 @@ export const routes = [
 @NgModule({
   imports: [
     CommonModule,
+    InfiniteScrollModule,
     MatToolbarModule,
     MatIconModule,
     FormsModule,

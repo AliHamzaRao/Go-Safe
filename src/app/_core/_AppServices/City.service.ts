@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http"
 import { Observable } from 'rxjs';
-import { GeoFenceResponse } from 'src/app/_interfaces/DBresponse.model';
 import { Router } from '@angular/router';
+import { CityResponse } from '../../_interfaces/DBresponse.model';
 @Injectable({
     providedIn: 'root',
 })
-export class GeoFenceService {
+export class CityService {
     response: any;
     constructor(public http: HttpClient, public Router: Router) { }
-    geoFence(pageNo:number): Observable<GeoFenceResponse> {
+    getCities(): Observable<CityResponse> {
         if (this.getApiUrl().length) {
-            return this.http.get<GeoFenceResponse>(`${this.getApiUrl()}/api/GEOFENCES/list/30/${pageNo}`);
+            return this.http.get<CityResponse>(this.getApiUrl() + '/api/City/List');
         }
         else {
             this.Router.navigateByUrl('/login')

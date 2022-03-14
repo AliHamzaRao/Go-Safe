@@ -44,7 +44,7 @@
         {{ currentMap }} <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
 
-      <mat-menu #GeoFenceMenu="matMenu">
+      <mat-menu #GeoFenceMenu="matMenu" style="z-index: 1 !important;">
         <button
           mat-menu-item
           class="mat-child"
@@ -1084,7 +1084,7 @@
         <!-- <button (click)="play()">Play</button>
         <button (click)="pause()">Pause</button> -->
         <!-- Fence List -->
-        <div class="shadow rounded selectionList d-none row">
+        <div infinite-scroll [infiniteScrollThrottle]="10" [infiniteScrollDistance]="0" [scrollWindow]="false" (scrolled)="onScrollDown()" class="shadow rounded selectionList d-none row">
           <span
             style="
               display: flex;
@@ -1100,6 +1100,7 @@
               class="matListOption"
               (click)="closeFencing()"
               mat-icon-button
+              style="line-height: 0px !important;"
             >
               X
             </button>
@@ -1266,19 +1267,6 @@
     <br />
     <button mat-icon-button (click)="exportToPDF()">
       <img src="./assets/icons/ExportToPDF.png" alt="" />
-    </button>
-  </div>
-  <div class="shapeSelect d-none">
-    <button mat-icon-button>
-      <img src="./assets/icons/square.jpg" alt="" />
-    </button>
-    <br />
-    <button mat-icon-button>
-      <img src="./assets/icons/polygone.png" alt="" />
-    </button>
-    <br />
-    <button mat-icon-button>
-      <img src="./assets/icons/Circle.jpg" alt="" />
     </button>
   </div>
   <button
@@ -2012,7 +2000,7 @@
 
   <div class="row m-0" style="padding: 10px !important">
     <div class="col-12 p-0 m-0 pt-2">
-      <label>Select Fence Type</label>
+      <label>Select Fence Type <span class="text-danger">*</span> </label>
       <select class="inputSettings" (change)="onInputChange($event)">
         <option value="Select Fence Type" disabled selected>
           Select Fence Type
@@ -2023,21 +2011,31 @@
       </select>
     </div>
     <div class="col-12 p-0 m-0 pt-2" *ngIf="fenceType === 'Circle'">
-      <label>Circle Radius</label>
+      <label>Circle Radius <span class="text-danger">*</span> </label>
       <input class="inputSettings radius" 
       oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')" placeholder="Enter Circle Radius" />
     </div>
     <div class="col-12 p-0 m-0 pt-2">
-      <label>Fence Name</label>
+      <label>Fence Name <span class="text-danger">*</span> </label>
       <input class="inputSettings fenceName" placeholder="Enter Fence Name" />
     </div>
     <div class="col-12 p-0 m-0 pt-2">
-      <label>Country</label>
-      <input class="inputSettings country" placeholder="Enter Country" />
+      <label>Country <span class="text-danger">*</span> </label>
+      <select class="inputSettings" (change)="onCountryChange($event)">
+        <option value="Select Coutnry" disabled selected>
+          Select Country
+        </option>
+        <option *ngFor="let item of AllCountries; let i = index" [value]="item.cnt_id">{{item.cnt_name}}</option>
+      </select>
     </div>
     <div class="col-12 p-0 m-0 pt-2">
-      <label>City</label>
-      <input class="inputSettings city" placeholder="Enter City" />
+      <label>City <span class="text-danger">*</span> </label>
+      <select class="inputSettings" (change)="onCityChange($event)">
+        <option value="Select Coutnry to see Cities" disabled selected>
+          Select Country to See Cities
+        </option>
+        <option *ngFor="let item of AvailableCities; let i = index" [value]="item.cty_id">{{item.cty_name}}</option>
+      </select>
     </div>
     <div class="col-12 p-0 m-0 pt-2">
       <p class="text-danger">*Double click marker to remove</p>

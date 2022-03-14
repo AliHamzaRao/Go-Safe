@@ -471,11 +471,6 @@
         </agm-polyline-point>
         <span *ngIf="latitude != 0">
           <agm-marker
-            [drawingMode]="'circle'"
-            [circleOptions]="{ fillColor: 'red', radius: 150 }"
-          >
-          </agm-marker>
-          <agm-marker
             [latitude]="latitude"
             [longitude]="longitude"
             [agmFitBounds]="true"
@@ -633,17 +628,28 @@
     </div>
     <div class="col-12 p-0 m-0 pt-2">
       <label>Country</label>
-      <input
-        class="inputSettings countryGoogle"
-        placeholder="Enter Country"
-      />
+      <select
+      class="inputSettings GooglefenceTypeSelect"
+      (change)="onCoutryChange($event)"
+    >
+      <option value="Select Fence Type" disabled selected>
+        Select Fence Type
+      </option>
+      <option *ngFor="let country of AllCountries; let i - index" [value]="country.cnt_id">{{country.cnt_name}}</option>
+    </select>
     </div>
     <div class="col-12 p-0 m-0 pt-2">
       <label>City</label>
-      <input
-        class="inputSettings cityGoogle"
-        placeholder="Enter City"
-      />
+      <select
+        class="inputSettings GooglefenceTypeSelect"
+        (change)="onCityChange($event)"
+      >
+        <option value="Select Fence Type" disabled selected>
+          Select Fence Type
+        </option>
+        <option *ngFor="let city of AllCities; let i - index" [value]="country.cty_id">{{country.cty_name}}</option>
+
+      </select>
     </div>
     <div class="col-12 p-0 m-0 confirmationBoxGoogle">
       <span>
@@ -690,19 +696,6 @@
       <img src="./assets/icons/ExportToPDF.png" alt="" />
     </button>
   </div>
-  <div class="shapeSelect d-none">
-    <button mat-icon-button>
-      <img src="./assets/icons/square.jpg" alt="" />
-    </button>
-    <br />
-    <button mat-icon-button>
-      <img src="./assets/icons/polygone.png" alt="" />
-    </button>
-    <br />
-    <button mat-icon-button>
-      <img src="./assets/icons/Circle.jpg" alt="" />
-    </button>
-  </div>
   <button
     mat-icon-button
     class="recordControl expBtn"
@@ -714,7 +707,6 @@
   <button
     mat-icon-button
     class="recordControl"
-    (click)="draw()"
     data-title="Draw Route"
   >
     <img src="./assets/icons/Route.png" />
@@ -922,10 +914,9 @@
             >
               Ignition
             </h6>
-            <h6 class="text-muted m-0 p-0" *ngIf="historyInfo.Speed != '0'">
-              ON
+            <h6 class="text-muted m-0 p-0">
+              {{historyInfo.Speed != '0'?"ON":"OFF"}}
             </h6>
-            <h6 class="text-muted m-0 p-0" ngElse>OFF</h6>
           </div>
           <div
             style="

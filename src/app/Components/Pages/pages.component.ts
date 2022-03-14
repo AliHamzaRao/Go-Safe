@@ -23,12 +23,14 @@ import { Vehicles } from "src/app/_interfaces/vehicle.model";
 import { dashboardService } from "src/app/_core/_AppServices/dashboard.service";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
 import { CurrentStateService } from '../../_core/_AppServices/CurrentStateService';
-import { Alarm, GeoFence, History } from '../../_interfaces/DBresponse.model';
+import { Alarm, GeoFence, History, City, Country } from '../../_interfaces/DBresponse.model';
 import { AllControlsDialogComponent } from "./Dialogs/AllControlsDialog/AllControlsDialog.component"
 import { AllSettingsDialogComponent } from "./Dialogs/AllSettingsDialog/AllSettingsDialog.component"
 import { DeviceIdService } from '../../_core/_AppServices/DeviceId.service';
 import { AssetTripDialogComponent } from "./Dialogs/ReportsDialogs/AssetTripDialog/AssetTripDialog.component";
 import { historyDialogComponent } from './Dialogs/HistoryDialog/historyDialog.component';
+import { CityService } from '../../_core/_AppServices/City.service';
+import { CountryService } from '../../_core/_AppServices/Country.service';
 // Global Variables
 declare var L;
 var map;
@@ -75,7 +77,7 @@ export class PagesComponent implements OnInit, OnDestroy {
   marker: any;
   notifications: Alarm[] = [];
   alarmsFound: boolean = false;
-  geoFences: GeoFence[];
+  geoFences: GeoFence[]=[];
   searchedFences: GeoFence[] = [];
   fenceType: any;
   rectMarkers: any[] = [];
@@ -105,6 +107,7 @@ export class PagesComponent implements OnInit, OnDestroy {
   SearchedDevices: PacketParser[] = []
   fenceListLoaded: boolean = false;
   polylineMarkers: any[] = [];
+  totalPages:number;
   historyInfo: History = {
     GPSDateTime: "test",
     Speed: "0",
@@ -120,6 +123,10 @@ export class PagesComponent implements OnInit, OnDestroy {
     RECDateTime: "test",
     Index: -1,
   };
+  AllCountries: Country[];
+  AllCities: City[];
+  AvailableCities: City[];
+  pageNo:number= 1;
   CarMarker = L.icon({
     iconUrl: './assets/img/vendor/google-maps/car-marker.png',
     iconSize:     [23, 50], 
@@ -161,7 +168,9 @@ export class PagesComponent implements OnInit, OnDestroy {
     public dashboardService: dashboardService,
     public RegistrationNoService: RegistrationNoService,
     public CurrentStateService: CurrentStateService,
-    public DeviceIdService: DeviceIdService
+    public DeviceIdService: DeviceIdService,
+    public CityService: CityService,
+    public CountryService: CountryService,
   ) {
     this.settings = this.appSettings.settings;
   }
@@ -1186,11 +1195,29 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.fenceListLoaded = false;
     $(".createFence").addClass("d-none");
     $(".createFenceGoogleMap").addClass("d-none");
-    this.GeoFence.geoFence().subscribe((data) => {
-      this.geoFences = data.data.sort();
+    this.getGeoFences(this.pageNo);
+    $(".selectionList").removeClass("d-none");
+  }
+  getGeoFences(currentPage:number){
+      this.GeoFence.geoFence(currentPage).subscribe((data) => {
+      this.totalPages = data.total_pages;
+      this.Toast.clear();
+      this.Toast.success(`Data Loaded from Page ${data.pageno} out of ${data.total_pages} page(s)`)
+      this.geoFences.push(...data.data);
       this.fenceListLoaded = true;
     }); 
-    $(".selectionList").removeClass("d-none");
+  }
+  onScrollDown(){
+    console.log('scrolled')
+    if(this.totalPages != this.pageNo){
+    this.fenceListLoaded = false;
+    this.getGeoFences(this.pageNo++)
+  }
+  else{
+    this.Toast.clear();
+    this.Toast.info('Maximum Data Loaded', "Couldn't proceed")
+    this.Toast.clear();
+  }
   }
   geofenceQuery(e) {
     let query: string = e.target.value
@@ -1204,6 +1231,15 @@ export class PagesComponent implements OnInit, OnDestroy {
   closeFencing() {
     this.router.navigate(['/'])
     $(".selectionList").addClass("d-none");
+  }
+  onCityChange = (e)=>{
+    this.cityName = e.target.value
+  }
+  onCountryChange = (e) =>{
+    console.log(e.target.value)
+    this.countryName = e.target.value
+    this.AvailableCities = this.AllCities.filter((cities:City)=>cities.cnt_id == this.countryName)
+    console.log(this.AvailableCities)
   }
   onInputChange = (e) => {
     this.fenceType = e.target.value;
@@ -1308,6 +1344,7 @@ export class PagesComponent implements OnInit, OnDestroy {
                 map.removeLayer(thismarker);
                 let data: any[] = event.latlng;
                 let newData = { ...data };
+
                 let tempArr = [
                   parseFloat(newData["lat"]),
                   parseFloat(newData["lng"]),
@@ -1346,14 +1383,19 @@ export class PagesComponent implements OnInit, OnDestroy {
     }
   }
   drawPolygon() {
+    debugger;
     if (this.polyMarkers.length) {
       if (this.polygon) {
         map.removeLayer(this.polygon);
-      } else {
         this.polygon = L.polygon(this.polyMarkers, { color: "#FF1111" });
         this.polygon.addTo(map);
       }
-    } else {
+    else {
+      this.polygon = L.polygon(this.polyMarkers, { color: "#FF1111" });
+      this.polygon.addTo(map);
+    }
+    }
+    else {
       this.Toast.clear()
       this.Toast.error(
         "you should have atleast 2 markers to draw a polygon",
@@ -1362,6 +1404,16 @@ export class PagesComponent implements OnInit, OnDestroy {
     }
   }
   CreateFencing() {
+    this.CityService.getCities().subscribe((data)=>{
+      if (data.status) {
+        this.AllCities = data.data;
+      }
+    })
+    this.CountryService.getCountries().subscribe((data)=>{
+      if (data.status) {
+        this.AllCountries = data.data;
+      }
+    })
     $(".selectionList").addClass("d-none");
     if (mapType === "Google Maps") {
       $(".createFenceGoogleMap").removeClass("d-none");
@@ -1406,8 +1458,6 @@ export class PagesComponent implements OnInit, OnDestroy {
   }
   sendCircle() {
     if (this.circleMarkers.length) {
-      this.cityName = $(".city").val();
-      this.countryName = $(".country").val();
       this.fenceName = $(".fenceName").val();
       let param: string = "";
       this.FenceParam = this.circleMarkers.forEach((item: any[]) => {
@@ -1425,8 +1475,8 @@ export class PagesComponent implements OnInit, OnDestroy {
         FenceParam: param,
       };
       if (
-        this.cityName.length &&
-        this.countryName.length &&
+        this.cityName &&
+        this.countryName &&
         this.fenceName.length
       ) {
         this.PostFence.addGeoFence(circleParams).subscribe((data) => {
@@ -1455,8 +1505,6 @@ export class PagesComponent implements OnInit, OnDestroy {
   sendPolygon() {
     // var asd = '';
     if (this.polyMarkers.length) {
-      this.cityName = $(".city").val();
-      this.countryName = $(".country").val();
       this.fenceName = $(".fenceName").val();
       let param: string = "";
       this.FenceParam = this.polyMarkers.forEach((item: any[]) => {
@@ -1473,8 +1521,8 @@ export class PagesComponent implements OnInit, OnDestroy {
         FenceParam: param,
       };
       if (
-        this.cityName.length &&
-        this.countryName.length &&
+        this.cityName &&
+        this.countryName &&
         this.fenceName.length
       ) {
         this.PostFence.addGeoFence(polyparams).subscribe((data) => {
@@ -1500,8 +1548,6 @@ export class PagesComponent implements OnInit, OnDestroy {
   }
   sendRectangle() {
     if (this.rectMarkers.length) {
-      this.cityName = $(".city").val();
-      this.countryName = $(".country").val();
       this.fenceName = $(".fenceName").val();
       let param: string = "";
       this.FenceParam = this.rectMarkers.forEach((item: any[]) => {
@@ -1518,8 +1564,8 @@ export class PagesComponent implements OnInit, OnDestroy {
         FenceParam: param,
       };
       if (
-        this.cityName.length &&
-        this.countryName.length &&
+        this.cityName &&
+        this.countryName &&
         this.fenceName.length
       ) {
         this.PostFence.addGeoFence(rectparams).subscribe((data) => {

@@ -53,6 +53,7 @@ import { SettingDialogComponent } from './Components/Pages/Dialogs/SettingDialog
 import { AssetTripDialogComponent } from './Components/Pages/Dialogs/ReportsDialogs/AssetTripDialog/AssetTripDialog.component';
 import { HeaderComponent } from './theme/components/header/header.component';
 import { historyDialogComponent } from './Components/Pages/Dialogs/HistoryDialog/historyDialog.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 @NgModule({
   imports: [
     BrowserModule,
@@ -62,6 +63,7 @@ import { historyDialogComponent } from './Components/Pages/Dialogs/HistoryDialog
     HttpClientModule,
     NgSelectModule,
     MatBadgeModule,
+    InfiniteScrollModule,
     AgmDrawingModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyAO7Mg2Cs1qzo_3jkKkZAKY6jtwIlm41-I',

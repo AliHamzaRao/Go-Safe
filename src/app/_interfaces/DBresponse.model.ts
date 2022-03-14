@@ -93,6 +93,11 @@ export class GeoFenceResponse {
   status: boolean;
   message: string;
   data: GeoFence[];
+  total_count: number;
+  total_pages: number;
+  offset: number;
+  pageno: number;
+  rows_per_page: number;
 }
 export class Version {
   public producer: string;
@@ -196,4 +201,31 @@ export class commandPostResponse {
     code: number;
     _data: string;
   };
+}
+
+export class CityResponse{
+  code: number;
+  status: boolean;
+  message: string;
+  data: City[];
+}
+export class City{
+  cty_id:number;
+  cty_name:string;
+  cnt_name:string;
+  cnt_id:number;
+  save_datetime:Date;
+}
+export class CountryResponse{
+ code: number;
+  status: boolean;
+  message: string;
+  data: Country[];
+}
+export class Country{
+  cnt_id: number;
+  cnt_name: string;
+  cnt_currency: string;
+  cnt_currency_abbr: string;
+  save_datetime: Date;
 }

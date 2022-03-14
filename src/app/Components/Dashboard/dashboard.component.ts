@@ -13,7 +13,9 @@ import { GeoFencePostService } from "src/app/_core/_AppServices/GeoFencePostingS
 import { ExportService } from "src/app/_core/_AppServices/exportService";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
 import { Router } from "@angular/router";
-import { GeoFenceVM } from '../../_interfaces/DBresponse.model';
+import { City, Country, GeoFenceVM } from '../../_interfaces/DBresponse.model';
+import { CityService } from '../../_core/_AppServices/City.service';
+import { CountryService } from '../../_core/_AppServices/Country.service';
 declare const google: any;
 var Historydata = [];
 @Component({
@@ -104,6 +106,9 @@ export class DashboardComponent implements OnInit {
     Index: -1,
   };
   reg_no: string = "";
+  AllCountries: Country[];
+  AllCities: City[];
+  AvailableCities: City[];
   //#region Constructor
   constructor(
     public appSettings: AppSettings,
@@ -118,7 +123,9 @@ export class DashboardComponent implements OnInit {
     public PostFence: GeoFencePostService,
     public ExportService: ExportService,
     public RegistrationNoService: RegistrationNoService,
-    public Router: Router
+    public Router: Router,
+    public CityService: CityService,
+    public CountryService : CountryService
   ) {
     this.settings = this.appSettings.settings;
   }
@@ -147,6 +154,15 @@ export class DashboardComponent implements OnInit {
         });
       }
     });
+    this.historyDataService.newMarkers.subscribe((data) => {
+      this.markersData = data;
+      Historydata = this.markersData
+    });
+    this.CountryService.getCountries().subscribe(data=>{
+      if(data.status){
+        this.AllCountries = data.data
+      }
+    })
     $(".mapDropdown").on("change", ($event) => {
       this.mapType = $(".mapDropdown").find(":selected").val();
       this.mapTypeService.SetMap(this.mapType);
@@ -172,6 +188,15 @@ export class DashboardComponent implements OnInit {
     if (window.location.pathname != '/createfence') {
       $(".gmnoprint").removeClass("d-none");
     }
+  }
+  onCoutryChange = (e)=>{
+    console.log(e.target.value)
+    this.countryName = e.target.value
+    this.AvailableCities = this.AllCities.filter((cities:City)=>cities.cnt_id == this.countryName)
+    console.log(this.AvailableCities)
+  }
+  onCityChange = (e)=>{
+    this.cityName = e.target.value  
   }
   drawCircle(e) {
     if (this.circle) {
@@ -250,8 +275,8 @@ export class DashboardComponent implements OnInit {
     }
   }
   sendPolygon() {
-    this.cityName = $(".cityGoogle").val();
-    this.countryName = $(".countryGoogle").val();
+    // this.cityName = $(".cityGoogle").val();
+    // this.countryName = $(".countryGoogle").val();
     this.fenceName = $(".fenceNameGoogle").val();
     let polyparams = {
       cmp_id: 0,
@@ -262,11 +287,7 @@ export class DashboardComponent implements OnInit {
       CityNCountry: this.cityName + ", " + this.countryName,
       FenceParam: this.FenceParam,
     };
-    if (
-      this.cityName.length &&
-      this.countryName.length &&
-      this.fenceName.length
-    ) {
+    if (this.fenceName.length) {
       this.PostFence.addGeoFence(polyparams).subscribe((data) => {
         if (data.status) {
           this.Toast.success(data.message, "Polygon Created Successfully");
@@ -282,8 +303,8 @@ export class DashboardComponent implements OnInit {
     }
   }
   sendRectangle() {
-    this.cityName = $(".cityGoogle").val();
-    this.countryName = $(".countryGoogle").val();
+    // this.cityName = $(".cityGoogle").val();
+    // this.countryName = $(".countryGoogle").val();
     this.fenceName = $(".fenceNameGoogle").val();
     let rectParam = {
       cmp_id: 0,
@@ -294,11 +315,7 @@ export class DashboardComponent implements OnInit {
       CityNCountry: this.cityName + ", " + this.countryName,
       FenceParam: this.FenceParam,
     };
-    if (
-      this.cityName.length &&
-      this.countryName.length &&
-      this.fenceName.length
-    ) {
+    if (this.fenceName.length) {
       this.PostFence.addGeoFence(rectParam).subscribe((data) => {
         if (data.status) {
           this.Toast.success(data.message, "Rectangle Created Successfully");
@@ -314,8 +331,8 @@ export class DashboardComponent implements OnInit {
     }
   }
   sendCircle() {
-    this.cityName = $(".cityGoogle").val();
-    this.countryName = $(".countryGoogle").val();
+    // this.cityName = $(".cityGoogle").val();
+    // this.countryName = $(".countryGoogle").val();
     this.fenceName = $(".fenceNameGoogle").val();
     let circleParams = {
       cmp_id: 0,
@@ -327,11 +344,7 @@ export class DashboardComponent implements OnInit {
       CityNCountry: this.cityName + ", " + this.countryName,
       FenceParam: this.FenceParam,
     };
-    if (
-      this.cityName.length &&
-      this.countryName.length &&
-      this.fenceName.length
-    ) {
+    if (this.fenceName.length) {
       this.PostFence.addGeoFence(circleParams).subscribe((data) => {
         if (data.status) {
           this.Toast.success(data.message, "Rectangle Created Successfully");
@@ -416,10 +429,7 @@ export class DashboardComponent implements OnInit {
     $(".playBtn").removeClass("d-none");
   }
   play() {
-    this.historyDataService.newMarkers.subscribe((data) => {
-      this.markersData = data;
-      Historydata = this.markersData
-    });
+    
     this.markersData.forEach((element) => {
       this.markerData.push({
         latitude: parseFloat(element.Latitude),
@@ -490,9 +500,6 @@ export class DashboardComponent implements OnInit {
       this.Router.navigate(['/']);
       $(".gmnoprint").addClass("d-none");
     })
-  }
-  draw() {
-    $(".shapeSelect").toggleClass("d-none");
   }
   closeCreateFencingGoogle() {
     this.Router.navigate(['/'])
