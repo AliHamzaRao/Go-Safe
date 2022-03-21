@@ -374,7 +374,7 @@ export class DashboardComponent implements OnInit {
     if (this.fenceName.length) {
       this.PostFence.addGeoFence(circleParams).subscribe((data) => {
         if (data.status) {
-          this.Toast.success(data.message, "Rectangle Created Successfully");
+          this.Toast.success(data.message, "Circle Created Successfully");
         } else {
           this.Toast.error(
             data.message,
