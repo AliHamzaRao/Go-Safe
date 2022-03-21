@@ -64,11 +64,6 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     NgSelectModule,
     MatBadgeModule,
     InfiniteScrollModule,
-    AgmDrawingModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyAO7Mg2Cs1qzo_3jkKkZAKY6jtwIlm41-I',
-      libraries: ['drawing']
-    }),
     PerfectScrollbarModule,
     CalendarModule.forRoot({
       provide: DateAdapter,

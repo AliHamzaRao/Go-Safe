@@ -11,7 +11,7 @@ export class GeoFenceService {
     constructor(public http: HttpClient, public Router: Router) { }
     geoFence(pageNo:number): Observable<GeoFenceResponse> {
         if (this.getApiUrl().length) {
-            return this.http.get<GeoFenceResponse>(`${this.getApiUrl()}/api/GEOFENCES/list/30/${pageNo}`);
+            return this.http.get<GeoFenceResponse>(`${this.getApiUrl()}/api/GEOFENCES/list/20/${pageNo}`);
         }
         else {
             this.Router.navigateByUrl('/login')

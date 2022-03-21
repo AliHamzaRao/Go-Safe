@@ -200,7 +200,8 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.logo = localStorage.CompanyLogo ? 'data:image/png;base64,' + localStorage.getItem("CompanyLogo") : './assets/logos/logo 1-01.svg';
     this.username = localStorage.getItem("username") || null;
     this.mapTypeService.newMap.subscribe((data) => {
-      mapType = data;
+      this.currentMap = mapType = data;
+      
     });
     this.historyDataService.newMarkers.subscribe(
       (data) => {
@@ -216,8 +217,9 @@ export class PagesComponent implements OnInit, OnDestroy {
               this.lat = parseFloat(el.Latitude);
               this.lng = parseFloat(el.Longitude);
             });
+            if(this.currentMap == 'Open Street Maps'){
             map.setView([this.lat, this.lng], 10);
-            L.polyline(this.polylineMarkers).addTo(map);
+            L.polyline(this.polylineMarkers).addTo(map);}
           }
       });
     this.AllDeviceDataService.AllDevices.subscribe((data) => (this.AllDevices = data));
@@ -494,7 +496,9 @@ export class PagesComponent implements OnInit, OnDestroy {
 
   //#region AfterViewInit Hook
   ngAfterViewInit() {
+    if(this.currentMap != 'Google Maps'){
     this.loadLeafLetMap();
+  }
     setTimeout(() => {
       this.settings.loadingSpinner = false;
     }, 300);
@@ -623,6 +627,7 @@ export class PagesComponent implements OnInit, OnDestroy {
 
   //#region Refresh Map
   RefreshMap() {
+    if(this.currentMap == "Open Street Maps"){
     $("#leafletContainer")
       .html("")
       .append(
@@ -630,7 +635,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       );
     setTimeout(() => {
       this.loadLeafLetMap();
-    });
+    });}
     if(this.markerData.length){
     this.historyDataService.newMarkers.subscribe(
       (data) => {
@@ -645,8 +650,10 @@ export class PagesComponent implements OnInit, OnDestroy {
               this.lat = parseFloat(el.Latitude);
               this.lng = parseFloat(el.Longitude);
             });
+            if(this.currentMap == "Open Street Maps"){
             map.setView([this.lat, this.lng], 10);
             L.polyline(this.polylineMarkers).addTo(map);
+          }
           }
       });
     }
@@ -686,6 +693,7 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.drawLine();
     $(".pauseBtn").removeClass("d-none");
     $(".playBtn").addClass("d-none");
+    if(this.currentMap == 'Open Street Maps'){
     if (this.currentState !== this.markerData.length - 1) {
       this.setTime = setInterval(() => {
         this.latitude = this.markerData[this.currentState][0];
@@ -707,6 +715,7 @@ export class PagesComponent implements OnInit, OnDestroy {
         map.setView([this.latitude, this.longitude], 17);
       }, this.interval);
     }
+  }
   }
   pause() {
     $(".pauseBtn").addClass("d-none");
@@ -740,6 +749,7 @@ export class PagesComponent implements OnInit, OnDestroy {
   }
 
   draw() {
+    if(this.currentMap == 'Open Street Maps')
     L.polyline([
       this.markerData[0],
       this.markerData[this.markerData.length - 1],
@@ -787,8 +797,10 @@ export class PagesComponent implements OnInit, OnDestroy {
           this.lat = parseFloat(el.Latitude);
           this.lng = parseFloat(el.Longitude);
         });
+        if(this.currentMap === 'Open Street Maps'){
         map.setView([this.lat, this.lng], 10);
         L.polyline(this.polylineMarkers).addTo(map);
+      }
       }
   }
   //#endregion
@@ -1090,6 +1102,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       nest.push(tempArr);
     });
     if (fenceData.gf_type == "Polygon") {
+      if(this.currentMap != 'Google Maps'){
       map.setView(nest[nest.length - 1], 10);
       if (plgn) {
         map.removeLayer(plgn);
@@ -1104,21 +1117,24 @@ export class PagesComponent implements OnInit, OnDestroy {
         map.removeLayer(marker);
       }
       plgn = L.polygon(nest, { color: "#FF1111" });
-      plgn.addTo(map);
+      plgn.addTo(map); 
+      map.fitBounds(nest);
+        $(".closeGeoFenceBtn").removeClass("d-none");
+    }
       if (mapType === "Google Maps") {
         $(".closeGeoFenceBtnGoogle").removeClass("d-none");
-      } else if (mapType === "Open Street Maps") {
-        $(".closeGeoFenceBtn").removeClass("d-none");
       }
+
       let postdata = {
         gf_type: fenceData.gf_type,
         fenceParam: nestArray,
       }
       this.GeoFencingService.newFence(postdata);
-      map.fitBounds(nest);
+     
       nest = [];
     }
     if (fenceData.gf_type == "Rectangle") {
+      if(this.currentMap != 'Google Maps'){
       map.setView(nest[0], 10);
       if (rect) {
         map.removeLayer(rect);
@@ -1138,7 +1154,7 @@ export class PagesComponent implements OnInit, OnDestroy {
         $(".closeGeoFenceBtnGoogle").removeClass("d-none");
       } else if (mapType === "Open Street Maps") {
         $(".closeGeoFenceBtn").removeClass("d-none");
-      }
+      }}
       let postdata ={
         gf_type: fenceData.gf_type,
         fenceParam: nestArray,
@@ -1148,6 +1164,8 @@ export class PagesComponent implements OnInit, OnDestroy {
       nest = [];
     }
     if (fenceData.gf_type == "Circle") {
+      
+      if(this.currentMap != 'Google Maps'){
       map.setView(nest[0], 10);
       if (circle) {
         map.removeLayer(circle);
@@ -1169,6 +1187,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       marker.addTo(map);
       circle = L.circle(...nest, fenceData.gf_diff, { color: "#00C190" });
       circle.addTo(map);
+    }
       if (mapType === "Google Maps") {
         $(".closeGeoFenceBtnGoogle").removeClass("d-none");
       } else if (mapType === "Open Street Maps") {
@@ -1198,8 +1217,9 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.getGeoFences(this.pageNo);
     $(".selectionList").removeClass("d-none");
   }
-  getGeoFences(currentPage:number){
+  getGeoFences(currentPage = this.pageNo){
       this.GeoFence.geoFence(currentPage).subscribe((data) => {
+
       this.totalPages = data.total_pages;
       this.Toast.clear();
       this.Toast.success(`Data Loaded from Page ${data.pageno} out of ${data.total_pages} page(s)`)
@@ -1211,7 +1231,8 @@ export class PagesComponent implements OnInit, OnDestroy {
     console.log('scrolled')
     if(this.totalPages != this.pageNo){
     this.fenceListLoaded = false;
-    this.getGeoFences(this.pageNo++)
+    this.pageNo = this.pageNo + 1;
+    this.getGeoFences(this.pageNo)
   }
   else{
     this.Toast.clear();
@@ -1486,7 +1507,7 @@ export class PagesComponent implements OnInit, OnDestroy {
           } else {
             this.Toast.error(
               data.message,
-              `Failed to execute command due to code ${data.code}`
+              `Process ended with status code ${data.code}`
             );
           }
         });
@@ -1533,7 +1554,7 @@ export class PagesComponent implements OnInit, OnDestroy {
             this.Toast.clear()
             this.Toast.error(
               data.message,
-              `Failed to execute command due to code ${data.code}`
+              `Process ended with status code ${data.code}`
             );
           }
         });
@@ -1576,7 +1597,7 @@ export class PagesComponent implements OnInit, OnDestroy {
             this.Toast.clear()
             this.Toast.error(
               data.message,
-              `Failed to execute command due to code ${data.code}`
+              `Process ended with status code ${data.code}`
             );
           }
         });

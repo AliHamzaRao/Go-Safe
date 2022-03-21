@@ -13,7 +13,7 @@ import { GeoFencePostService } from "src/app/_core/_AppServices/GeoFencePostingS
 import { ExportService } from "src/app/_core/_AppServices/exportService";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
 import { Router } from "@angular/router";
-import { City, Country, GeoFenceVM } from '../../_interfaces/DBresponse.model';
+import { City, Country, GeoFenceVM, History } from '../../_interfaces/DBresponse.model';
 import { CityService } from '../../_core/_AppServices/City.service';
 import { CountryService } from '../../_core/_AppServices/Country.service';
 declare const google: any;
@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit {
   longitude = 0;
   interval = 1000;
   markerData = [];
-  markersData = [];
+  markersData:History[]= [];
   setTime: any;
   gpsTime: any;
   currentState: number = 0;
@@ -105,10 +105,17 @@ export class DashboardComponent implements OnInit {
     RECDateTime: "test",
     Index: -1,
   };
+  origin:any={
+    lat:0,
+    lng:0
+  }
+  destination:any={
+    lat:0,
+    lng:0
+  }
   reg_no: string = "";
   AllCountries: Country[];
-  AllCities: City[];
-  AvailableCities: City[];
+  AllCities: City[]=[];
   //#region Constructor
   constructor(
     public appSettings: AppSettings,
@@ -156,12 +163,25 @@ export class DashboardComponent implements OnInit {
     });
     this.historyDataService.newMarkers.subscribe((data) => {
       this.markersData = data;
+      if(this.markersData.length){
+      this.origin={
+        lat: parseInt(this.markersData[0].Latitude),
+        lng:parseInt(this.markersData[0].Longitude)
+      }
+      this.destination={
+        lat: parseInt(this.markersData[this.markersData.length - 1].Latitude),
+        lng: parseInt(this.markersData[this.markersData.length - 1].Longitude)
+      }
       Historydata = this.markersData
+    }
     });
     this.CountryService.getCountries().subscribe(data=>{
       if(data.status){
         this.AllCountries = data.data
       }
+    })
+    this.CityService.getCities().subscribe(data=>{
+      this.AllCities = data.data
     })
     $(".mapDropdown").on("change", ($event) => {
       this.mapType = $(".mapDropdown").find(":selected").val();
@@ -189,11 +209,16 @@ export class DashboardComponent implements OnInit {
       $(".gmnoprint").removeClass("d-none");
     }
   }
+  mapClick(e){
+    console.log(e)
+  }
+  draw(e){
+    console.log(e)
+  }
   onCoutryChange = (e)=>{
     console.log(e.target.value)
-    this.countryName = e.target.value
-    this.AvailableCities = this.AllCities.filter((cities:City)=>cities.cnt_id == this.countryName)
-    console.log(this.AvailableCities)
+    this.countryName = e.target.value;
+    this.AllCities = this.AllCities.filter((cities:City)=>cities.cnt_id == this.countryName)
   }
   onCityChange = (e)=>{
     this.cityName = e.target.value  
@@ -212,13 +237,15 @@ export class DashboardComponent implements OnInit {
     if (circleArr.length == 1) {
       $(".GooglefenceTypeSelect").val("Circle");
       this.fenceType = "Circle";
-      $(".circleField").val(e.radius);
       let param: string = "";
       this.FenceParam = circleArr.forEach((item: any[]) => {
         param = item[0] + "," + item[1];
       });
       this.FenceParam = param.slice(0, param.length - 1);
       this.gf_diff = e.radius;
+      setTimeout(()=>{
+      $(".circleField").val(e.radius);
+      })
     }
   }
   drawRectangle(e) {

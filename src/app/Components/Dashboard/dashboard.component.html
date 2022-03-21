@@ -398,6 +398,7 @@
       [fitBounds]="true"
       [agmDrawingManager]="drawing"
       (mapReady)="mapLoad($event)"
+      (mapClick)="mapClick($event)"
     >
       <agm-polyline>
         <agm-polyline-point
@@ -406,6 +407,11 @@
           [longitude]="data.longitude"
         >
         </agm-polyline-point>
+        <agm-direction 
+    [origin]="origin" 
+    [destination]="destination"
+  >
+  </agm-direction>
         <span *ngIf="latitude != 0">
           <agm-marker
             [latitude]="latitude"
@@ -560,10 +566,10 @@
       class="inputSettings GooglefenceTypeSelect"
       (change)="onCoutryChange($event)"
     >
-      <option value="Select Fence Type" disabled selected>
-        Select Fence Type
+      <option value="Select Country" disabled selected>
+        Select Country
       </option>
-      <option *ngFor="let country of AllCountries; let i - index" [value]="country.cnt_id">{{country.cnt_name}}</option>
+      <option *ngFor="let country of AllCountries; let i = index" [value]="country.cnt_id">{{country.cnt_name}}</option>
     </select>
     </div>
     <div class="col-12 p-0 m-0 pt-2">
@@ -572,10 +578,10 @@
         class="inputSettings GooglefenceTypeSelect"
         (change)="onCityChange($event)"
       >
-        <option value="Select Fence Type" disabled selected>
-          Select Fence Type
+        <option value="Select City" disabled selected>
+          Select City
         </option>
-        <option *ngFor="let city of AllCities; let i - index" [value]="country.cty_id">{{country.cty_name}}</option>
+        <option *ngFor="let city of AllCities; let i = index" [value]="city.cty_id">{{city.cty_name}}</option>
 
       </select>
     </div>
@@ -635,6 +641,7 @@
   <button
     mat-icon-button
     class="recordControl"
+    (click)="draw($event)"
     data-title="Draw Route"
   >
     <img src="./assets/icons/Route.png" />

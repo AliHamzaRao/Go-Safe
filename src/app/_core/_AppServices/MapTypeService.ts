@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 export class mapTypeService {
     constructor() { }
 
-    private currentMap = new BehaviorSubject('Open Street Maps');
+    private currentMap = new BehaviorSubject('Google Maps');
     newMap = this.currentMap.asObservable();
     SetMap(map: string) {
         this.currentMap.next(map);

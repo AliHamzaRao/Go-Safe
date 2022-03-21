@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { VehicleListResolver } from 'src/app/_resolvers/Vehicle_Post_Resolver';
 import { AgmDrawingModule } from "@agm/drawing"
+import {AgmDirectionModule} from "agm-direction"
 export const routes = [
   { path: '', component: DashboardComponent, pathMatch: 'full' }
 ];
@@ -27,9 +28,10 @@ export const routes = [
     MatIconModule,
     MatButtonModule,
     AgmDrawingModule,
+    AgmDirectionModule,
     AgmCoreModule.forRoot({
       apiKey: 'AIzaSyBc7ZR2g0xCZD881nyphW7hCe2OsUvBIw8',
-      libraries: ['drawing', 'places', 'geometry']
+      libraries: ['drawing', 'places', 'geometry', 'directions']
     })
   ],
   declarations: [

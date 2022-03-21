@@ -9,9 +9,6 @@ import { Router } from '@angular/router';
 export class AlarmsService {
     response: any;
     constructor(public http: HttpClient, public Router: Router) { }
-
-    // private currentMap = new BehaviorSubject('Open Street Maps');
-    // newMap = this.currentMap.asObservable();
     getNotifications(value: any): Observable<AlarmsResponse> {
         if (this.getApiUrl().length) {
             return this.http.post<AlarmsResponse>(this.getApiUrl() + '/api/Alarm/veh_alrm', value);
