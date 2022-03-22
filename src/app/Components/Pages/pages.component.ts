@@ -17,7 +17,6 @@ import { GeoFenceService } from "src/app/_core/_AppServices/GeoFenceService";
 import { GeoFencingService } from "src/app/_core/_AppServices/GeoFencingService";
 import "leaflet";
 import { AlarmsService } from "src/app/_core/_AppServices/AlarmsService";
-import { GeoFencePostService } from "src/app/_core/_AppServices/GeoFencePostingService";
 import { ExportService } from "src/app/_core/_AppServices/exportService";
 import { Vehicles } from "src/app/_interfaces/vehicle.model";
 import { dashboardService } from "src/app/_core/_AppServices/dashboard.service";
@@ -163,7 +162,6 @@ export class PagesComponent implements OnInit, OnDestroy {
     public GeoFencingService: GeoFencingService,
     public Toast: ToastrService,
     public Alarms: AlarmsService,
-    public PostFence: GeoFencePostService,
     public ExportService: ExportService,
     public dashboardService: dashboardService,
     public RegistrationNoService: RegistrationNoService,
@@ -255,7 +253,6 @@ export class PagesComponent implements OnInit, OnDestroy {
         devices.forEach((item) => {
           $(`[data-device_id]`).each((param, el) => {
             if (item.id == el.id) {
-              console.log(item.id == el.id);
               $(el).prop('checked', true)
             }
             else {
@@ -782,8 +779,10 @@ export class PagesComponent implements OnInit, OnDestroy {
           this.lat = this.markers[this.markers.length - 1][1]
           this.lng = this.markers[this.markers.length - 1][2]
           let bounds = new L.LatLngBounds([[Math.max(this.lat), Math.max(this.lng)], [Math.min(this.lat), Math.min(this.lng)]]);
+        if(this.currentMap == 'Open Street Maps'){
           map.fitBounds(bounds);
           currentMarker.addTo(map);
+        }
           this.AllMarkers.push(currentMarker);
         }
       }) : this.RefreshMap();
@@ -1121,7 +1120,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       map.fitBounds(nest);
         $(".closeGeoFenceBtn").removeClass("d-none");
     }
-      if (mapType === "Google Maps") {
+      else if (mapType === "Google Maps") {
         $(".closeGeoFenceBtnGoogle").removeClass("d-none");
       }
 
@@ -1150,17 +1149,17 @@ export class PagesComponent implements OnInit, OnDestroy {
       }
       rect = L.rectangle(nest, { color: "#2876FC" });
       rect.addTo(map);
-      if (mapType === "Google Maps") {
-        $(".closeGeoFenceBtnGoogle").removeClass("d-none");
-      } else if (mapType === "Open Street Maps") {
         $(".closeGeoFenceBtn").removeClass("d-none");
-      }}
+      map.fitBounds(nest);
+    }
+     else if (mapType == "Google Maps") {
+        $(".closeGeoFenceBtnGoogle").removeClass("d-none");
+      }
       let postdata ={
         gf_type: fenceData.gf_type,
         fenceParam: nestArray,
       }
       this.GeoFencingService.newFence(postdata);
-      map.fitBounds(nest);
       nest = [];
     }
     if (fenceData.gf_type == "Circle") {
@@ -1187,18 +1186,35 @@ export class PagesComponent implements OnInit, OnDestroy {
       marker.addTo(map);
       circle = L.circle(...nest, fenceData.gf_diff, { color: "#00C190" });
       circle.addTo(map);
+       $(".closeGeoFenceBtn").removeClass("d-none");
     }
-      if (mapType === "Google Maps") {
+      else if (mapType == "Google Maps") {
         $(".closeGeoFenceBtnGoogle").removeClass("d-none");
-      } else if (mapType === "Open Street Maps") {
-        $(".closeGeoFenceBtn").removeClass("d-none");
-      }
+      } 
       this.GeoFencingService.newFence({gf_type: fenceData.gf_type,fenceParam: nestArray,gf_diff: fenceData.gf_diff,
         }
       );
       nest = [];
     }
     $(".selectionList").addClass("d-none");;
+  }
+  editFence=(id:any)=>{
+    console.log(id);
+  }
+  deleteFence=(id:any)=>{
+    this.fenceListLoaded = false;
+    console.log(id);
+    this.GeoFence.deleteFence(id).subscribe(data=>{
+      if(data._object._data == ''){
+        this.Toast.clear();
+        this.Toast.success(data._object.Message, "Action Performed")
+        this.geoFences = [];
+        this.pageNo = 1;
+        setTimeout(()=>{
+          this.GeoFencing()
+        },2000)
+      }
+    })
   }
   RemoveFencing() {
     this.RefreshMap()
@@ -1228,7 +1244,6 @@ export class PagesComponent implements OnInit, OnDestroy {
     }); 
   }
   onScrollDown(){
-    console.log('scrolled')
     if(this.totalPages != this.pageNo){
     this.fenceListLoaded = false;
     this.pageNo = this.pageNo + 1;
@@ -1257,10 +1272,8 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.cityName = e.target.value
   }
   onCountryChange = (e) =>{
-    console.log(e.target.value)
     this.countryName = e.target.value
     this.AvailableCities = this.AllCities.filter((cities:City)=>cities.cnt_id == this.countryName)
-    console.log(this.AvailableCities)
   }
   onInputChange = (e) => {
     this.fenceType = e.target.value;
@@ -1500,9 +1513,8 @@ export class PagesComponent implements OnInit, OnDestroy {
         this.countryName &&
         this.fenceName.length
       ) {
-        this.PostFence.addGeoFence(circleParams).subscribe((data) => {
+        this.GeoFence.addGeoFence(circleParams).subscribe((data) => {
           if (data.status) {
-            console.log()
             this.Toast.success(data.message, "Created Successfully");
           } else {
             this.Toast.error(
@@ -1546,7 +1558,7 @@ export class PagesComponent implements OnInit, OnDestroy {
         this.countryName &&
         this.fenceName.length
       ) {
-        this.PostFence.addGeoFence(polyparams).subscribe((data) => {
+        this.GeoFence.addGeoFence(polyparams).subscribe((data) => {
           if (data.status) {
             this.Toast.clear()
             this.Toast.success(data.message, "Polygon Created Successfully");
@@ -1589,7 +1601,7 @@ export class PagesComponent implements OnInit, OnDestroy {
         this.countryName &&
         this.fenceName.length
       ) {
-        this.PostFence.addGeoFence(rectparams).subscribe((data) => {
+        this.GeoFence.addGeoFence(rectparams).subscribe((data) => {
           if (data.status) {
             this.Toast.clear()
             this.Toast.success(data.message, "Rectangle Created Successfully");

@@ -167,17 +167,17 @@
 }
 .mat-hover {
   font-size: 12px;
-}
-.mat-child {
-  font-size: 12px !important;
-}
-.mat-hover:hover {
+&:hover {
   color: rgb(251, 182, 42) !important;
   text-decoration: underline;
 }
-.mat-child:hover {
-  background-color: rgb(251, 182, 42) !important;
-  color: #283593 !important;
+}
+.mat-child {
+  font-size: 12px !important;
+  &:hover {
+    background-color: rgb(251, 182, 42) !important;
+    color: #283593 !important;
+  }
 }
 .mat-child-active {
   background-color: rgb(251, 182, 42) !important;
@@ -402,19 +402,6 @@
   height: 50% !important;
 }
 
-// .recordControl:nth-of-type(1) {
-// margin-left: calc(10rem / 5);
-// background-image: url("./assets/icons/Export.png");
-// }
-// .recordControl:nth-of-type(2) {
-//   // background-image: url("./assets/icons/Route.png");
-// }
-// .recordControl:nth-of-type(3) {
-//   // background-image: url("./assets/icons/Pause.png");
-// }
-// .recordControl:nth-of-type(4) {
-//   // background-image: url("./assets/icons/Play.png");
-// }
 .recordControl:nth-of-type(5) {
   height: 50% !important;
 }

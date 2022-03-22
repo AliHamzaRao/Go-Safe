@@ -1119,50 +1119,69 @@
               "
             >
               <ng-container *ngFor="let geoFence of geoFences">
+                <div class="matListOption cursor-pointer">
+
                 <div
                   [value]="geoFence.gf_name"
-                  class="matListOption cursor-pointer"
+                  style="width: 100%; display: flex; align-items: center;"
                   (click)="
-                    Draw({
-                      FenceParam: geoFence.FenceParam,
-                      gf_id: geoFence.gf_id,
-                      gf_diff: geoFence.gf_diff,
-                      gf_name: geoFence.gf_name,
-                      gf_type: geoFence.gf_type,
-                      gf_diff: geoFence.gf_diff
-                    })
+                  Draw({
+                    FenceParam: geoFence.FenceParam,
+                    gf_id: geoFence.gf_id,
+                    gf_diff: geoFence.gf_diff,
+                    gf_name: geoFence.gf_name,
+                    gf_type: geoFence.gf_type,
+                    gf_diff: geoFence.gf_diff
+                  })
                   "
-                >
+                  >
                   <ng-container *ngIf="geoFence.gf_type === 'Circle'">
                     <img
-                      style="margin-right: 10px"
+                      style="margin-right: 10px;"
                       src="./assets/icons/Circle.jpg"
                       alt="cir"
                     />
                   </ng-container>
                   <ng-container *ngIf="geoFence.gf_type === 'Rectangle'">
                     <img
-                      style="margin-right: 10px"
+                      style="margin-right: 10px;"
                       src="./assets/icons/square.jpg"
                       alt="sq"
-                    />
-                  </ng-container>
-                  <ng-container *ngIf="geoFence.gf_type === 'Polygon'">
+                      />
+                    </ng-container>
+                    <ng-container *ngIf="geoFence.gf_type === 'Polygon'">
                     <img
-                      style="margin-right: 10px"
+                      style="margin-right: 10px;"
                       src="./assets/icons/polygone.png"
                       alt="poly"
                     />
                   </ng-container>
-                  <p class="p-0 m-0">
+                  <p class="p-0 m-0" style="clear: both !important;">
                     {{ geoFence.gf_name }}
                   </p>
+              </div>
+                <div>
+                <button mat-icon-button class="mat-icon-button-custom" [matMenuTriggerFor]="menu">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                  <button mat-menu-item class="mat-child" (click)="editFence(geoFence.gf_id)">
+                    <mat-icon>mode_edit</mat-icon>
+                    <span>Edit Fence</span>
+                  </button>
+                  <button mat-menu-item class="mat-child" (click)="deleteFence(geoFence.gf_id)">
+                    <mat-icon>delete_forever</mat-icon>
+                    <span>Delete Fence</span>
+                  </button>
+                </mat-menu>
+                </div>
                 </div>
               </ng-container>
             </ng-container>
             <ng-container *ngIf="searchedFences.length">
               <ng-container *ngFor="let fence of searchedFences">
-                <div
+                <div class="matListOption">
+                  <div
                   [value]="fence.gf_name"
                   class="matListOption cursor-pointer"
                   (click)="
@@ -1185,9 +1204,9 @@
                   </ng-container>
                   <ng-container *ngIf="fence.gf_type === 'Rectangle'">
                     <img
-                      style="margin-right: 10px"
-                      src="./assets/icons/square.jpg"
-                      alt="sq"
+                    style="margin-right: 10px"
+                    src="./assets/icons/square.jpg"
+                    alt="sq"
                     />
                   </ng-container>
                   <ng-container *ngIf="fence.gf_type === 'Polygon'">
@@ -1200,6 +1219,23 @@
                   <p class="p-0 m-0">
                     {{ fence.gf_name }}
                   </p>
+                </div>
+                <div>
+
+                  <button mat-icon-button [matMenuTriggerFor]="menu+fence.gf_id">
+                    <mat-icon>more_vert</mat-icon>
+                  </button>
+                <mat-menu #menu+fence.gf_id="matMenu">
+                  <button mat-menu-item class="mat-child">
+                    <mat-icon>mode_edit</mat-icon>
+                    <span>Edit Fence</span>
+                  </button> 
+                  <button mat-menu-item class="mat-child">
+                    <mat-icon>delete_forever</mat-icon>
+                    <span>Delete Fence</span>
+                  </button>
+                </mat-menu>
+              </div>
                 </div>
               </ng-container>
             </ng-container>

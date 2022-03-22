@@ -80,6 +80,9 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
         },
       },
     }),
+    AgmCoreModule.forRoot({
+      apiKey:'AIzaSyCH09ipvjT9ImiW3hJts1Z4Gp8JovISnxI'
+    }),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     NgbModule
   ],

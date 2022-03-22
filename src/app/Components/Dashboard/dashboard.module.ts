@@ -30,7 +30,7 @@ export const routes = [
     AgmDrawingModule,
     AgmDirectionModule,
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyBc7ZR2g0xCZD881nyphW7hCe2OsUvBIw8',
+      apiKey: 'AIzaSyCH09ipvjT9ImiW3hJts1Z4Gp8JovISnxI',
       libraries: ['drawing', 'places', 'geometry', 'directions']
     })
   ],

@@ -1,5 +1,5 @@
 import { PacketParser } from "../Components/dashboard/PacketParser";
-export class Response {
+export class  Response {
   code: number;
   status: boolean;
   message: string;
@@ -198,6 +198,13 @@ export class Setting {
 export class commandPostResponse {
   _object: {
     Message: number;
+    code: number;
+    _data: string;
+  };
+}
+export class fenceDeleteResponse {
+  _object: {
+    Message: string;
     code: number;
     _data: string;
   };

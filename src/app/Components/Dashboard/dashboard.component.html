@@ -407,11 +407,11 @@
           [longitude]="data.longitude"
         >
         </agm-polyline-point>
-        <agm-direction 
+        <!-- <agm-direction 
     [origin]="origin" 
     [destination]="destination"
   >
-  </agm-direction>
+  </agm-direction> -->
         <span *ngIf="latitude != 0">
           <agm-marker
             [latitude]="latitude"
@@ -461,6 +461,9 @@
           [visible]="true"
           [zIndex]="1"
           [radius]="geoFenceData.gf_diff"
+          [editable]="true"
+          (centerChange)="circleChange($event)"
+          (radiusChange)="radiusChange($event)"
         ></agm-circle>
       </span>
       <span ngElse>

@@ -9,13 +9,13 @@ import { historyDataService } from "src/app/_core/_AppServices/HistoryDataServic
 import { SingleDeviceDataService } from "src/app/_core/_AppServices/SingleDeviceDataService";
 import { ToastrService } from "ngx-toastr";
 import { GeoFencingService } from "src/app/_core/_AppServices/GeoFencingService";
-import { GeoFencePostService } from "src/app/_core/_AppServices/GeoFencePostingService";
 import { ExportService } from "src/app/_core/_AppServices/exportService";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
 import { Router } from "@angular/router";
-import { City, Country, GeoFenceVM, History } from '../../_interfaces/DBresponse.model';
+import { City, Country, GeoFenceVM, History, GeoFence } from '../../_interfaces/DBresponse.model';
 import { CityService } from '../../_core/_AppServices/City.service';
 import { CountryService } from '../../_core/_AppServices/Country.service';
+import { GeoFenceService } from '../../_core/_AppServices/GeoFenceService';
 declare const google: any;
 var Historydata = [];
 @Component({
@@ -127,12 +127,12 @@ export class DashboardComponent implements OnInit {
     public singleDeviceDataService: SingleDeviceDataService,
     public Toast: ToastrService,
     public GeoFencingService: GeoFencingService,
-    public PostFence: GeoFencePostService,
     public ExportService: ExportService,
     public RegistrationNoService: RegistrationNoService,
     public Router: Router,
     public CityService: CityService,
-    public CountryService : CountryService
+    public CountryService : CountryService,
+    public GeoFence: GeoFenceService
   ) {
     this.settings = this.appSettings.settings;
   }
@@ -216,12 +216,17 @@ export class DashboardComponent implements OnInit {
     console.log(e)
   }
   onCoutryChange = (e)=>{
-    console.log(e.target.value)
     this.countryName = e.target.value;
     this.AllCities = this.AllCities.filter((cities:City)=>cities.cnt_id == this.countryName)
   }
   onCityChange = (e)=>{
     this.cityName = e.target.value  
+  }
+  circleChange = (e)=>{
+    console.log(e);
+  }
+  radiusChange = (e)=>{
+    console.log(e);
   }
   drawCircle(e) {
     if (this.circle) {
@@ -315,7 +320,7 @@ export class DashboardComponent implements OnInit {
       FenceParam: this.FenceParam,
     };
     if (this.fenceName.length) {
-      this.PostFence.addGeoFence(polyparams).subscribe((data) => {
+      this.GeoFence.addGeoFence(polyparams).subscribe((data) => {
         if (data.status) {
           this.Toast.success(data.message, "Polygon Created Successfully");
         } else {
@@ -343,7 +348,7 @@ export class DashboardComponent implements OnInit {
       FenceParam: this.FenceParam,
     };
     if (this.fenceName.length) {
-      this.PostFence.addGeoFence(rectParam).subscribe((data) => {
+      this.GeoFence.addGeoFence(rectParam).subscribe((data) => {
         if (data.status) {
           this.Toast.success(data.message, "Rectangle Created Successfully");
         } else {
@@ -372,7 +377,7 @@ export class DashboardComponent implements OnInit {
       FenceParam: this.FenceParam,
     };
     if (this.fenceName.length) {
-      this.PostFence.addGeoFence(circleParams).subscribe((data) => {
+      this.GeoFence.addGeoFence(circleParams).subscribe((data) => {
         if (data.status) {
           this.Toast.success(data.message, "Circle Created Successfully");
         } else {
@@ -458,7 +463,7 @@ export class DashboardComponent implements OnInit {
   play() {
     
     this.markersData.forEach((element) => {
-      this.markerData.push({
+        this.markerData.push({
         latitude: parseFloat(element.Latitude),
         longitude: parseFloat(element.Longitude),
       });
@@ -470,8 +475,8 @@ export class DashboardComponent implements OnInit {
   move() {
     if (this.currentState !== this.markerData.length - 1) {
       this.setTime = setInterval(() => {
-        this.latitude = this.markerData[this.currentState].latitude;
-        this.longitude = this.markerData[this.currentState].longitude;
+        this.latitude = this.lat = this.markerData[this.currentState].latitude;
+        this.longitude = this.lng = this.markerData[this.currentState].longitude;
         this.historyInfo = Historydata[this.currentState];
         this.currentState++;
         if (this.currentState === this.markerData.length - 1) {
@@ -532,8 +537,6 @@ export class DashboardComponent implements OnInit {
     this.Router.navigate(['/'])
   }
   RemoveFencing() {
-    this.Router.navigate(['/']).then(() => {
-      this.Router.navigate(['/showgeofence'])
-    })
+  $('.selectionList').removeClass('d-none')
   }
 }
