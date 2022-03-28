@@ -36,6 +36,7 @@ import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
 import { DataTablesModule } from 'angular-datatables';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { SharedGrid } from './SharedGridComponent/sharedgrid.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -116,6 +117,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
     NgbModule,
     DataTablesModule,
     NgSelectModule
+  ],
+  declarations:[
+    SharedGrid
   ]
 })
 export class SharedModule { }

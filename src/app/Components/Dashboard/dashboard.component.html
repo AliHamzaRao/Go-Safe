@@ -427,11 +427,13 @@
           fillColor="#FF0000"
           [fillOpacity]="0.5"
           [paths]="geoFenceData.fenceParam"
-          [strokeColor]="blue"
+          [strokeColor]="'black'"
           [strokeOpacity]="0.6"
           [strokeWeight]="2"
           [visible]="true"
           [zIndex]="1"
+          [editable]="true"
+          (polyPathsChange)="polygonChange($event)"
         ></agm-polygon>
       </span>
       <span *ngIf="geoFenceData.gf_type == 'Rectangle'">=
@@ -442,11 +444,13 @@
           [south]="geoFenceData.fenceParam[0].lat"
           [east]="geoFenceData.fenceParam[1].lng"
           [west]="geoFenceData.fenceParam[0].lng"
-          strokeColor="#2876FC"
-          [strokeOpacity]="0.6"
-          [strokeWeight]="2"
+          strokeColor="#000"
+          [strokeOpacity]="1"
+          [strokeWeight]="3"
           [visible]="true"
           [zIndex]="1"
+          [editable]="true"
+          (boundsChange)="rectangleChange($event)"
         ></agm-rectangle>
       </span>
       <span *ngIf="geoFenceData.gf_type == 'Circle'">=
@@ -455,12 +459,13 @@
           [longitude]="geoFenceData.fenceParam[0].lng"
           fillColor="#03C291"
           [fillOpacity]="0.5"
-          strokeColor="#03C291"
-          [strokeOpacity]="0.6"
+          strokeColor="#000"
+          [strokeOpacity]="1"
           [strokeWeight]="2"
           [visible]="true"
           [zIndex]="1"
           [radius]="geoFenceData.gf_diff"
+          [editable]="true"
         ></agm-circle>
       </span>
       <span ngElse>

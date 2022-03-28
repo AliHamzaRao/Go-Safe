@@ -154,11 +154,12 @@ export class DashboardComponent implements OnInit {
     );
     this.GeoFencingService.currentFence.subscribe((data: GeoFenceVM) => { 
       this.geoFenceData = data;
-      if (data.fenceParam.length) {
-        data.fenceParam.forEach((item) => {
+      if (this.geoFenceData.fenceParam.length) {
+        this.geoFenceData.fenceParam.forEach((item) => {
           this.lat = item.lat;
           this.lng = item.lng;
         });
+        this.zoom = 8;
       }
     });
     this.historyDataService.newMarkers.subscribe((data) => {
@@ -216,7 +217,6 @@ export class DashboardComponent implements OnInit {
     console.log(e)
   }
   onCoutryChange = (e)=>{
-    console.log(e.target.value)
     this.countryName = e.target.value;
     this.AllCities = this.AllCities.filter((cities:City)=>cities.cnt_id == this.countryName)
   }
@@ -314,6 +314,7 @@ export class DashboardComponent implements OnInit {
       CityNCountry: this.cityName + ", " + this.countryName,
       FenceParam: this.FenceParam,
     };
+    console.log(this.FenceParam)
     if (this.fenceName.length) {
       this.PostFence.addGeoFence(polyparams).subscribe((data) => {
         if (data.status) {
@@ -328,6 +329,22 @@ export class DashboardComponent implements OnInit {
     } else {
       this.Toast.warning("Please Fill up all the fields", "Invalid Input");
     }
+  }
+  rectangleChange(e){
+    console.log(e);
+  }
+  polygonChange(e){
+    let newdata:any[] = e.newArr[0]
+    let changePolyParams:any[]=[];
+    newdata.forEach(element => {
+      changePolyParams.push([element.lat,element.lng])
+    });
+    let param :string = '';
+      changePolyParams.forEach((item: any[]) => {
+        param += item.toString() + "|";
+      })
+      this.FenceParam = param;
+      console.log(this.FenceParam,param);
   }
   sendRectangle() {
     // this.cityName = $(".cityGoogle").val();

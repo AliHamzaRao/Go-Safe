@@ -23,7 +23,7 @@ import { Vehicles } from "src/app/_interfaces/vehicle.model";
 import { dashboardService } from "src/app/_core/_AppServices/dashboard.service";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
 import { CurrentStateService } from '../../_core/_AppServices/CurrentStateService';
-import { Alarm, GeoFence, History, City, Country } from '../../_interfaces/DBresponse.model';
+import { Alarm, GeoFence, History, City, Country, PagingResponse } from '../../_interfaces/DBresponse.model';
 import { AllControlsDialogComponent } from "./Dialogs/AllControlsDialog/AllControlsDialog.component"
 import { AllSettingsDialogComponent } from "./Dialogs/AllSettingsDialog/AllSettingsDialog.component"
 import { DeviceIdService } from '../../_core/_AppServices/DeviceId.service';
@@ -252,10 +252,9 @@ export class PagesComponent implements OnInit, OnDestroy {
 
     if (devices.length) {
       this.listLoading = true;
-        devices.forEach((item) => {
+        devices.forEach((item) => { 
           $(`[data-device_id]`).each((param, el) => {
             if (item.id == el.id) {
-              console.log(item.id == el.id);
               $(el).prop('checked', true)
             }
             else {
@@ -489,7 +488,6 @@ export class PagesComponent implements OnInit, OnDestroy {
       });
       this.treeLoaded = true;
     } catch (err) {
-      console.error(err, "Custom Error");
     }
   }
   //#endregion
@@ -782,8 +780,10 @@ export class PagesComponent implements OnInit, OnDestroy {
           this.lat = this.markers[this.markers.length - 1][1]
           this.lng = this.markers[this.markers.length - 1][2]
           let bounds = new L.LatLngBounds([[Math.max(this.lat), Math.max(this.lng)], [Math.min(this.lat), Math.min(this.lng)]]);
+        if(this.currentMap === 'Open Street Maps'){
           map.fitBounds(bounds);
           currentMarker.addTo(map);
+        }
           this.AllMarkers.push(currentMarker);
         }
       }) : this.RefreshMap();
@@ -1101,6 +1101,7 @@ export class PagesComponent implements OnInit, OnDestroy {
       }
       nest.push(tempArr);
     });
+    $(".selectionList").addClass("d-none");
     if (fenceData.gf_type == "Polygon") {
       if(this.currentMap != 'Google Maps'){
       map.setView(nest[nest.length - 1], 10);
@@ -1150,17 +1151,17 @@ export class PagesComponent implements OnInit, OnDestroy {
       }
       rect = L.rectangle(nest, { color: "#2876FC" });
       rect.addTo(map);
-      if (mapType === "Google Maps") {
-        $(".closeGeoFenceBtnGoogle").removeClass("d-none");
-      } else if (mapType === "Open Street Maps") {
-        $(".closeGeoFenceBtn").removeClass("d-none");
-      }}
+      $(".closeGeoFenceBtn").removeClass("d-none");
+      map.fitBounds(nest);
+    }
+    else if (mapType === "Google Maps") {
+      $(".closeGeoFenceBtnGoogle").removeClass("d-none");
+    }
       let postdata ={
         gf_type: fenceData.gf_type,
         fenceParam: nestArray,
       }
       this.GeoFencingService.newFence(postdata);
-      map.fitBounds(nest);
       nest = [];
     }
     if (fenceData.gf_type == "Circle") {
@@ -1187,18 +1188,16 @@ export class PagesComponent implements OnInit, OnDestroy {
       marker.addTo(map);
       circle = L.circle(...nest, fenceData.gf_diff, { color: "#00C190" });
       circle.addTo(map);
+      $(".closeGeoFenceBtn").removeClass("d-none");
     }
-      if (mapType === "Google Maps") {
+     else if (mapType === "Google Maps") {
         $(".closeGeoFenceBtnGoogle").removeClass("d-none");
-      } else if (mapType === "Open Street Maps") {
-        $(".closeGeoFenceBtn").removeClass("d-none");
-      }
+      } 
       this.GeoFencingService.newFence({gf_type: fenceData.gf_type,fenceParam: nestArray,gf_diff: fenceData.gf_diff,
         }
       );
       nest = [];
     }
-    $(".selectionList").addClass("d-none");;
   }
   RemoveFencing() {
     this.RefreshMap()
@@ -1218,7 +1217,7 @@ export class PagesComponent implements OnInit, OnDestroy {
     $(".selectionList").removeClass("d-none");
   }
   getGeoFences(currentPage = this.pageNo){
-      this.GeoFence.geoFence(currentPage).subscribe((data) => {
+      this.GeoFence.geoFence(currentPage).subscribe((data:PagingResponse<GeoFence[]>) => {
 
       this.totalPages = data.total_pages;
       this.Toast.clear();
@@ -1228,7 +1227,6 @@ export class PagesComponent implements OnInit, OnDestroy {
     }); 
   }
   onScrollDown(){
-    console.log('scrolled')
     if(this.totalPages != this.pageNo){
     this.fenceListLoaded = false;
     this.pageNo = this.pageNo + 1;
@@ -1257,10 +1255,8 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.cityName = e.target.value
   }
   onCountryChange = (e) =>{
-    console.log(e.target.value)
     this.countryName = e.target.value
     this.AvailableCities = this.AllCities.filter((cities:City)=>cities.cnt_id == this.countryName)
-    console.log(this.AvailableCities)
   }
   onInputChange = (e) => {
     this.fenceType = e.target.value;
@@ -1502,7 +1498,6 @@ export class PagesComponent implements OnInit, OnDestroy {
       ) {
         this.PostFence.addGeoFence(circleParams).subscribe((data) => {
           if (data.status) {
-            console.log()
             this.Toast.success(data.message, "Created Successfully");
           } else {
             this.Toast.error(

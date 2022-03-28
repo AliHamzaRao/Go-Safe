@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { jsPDF } from "jspdf"
 import "jspdf-autotable"
-// import * as FileSaver from 'file-saver';
-// import * as XLSX from 'xlsx';
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.csv';
@@ -99,7 +97,7 @@ export class ExportService {
         // });
         // var rows = [];
         doc.text(`History for device ${title}`, 0, 0, { align: 'center' })
-        doc.table(0, 0, data, head, { padding: 1, fontSize: 8, headerBackgroundColor: "yellow", headerTextColor: "black" })
+        doc.table(0, 0, data, head, { padding: 1, fontSize: 8, headerBackgroundColor: "yellow", headerTextColor: "black" ,margins:10})
         doc.save(title + "_" + Date.now() + ".pdf")
     }
 }

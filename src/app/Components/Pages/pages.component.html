@@ -1,6 +1,4 @@
 <mat-toolbar
-  [fxHide.md]="true"
-  [fxShow.lg]="true"
   style="font-size: 12px; background-color: #18497d; color: white"
   class="flex-p-x"
 >
@@ -36,14 +34,19 @@
       <button mat-button class="mat-hover" [matMenuTriggerFor]="routeMenu">
         Route <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
+      <button mat-button class="mat-hover" [matMenuTriggerFor]="mapMenu">
+        {{ currentMap }} <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+      <button mat-button class="mat-hover" [matMenuTriggerFor]="reportsMenu">
+        Reports <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+      <button mat-button class="mat-hover" [matMenuTriggerFor]="AdminMenu">
+        Admin <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
       <mat-menu #routeMenu="matMenu">
         <button mat-menu-item class="mat-child">Add Route</button>
         <button mat-menu-item class="mat-child">Check Ruote</button>
       </mat-menu>
-      <button mat-button class="mat-hover" [matMenuTriggerFor]="mapMenu">
-        {{ currentMap }} <mat-icon>keyboard_arrow_down</mat-icon>
-      </button>
-
       <mat-menu #GeoFenceMenu="matMenu" style="z-index: 1 !important;">
         <button
           mat-menu-item
@@ -60,6 +63,73 @@
           [class.mat-child-active]="location == '/createfence'"
         >
           Create Fence
+        </button>
+      </mat-menu>
+      <mat-menu #GeoFenceMenu="matMenu" style="z-index: 1 !important;">
+        <button
+          mat-menu-item
+          class="mat-child"
+          routerLink="/showgeofence"
+          [class.mat-child-active]="location == '/showgeofence'"
+        >
+          Show Fence
+        </button>
+        <button
+          mat-menu-item
+          class="mat-child"
+          routerLink="/createfence"
+          [class.mat-child-active]="location == '/createfence'"
+        >
+          Create Fence
+        </button>
+      </mat-menu>
+      <mat-menu #AdminMenu="matMenu" style="z-index: 1 !important;">
+        <button
+          mat-menu-item
+          class="mat-child"
+          routerLink="/brands"
+          [class.mat-child-active]="location == '/brands'"
+        >Brands
+        </button>
+        <button
+          mat-menu-item
+          class="mat-child"
+          routerLink="/brandtypes"
+          [class.mat-child-active]="location == '/brandtypes'"
+        >
+          Brands Types
+        </button>
+        <button
+          mat-menu-item
+          class="mat-child"
+          routerLink="/brandversions"
+          [class.mat-child-active]="location == '/brandversion'"
+        >
+          Brands Versions
+        </button>
+        <button
+          mat-menu-item
+          class="mat-child"
+          routerLink="/colors"
+          [class.mat-child-active]="location == '/colors'"
+        >
+          Colors
+        </button>
+        <button
+          mat-menu-item
+          class="mat-child"
+          routerLink="/countries"
+          [class.mat-child-active]="location == '/countries'"
+        >
+        Countries
+        </button>
+        <button
+          mat-menu-item
+          class="mat-child"
+          routerLink="/cities"
+          [class.mat-child-active]="location == '/cities'"
+        >
+        Cities
         </button>
       </mat-menu>
       <mat-menu #mapMenu="matMenu">
@@ -82,10 +152,6 @@
           Google Maps
         </button>
       </mat-menu>
-
-      <button mat-button class="mat-hover" [matMenuTriggerFor]="reportsMenu">
-        Reports <mat-icon>keyboard_arrow_down</mat-icon>
-      </button>
       <mat-menu #reportsMenu="matMenu">
         <button
           mat-menu-item

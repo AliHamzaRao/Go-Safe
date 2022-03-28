@@ -2,16 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http"
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { GeoFence, PagingResponse } from '../../_interfaces/DBresponse.model';
+import {  PagingResponse, Brand } from '../../_interfaces/DBresponse.model';
 @Injectable({
     providedIn: 'root',
 })
-export class GeoFenceService {
+export class BrandsService {
     response: any;
     constructor(public http: HttpClient, public Router: Router) { }
-    geoFence(pageNo:number): Observable<PagingResponse<GeoFence[]>> {
+    getBrands(pageNo:number): Observable<PagingResponse<Brand[]>> {
         if (this.getApiUrl().length) {
-            return this.http.get<PagingResponse<GeoFence[]>>(`${this.getApiUrl()}/api/GEOFENCES/list/20/${pageNo}`);
+            return this.http.get<PagingResponse<Brand[]>>(`${this.getApiUrl()}/api/Brand/list/100/${pageNo}`);
         }
         else {
             this.Router.navigateByUrl('/login')

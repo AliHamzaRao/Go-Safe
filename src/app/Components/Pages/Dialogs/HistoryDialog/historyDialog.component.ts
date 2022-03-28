@@ -48,7 +48,6 @@ import { mapTypeService } from '../../../../_core/_AppServices/MapTypeService';
     }
     periodTypeChange(e){
       let date: Date = new Date;
-        console.log(e.target.value);
         let currentPeriod: string = e.target.value;
         switch(currentPeriod){
         case "Today":

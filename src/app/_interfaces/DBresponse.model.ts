@@ -67,6 +67,11 @@ export class GeoFence {
   public FenceParam: string;
   public gf_diff: number;
 }
+export class Brand{
+  public brn_id: number;
+  public brn_name: string;
+  public save_datetime: Date;
+}
 export class cords {
   public lat: number;
   public lng: number;
@@ -88,11 +93,11 @@ export class RecordsInterval {
   public start_date: string;
   public end_date: string;
 }
-export class GeoFenceResponse {
+export class PagingResponse<T> {
   code: number;
   status: boolean;
   message: string;
-  data: GeoFence[];
+  data: T;
   total_count: number;
   total_pages: number;
   offset: number;
@@ -228,4 +233,7 @@ export class Country{
   cnt_currency: string;
   cnt_currency_abbr: string;
   save_datetime: Date;
+}
+export class SharedGridColumn{
+  name:string;
 }

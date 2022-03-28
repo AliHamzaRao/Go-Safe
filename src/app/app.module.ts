@@ -54,6 +54,8 @@ import { AssetTripDialogComponent } from './Components/Pages/Dialogs/ReportsDial
 import { HeaderComponent } from './theme/components/header/header.component';
 import { historyDialogComponent } from './Components/Pages/Dialogs/HistoryDialog/historyDialog.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { BrandsComponent } from './Components/Admin/brands/brands.component';
+import { SharedGrid } from './Shared/SharedGridComponent/sharedgrid.component';
 @NgModule({
   imports: [
     BrowserModule,
@@ -104,6 +106,7 @@ import { InfiniteScrollModule } from 'ngx-infinite-scroll';
     AllSettingsDialogComponent,
     SettingDialogComponent,
     HeaderComponent,
+    BrandsComponent,
   ],
 
   providers: [
