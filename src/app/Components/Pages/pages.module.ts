@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -19,6 +19,9 @@ import { DashboardModule } from '../dashboard/dashboard.module';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatRadioModule } from '@angular/material/radio';
 import {InfiniteScrollModule} from "ngx-infinite-scroll"
+import { BrandsService } from '../../_core/_AppServices/Brand.service';
+import { SharedModule } from '../../Shared/shared.module';
+import { BrandsModule } from '../Admin/brands/brands.module';
 
 export const routes = [
   { path: '', component: PagesComponent, pathMatch: 'full' },
@@ -36,6 +39,7 @@ export const routes = [
     FormsModule,
     NgxChartsModule,
     PerfectScrollbarModule,
+    SharedModule,
     AgmCoreModule,
     MatTreeModule,
     MatButtonModule,
@@ -46,14 +50,16 @@ export const routes = [
     MatInputModule,
     MatRadioModule,
     DashboardModule,
+    BrandsModule,
     RouterModule.forChild(routes),
   ],
-  declarations: [
-    // historyRecordDialogComponent,
-  
-  ],
+  declarations: [],
   providers: [
-    VehicleListResolver
+    VehicleListResolver,
+    BrandsService
   ],
+  schemas: [
+    NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class PagesModule { }

@@ -23,7 +23,7 @@ import { Vehicles } from "src/app/_interfaces/vehicle.model";
 import { dashboardService } from "src/app/_core/_AppServices/dashboard.service";
 import { RegistrationNoService } from '../../_core/_AppServices/RegistrationNoService';
 import { CurrentStateService } from '../../_core/_AppServices/CurrentStateService';
-import { Alarm, GeoFence, History, City, Country, PagingResponse } from '../../_interfaces/DBresponse.model';
+import { Alarm, GeoFence, History, City, Country, PagingResponse, Brand } from '../../_interfaces/DBresponse.model';
 import { AllControlsDialogComponent } from "./Dialogs/AllControlsDialog/AllControlsDialog.component"
 import { AllSettingsDialogComponent } from "./Dialogs/AllSettingsDialog/AllSettingsDialog.component"
 import { DeviceIdService } from '../../_core/_AppServices/DeviceId.service';
@@ -31,6 +31,7 @@ import { AssetTripDialogComponent } from "./Dialogs/ReportsDialogs/AssetTripDial
 import { historyDialogComponent } from './Dialogs/HistoryDialog/historyDialog.component';
 import { CityService } from '../../_core/_AppServices/City.service';
 import { CountryService } from '../../_core/_AppServices/Country.service';
+import { BrandsService } from '../../_core/_AppServices/Brand.service';
 // Global Variables
 declare var L;
 var map;
@@ -149,28 +150,29 @@ export class PagesComponent implements OnInit, OnDestroy {
   private defaultMenu: string;
   //#endregion
   constructor(
-    public appSettings: AppSettings,
-    public router: Router,
+    private appSettings: AppSettings,
+    private router: Router,
     private menuService: MenuService,
-    public dialog: MatDialog,
-    public route: ActivatedRoute,
-    public markersService: markerService,
-    public mapTypeService: mapTypeService,
-    public AllDeviceDataService: AllDevicesDataService,
-    public GeoFence: GeoFenceService,
-    public historyDataService: historyDataService,
-    public singleDeviceDataService: SingleDeviceDataService,
-    public GeoFencingService: GeoFencingService,
-    public Toast: ToastrService,
-    public Alarms: AlarmsService,
-    public PostFence: GeoFencePostService,
-    public ExportService: ExportService,
-    public dashboardService: dashboardService,
-    public RegistrationNoService: RegistrationNoService,
-    public CurrentStateService: CurrentStateService,
-    public DeviceIdService: DeviceIdService,
-    public CityService: CityService,
-    public CountryService: CountryService,
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private markersService: markerService,
+    private mapTypeService: mapTypeService,
+    private AllDeviceDataService: AllDevicesDataService,
+    private GeoFence: GeoFenceService,
+    private historyDataService: historyDataService,
+    private singleDeviceDataService: SingleDeviceDataService,
+    private GeoFencingService: GeoFencingService,
+    private Toast: ToastrService,
+    private Alarms: AlarmsService,
+    private PostFence: GeoFencePostService,
+    private ExportService: ExportService,
+    private dashboardService: dashboardService,
+    private RegistrationNoService: RegistrationNoService,
+    private CurrentStateService: CurrentStateService,
+    private DeviceIdService: DeviceIdService,
+    private CityService: CityService,
+    private CountryService: CountryService,
+    private BrandsService: BrandsService
   ) {
     this.settings = this.appSettings.settings;
   }
@@ -1216,6 +1218,13 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.getGeoFences(this.pageNo);
     $(".selectionList").removeClass("d-none");
   }
+  getbrands(){
+    this.BrandsService.getBrands(1).subscribe((response:PagingResponse<Brand[]>)=>{
+      if(response.code >=200){
+        console.log(response.data)
+      }
+    })
+  }
   getGeoFences(currentPage = this.pageNo){
       this.GeoFence.geoFence(currentPage).subscribe((data:PagingResponse<GeoFence[]>) => {
 
@@ -1400,7 +1409,6 @@ export class PagesComponent implements OnInit, OnDestroy {
     }
   }
   drawPolygon() {
-    debugger;
     if (this.polyMarkers.length) {
       if (this.polygon) {
         map.removeLayer(this.polygon);

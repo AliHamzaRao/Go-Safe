@@ -32,14 +32,6 @@ export const routes: Routes = [
           ).then((m) => m.AssetTripReportModule),
       },
       {
-        path: "asset-trip-report",
-        data: { breadcrumb: "Asset Trip Report" },
-        loadChildren: () =>
-          import(
-            "./Components/Reporting/asset-trip-report/asset-trip-report.module"
-          ).then((m) => m.AssetTripReportModule),
-      },
-      {
         path: "brands",
         data: { breadcrumb: "Brands" },
         loadChildren: () =>

@@ -1,5 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Brand } from '../../_interfaces/DBresponse.model';
+import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { Brand, Data } from '../../_interfaces/DBresponse.model';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
 selector:"app-sharedgrid",
@@ -7,13 +9,17 @@ templateUrl:'./sharedgrid.component.html',
 styleUrls:['./sharedgrid.component.scss']
 })
 
-export class SharedGrid implements OnInit{
-    @Input() Columns: string[];
-    @Input() Data: Brand[];
-
+export class SharedGridComponent implements OnChanges{
+    @Input() Title: string;
+    @Input() Columns: any;
+    @Input() Data: MatTableDataSource<any>;
+    @ViewChild(MatPaginator) paginator :MatPaginator;
     constructor(){
     }
-    ngOnInit(): void {
-        console.log(this.Data, this.Columns)
+    ngOnChanges(data:SimpleChanges): void {
+        console.log(data)
+        if(data){
+            this.Data.paginator = this.paginator
+        }
     }
 }

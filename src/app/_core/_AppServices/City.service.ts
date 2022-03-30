@@ -11,7 +11,7 @@ export class CityService {
     constructor(public http: HttpClient, public Router: Router) { }
     getCities(): Observable<CityResponse> {
         if (this.getApiUrl().length) {
-            return this.http.get<CityResponse>(this.getApiUrl() + '/api/City/List');
+            return this.http.get<CityResponse>(this.getApiUrl() + '/api/City/List/100/1');
         }
         else {
             this.Router.navigateByUrl('/login')

@@ -11,7 +11,7 @@ export class CountryService {
     constructor(public http: HttpClient, public Router: Router) { }
     getCountries(): Observable<CountryResponse> {
         if (this.getApiUrl().length) {
-            return this.http.get<CountryResponse>(this.getApiUrl() + '/api/COUNTRY/List');
+            return this.http.get<CountryResponse>(this.getApiUrl() + '/api/COUNTRY/List/100/1');
         }
         else {
             this.Router.navigateByUrl('/login')

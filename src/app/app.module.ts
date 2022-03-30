@@ -54,8 +54,7 @@ import { AssetTripDialogComponent } from './Components/Pages/Dialogs/ReportsDial
 import { HeaderComponent } from './theme/components/header/header.component';
 import { historyDialogComponent } from './Components/Pages/Dialogs/HistoryDialog/historyDialog.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { BrandsComponent } from './Components/Admin/brands/brands.component';
-import { SharedGrid } from './Shared/SharedGridComponent/sharedgrid.component';
+import { BrandsService } from './_core/_AppServices/Brand.service';
 @NgModule({
   imports: [
     BrowserModule,
@@ -65,13 +64,13 @@ import { SharedGrid } from './Shared/SharedGridComponent/sharedgrid.component';
     HttpClientModule,
     NgSelectModule,
     MatBadgeModule,
+    SharedModule,
     InfiniteScrollModule,
     PerfectScrollbarModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
     }),
-    SharedModule,
     PipesModule,
     AppRoutingModule,
     JwtModule.forRoot({
@@ -105,12 +104,12 @@ import { SharedGrid } from './Shared/SharedGridComponent/sharedgrid.component';
     AllControlsDialogComponent,
     AllSettingsDialogComponent,
     SettingDialogComponent,
-    HeaderComponent,
-    BrandsComponent,
+    HeaderComponent
   ],
 
   providers: [
     VehicleListResolver,
+    BrandsService,
     Vehicles,
     AppSettings,
     { provide: PERFECT_SCROLLBAR_CONFIG, useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG },

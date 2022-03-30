@@ -2,13 +2,11 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http"
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import {  PagingResponse, Brand } from '../../_interfaces/DBresponse.model';
-@Injectable({
-    providedIn: 'root',
-})
+import { PagingResponse, Brand } from '../../_interfaces/DBresponse.model';
+@Injectable()
 export class BrandsService {
     response: any;
-    constructor(public http: HttpClient, public Router: Router) { }
+    constructor(private http: HttpClient, private Router: Router) { }
     getBrands(pageNo:number): Observable<PagingResponse<Brand[]>> {
         if (this.getApiUrl().length) {
             return this.http.get<PagingResponse<Brand[]>>(`${this.getApiUrl()}/api/Brand/list/100/${pageNo}`);

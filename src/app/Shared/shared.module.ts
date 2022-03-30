@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -36,7 +36,7 @@ import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
 import { DataTablesModule } from 'angular-datatables';
 import { NgSelectModule } from '@ng-select/ng-select';
-import { SharedGrid } from './SharedGridComponent/sharedgrid.component';
+import { SharedGridComponent } from './SharedGridComponent/sharedgrid.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -78,9 +78,10 @@ import { SharedGrid } from './SharedGridComponent/sharedgrid.component';
       progressAnimation:'decreasing'
     }),
     DataTablesModule,
-    NgSelectModule,
+    NgSelectModule
   ],
   exports: [
+    SharedGridComponent,
     FlexLayoutModule,
     MatAutocompleteModule,
     MatButtonModule,
@@ -97,7 +98,6 @@ import { SharedGrid } from './SharedGridComponent/sharedgrid.component';
     MatListModule,
     MatMenuModule,
     MatNativeDateModule,
-    MatPaginatorModule,
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatRadioModule,
@@ -107,8 +107,6 @@ import { SharedGrid } from './SharedGridComponent/sharedgrid.component';
     MatSliderModule,
     MatSlideToggleModule,
     MatSnackBarModule,
-    MatSortModule,
-    MatTableModule,
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
@@ -116,10 +114,14 @@ import { SharedGrid } from './SharedGridComponent/sharedgrid.component';
     NgxPrintModule,
     NgbModule,
     DataTablesModule,
-    NgSelectModule
+    NgSelectModule,
+
   ],
   declarations:[
-    SharedGrid
+    SharedGridComponent
+  ],
+  schemas: [
+    NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA
   ]
 })
 export class SharedModule { }

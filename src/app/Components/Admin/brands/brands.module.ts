@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { BrandsComponent } from './brands.component';
-import { SharedGridModule } from '../../../Shared/SharedGridComponent/sharedgrid.module';
+import { BrandsService } from 'src/app/_core/_AppServices/Brand.service';
+import { SharedModule } from 'src/app/Shared/shared.module';
 
 export const routes = [
   { path: '', component: BrandsComponent, pathMatch: 'full' }
@@ -14,11 +15,13 @@ export const routes = [
     CommonModule,
     RouterModule.forChild(routes),
     PerfectScrollbarModule,
-    SharedGridModule
+    SharedModule
   ],
   declarations: [
+    BrandsComponent
   ],
   providers: [
+    BrandsService
   ]
 })
 export class BrandsModule { }
