@@ -40,7 +40,7 @@
       <button mat-button class="mat-hover" [matMenuTriggerFor]="reportsMenu">
         Reports <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
-      <button mat-button class="mat-hover" [matMenuTriggerFor]="AdminMenu">
+      <button mat-button class="mat-hover"  [class.nav-link-active]="location == '/brands'" [matMenuTriggerFor]="AdminMenu">
         Admin <mat-icon>keyboard_arrow_down</mat-icon>
       </button>
       <mat-menu #routeMenu="matMenu">
@@ -245,7 +245,7 @@
   [disabled]="!settings.fixedHeader"
   (psScrollY)="onPsScrollY($event)"
 >
-  <!-- <app-breadcrumb></app-breadcrumb> -->
+  <app-breadcrumb></app-breadcrumb>
   <div [class.has-footer]="settings.hasFooter">
     <div class="col-md-12 row p-1 m-0" style="padding-bottom: 0px !important">
       <div class="col-md-2 p-1">

@@ -1,27 +1,49 @@
 <mat-card class="mat-elevation-z8">
+  <mat-card-header>
     <mat-card-title>{{Title}}</mat-card-title>
+
+  <mat-card-actions>
+    <button mat-raised-button (click)="addGridRow('CREATE')">Add {{Title}}</button>
+  </mat-card-actions>
+
+  </mat-card-header>
+    <!-- <mat-card-title>{{Title}}</mat-card-title>  -->
     <mat-card-content>
-    <table mat-table [dataSource]="Data" style="height: 80vh !important;">
-      <ng-container *ngFor="let column of Columns;" [matColumnDef]="column">
-        <th mat-header-cell *matHeaderCellDef> {{column.toUpperCase()}} </th>
-        <td mat-cell *matCellDef="let row"> {{row["brn_"+column]}} </td>
-        <td mat-cell *matCellDef="let row">
-          <ng-container><p>Test</p></ng-container>
-        </td>
+      <ng-container *ngIf="!dataLoaded">  
+        <mat-spinner>
+          
+        </mat-spinner>
       </ng-container>
-    <tr mat-header-row *matHeaderRowDef="Columns"></tr>
-    <tr mat-row *matRowDef="let row; columns: Columns;"></tr>
+      <ng-container *ngIf="dataLoaded">
+    <table mat-table [dataSource]="Data" matSort>
+      <ng-container *ngFor="let column of Columns" [matColumnDef]="column.dataField">
+        <th mat-header-cell mat-sort-header *matHeaderCellDef> {{column.Name.toUpperCase()}} </th>
+        <div *ngIf="column.columnType===GridColumnType.Text">
+        <td mat-cell *matCellDef="let row"> {{row[column.dataField]}}</td>
+      </div>
+      <div >
+        <td mat-cell *matCellDef="let row" > 
+          <span *ngFor="let action of actions">
+            <button mat-raised-button style="margin-right: 5px;" [color]="action.color" (click)="gridActionClick(row,action.name)">
+              <mat-icon size="7">{{action.icon}}</mat-icon>
+            {{action.name}}
+            </button>
+          </span>
+        </td>
+        </div>
+      </ng-container>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row multiTemplateDataRows *matRowDef="let row; columns: displayedColumns;"></tr>
     <tr class="mat-row" *matNoDataRow>
       <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
     </tr>
   </table>
- 
+</ng-container>
 </mat-card-content>
+
 <mat-divider inset>
-</mat-divider>
-<mat-card-footer> <mat-paginator [pageSizeOptions]="[5, 10, 20]" aria-label="Select page of brands">
+  </mat-divider>
+<mat-card-footer> <mat-paginator [showFirstLastButtons]="true" [pageSizeOptions]="[10,20,50,100]" aria-label="Select page of brands">
   </mat-paginator>
-  <!-- <button mat-button>LIKE</button>
-  <button mat-button>SHARE</button> -->
 </mat-card-footer>
 </mat-card>

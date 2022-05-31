@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http"
 import { Observable } from 'rxjs';
-import { SettingsResponse, Setting, commandPostResponse } from 'src/app/_interfaces/DBresponse.model';
+import { SettingsResponse, Setting, commandPostResponse,RootResponse  } from 'src/app/_interfaces/DBresponse.model';
 import { Router } from '@angular/router';
+import { Settings } from '../settings/app.settings.model';
 @Injectable({
     providedIn: 'root',
 })
@@ -16,9 +17,9 @@ export class SettingsService {
             this.Router.navigateByUrl('/login')
         }
     }
-    GetSettings(): Observable<SettingsResponse> {
+    GetSettings(): Observable<RootResponse<Setting>> {
         if (this.getApiUrl().length) {
-            return this.http.get<SettingsResponse>(this.getApiUrl() + '/api/Command/Settings/List')
+            return this.http.get<RootResponse<Setting>>(this.getApiUrl() + '/api/Command/Settings/List')
         }
         else {
             this.Router.navigateByUrl('/login')

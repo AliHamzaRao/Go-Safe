@@ -28,9 +28,10 @@ export class userService {
   }
   getApiUrl() {
     var apiInfo = JSON.parse(localStorage.getItem('apiinfo'));
-    if (apiInfo != null && apiInfo != undefined) {
+     if (apiInfo != null && apiInfo != undefined) {
       return 'http://' + apiInfo.IpAddress + ':' + apiInfo.Port
     }
     return '';
   }
 }
+

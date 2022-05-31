@@ -9,9 +9,9 @@ import { GeoFence, PagingResponse } from '../../_interfaces/DBresponse.model';
 export class GeoFenceService {
     response: any;
     constructor(public http: HttpClient, public Router: Router) { }
-    geoFence(pageNo:number): Observable<PagingResponse<GeoFence[]>> {
+    geoFence(pageNo:number): Observable<PagingResponse<GeoFence>> {
         if (this.getApiUrl().length) {
-            return this.http.get<PagingResponse<GeoFence[]>>(`${this.getApiUrl()}/api/GEOFENCES/list/20/${pageNo}`);
+            return this.http.get<PagingResponse<GeoFence>>(`${this.getApiUrl()}/api/GEOFENCES/list/20/${pageNo}`);
         }
         else {
             this.Router.navigateByUrl('/login')

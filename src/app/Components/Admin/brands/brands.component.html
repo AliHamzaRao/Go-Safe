@@ -1,3 +1,8 @@
 <div class="row">
-        <app-sharedgrid [Title]="'Brands'" [Columns]="Columns" [Data]="Data"></app-sharedgrid>
+        <app-sharedgrid [Title]="Title" [Columns]="Columns" [Data]="Data"
+        [actions] = "RequestGridActions"
+        [dataLoaded]="dataLoaded"
+        (invokeGridAction)="OnGridAction($event)"
+        > </app-sharedgrid>
+        <!-- (invokeCreateEvent)="onCreate($event)" -->
 </div>

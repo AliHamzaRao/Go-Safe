@@ -6,6 +6,7 @@ import { NotFoundComponent } from "src/app/Components/Pages/errors/not-found/not
 import { ErrorComponent } from "src/app/Components/Pages/errors/error/error.component";
 import { AuthGuard } from "./_core/auth.guard";
 import { VehicleListResolver } from "./_resolvers/Vehicle_Post_Resolver";
+import { BrandsComponent } from './Components/Admin/brands/brands.component';
 
 export const routes: Routes = [
   {
@@ -33,13 +34,54 @@ export const routes: Routes = [
       },
       {
         path: "brands",
-        data: { breadcrumb: "Brands" },
+        data: { breadcrumb: "brands" },
         loadChildren: () =>
-          import("./Components/Admin/brands/brands.module").then(
+        import(
+          "./Components/Admin/brands/brands.module"
+          ).then(
             (m) => m.BrandsModule
-          ),
+          )
       },
-      // { path: 'vehicles', data: { breadcrumb: 'Vehicles' }, loadChildren: () => import('./Components/dashboard/dashboard.module').then(m => m.DashboardModule) },
+      {
+        path: "brandtypes",
+        data: { breadcrumb: "brand types" },
+        loadChildren: () =>
+        import(
+          "./Components/Admin/BrandTypes/brandTypes.module"
+          ).then(
+            (m) => m.BrandTypesModule
+          )
+      },
+      {
+        path: "countries",
+        data: { breadcrumb: "countries" },
+        loadChildren: () =>
+        import(
+          "./Components/Admin/Countries/Countries.module"
+          ).then(
+            (m) => m.CountriesModule
+          )
+      },
+      {
+        path: "cities",
+        data: { breadcrumb: "cities" },
+        loadChildren: () =>
+        import(
+          "./Components/Admin/Cities/Cities.module"
+          ).then(
+            (m) => m.CitiesModule
+          )
+      },
+      {
+        path: "brandversions",
+        data: { breadcrumb: "Brand Versions" },
+        loadChildren: () =>
+        import(
+          "./Components/Admin/BrandVersions/BrandVersions.module"
+          ).then(
+            (m) => m.BrandVersionsModule
+          )
+      },
     ],
   },
   {
@@ -47,6 +89,7 @@ export const routes: Routes = [
     component: PagesComponent,
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
+    data:{breadCrumb:''},
     // resolve: { model: VehicleListResolver },
     children: [
       {

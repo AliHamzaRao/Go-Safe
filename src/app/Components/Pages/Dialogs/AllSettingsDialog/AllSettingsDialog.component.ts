@@ -4,6 +4,7 @@ import { Setting } from "src/app/_interfaces/DBresponse.model";
 import {SettingsService} from "../../../../_core/_AppServices/SettingsService"
 import {SettingTypeService} from "../../../../_core/_AppServices/SettingTypeService"
 import { SettingDialogComponent } from "../SettingDialog/SettingDialog.component";
+import { RootResponse } from '../../../../_interfaces/DBresponse.model';
 
 @Component({
     selector: 'app-all-settings-dialog',
@@ -32,7 +33,7 @@ import { SettingDialogComponent } from "../SettingDialog/SettingDialog.component
     }]
     constructor(public SettingsService: SettingsService, public SettingTypeService: SettingTypeService, public dialog: MatDialog) { }
     ngOnInit(): void {
-      this.SettingsService.GetSettings().subscribe(settings => this.AllSettings = settings.data)
+      this.SettingsService.GetSettings().subscribe((settings:RootResponse<Setting>) => this.AllSettings = settings.data)
     }
     OpenSettingDialog(name, id) {
       this.SettingTypeService.setSetting(name);

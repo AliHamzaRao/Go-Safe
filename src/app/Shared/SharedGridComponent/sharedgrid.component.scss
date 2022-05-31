@@ -15,12 +15,37 @@
   // height: 80vh !important;
   padding: 0 !important;
   margin: 0px 10px;
-  .mat-card-title{
+  .mat-card-header{
     padding: 16px;
     background-color: #18497D;
-    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .mat-card-title{
+      color: white;
+      margin-bottom:0;
+    }
+    .mat-card-actions{
+      margin: 0;
+      padding: 0;
+    }
   }
   .mat-card-content{
     padding:0px 16px;
+    height: 67vh !important;
+    overflow-y: scroll !important;
+    display: flex;
+    justify-content: center;
+    mat-spinner{
+    align-self: center;
+    }
+    mat-icon{
+      font-size: 17px;
+      height: 20px;
+      width: 20px;
+    }
+  }
+  .mat-card-footer{
+    margin: 0 !important;
   }
 }

@@ -7,7 +7,7 @@ import { BrandsService } from 'src/app/_core/_AppServices/Brand.service';
 import { SharedModule } from 'src/app/Shared/shared.module';
 
 export const routes = [
-  { path: '', component: BrandsComponent, pathMatch: 'full' }
+  { path: '', component: BrandsComponent }
 ];
 
 @NgModule({
@@ -15,7 +15,7 @@ export const routes = [
     CommonModule,
     RouterModule.forChild(routes),
     PerfectScrollbarModule,
-    SharedModule
+    SharedModule,
   ],
   declarations: [
     BrandsComponent

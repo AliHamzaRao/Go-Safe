@@ -2,16 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http"
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { CountryResponse } from '../../_interfaces/DBresponse.model';
+import { RootResponse, Country } from '../../_interfaces/DBresponse.model';
 @Injectable({
     providedIn: 'root',
 })
 export class CountryService {
     response: any;
     constructor(public http: HttpClient, public Router: Router) { }
-    getCountries(): Observable<CountryResponse> {
+    getCountries(): Observable<RootResponse<Country>> {
         if (this.getApiUrl().length) {
-            return this.http.get<CountryResponse>(this.getApiUrl() + '/api/COUNTRY/List/100/1');
+            return this.http.get<RootResponse<Country>>(this.getApiUrl() + '/api/COUNTRY/List');
         }
         else {
             this.Router.navigateByUrl('/login')

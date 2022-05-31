@@ -22,7 +22,8 @@ import {InfiniteScrollModule} from "ngx-infinite-scroll"
 import { BrandsService } from '../../_core/_AppServices/Brand.service';
 import { SharedModule } from '../../Shared/shared.module';
 import { BrandsModule } from '../Admin/brands/brands.module';
-
+import { BrandTypesModule } from '../Admin/BrandTypes/brandTypes.module';
+import { CountriesModule } from "../Admin/Countries/Countries.Module"
 export const routes = [
   { path: '', component: PagesComponent, pathMatch: 'full' },
   { path: '/vehicles', component: PagesComponent, pathMatch: 'full' },
@@ -51,6 +52,8 @@ export const routes = [
     MatRadioModule,
     DashboardModule,
     BrandsModule,
+    BrandTypesModule,
+    CountriesModule,
     RouterModule.forChild(routes),
   ],
   declarations: [],

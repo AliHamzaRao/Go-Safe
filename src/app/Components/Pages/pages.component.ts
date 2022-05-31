@@ -154,13 +154,11 @@ export class PagesComponent implements OnInit, OnDestroy {
     private router: Router,
     private menuService: MenuService,
     private dialog: MatDialog,
-    private route: ActivatedRoute,
     private markersService: markerService,
     private mapTypeService: mapTypeService,
     private AllDeviceDataService: AllDevicesDataService,
     private GeoFence: GeoFenceService,
     private historyDataService: historyDataService,
-    private singleDeviceDataService: SingleDeviceDataService,
     private GeoFencingService: GeoFencingService,
     private Toast: ToastrService,
     private Alarms: AlarmsService,
@@ -168,11 +166,9 @@ export class PagesComponent implements OnInit, OnDestroy {
     private ExportService: ExportService,
     private dashboardService: dashboardService,
     private RegistrationNoService: RegistrationNoService,
-    private CurrentStateService: CurrentStateService,
     private DeviceIdService: DeviceIdService,
     private CityService: CityService,
     private CountryService: CountryService,
-    private BrandsService: BrandsService
   ) {
     this.settings = this.appSettings.settings;
   }
@@ -1218,15 +1214,9 @@ export class PagesComponent implements OnInit, OnDestroy {
     this.getGeoFences(this.pageNo);
     $(".selectionList").removeClass("d-none");
   }
-  getbrands(){
-    this.BrandsService.getBrands(1).subscribe((response:PagingResponse<Brand[]>)=>{
-      if(response.code >=200){
-        console.log(response.data)
-      }
-    })
-  }
+ 
   getGeoFences(currentPage = this.pageNo){
-      this.GeoFence.geoFence(currentPage).subscribe((data:PagingResponse<GeoFence[]>) => {
+      this.GeoFence.geoFence(currentPage).subscribe((data:PagingResponse<GeoFence>) => {
 
       this.totalPages = data.total_pages;
       this.Toast.clear();

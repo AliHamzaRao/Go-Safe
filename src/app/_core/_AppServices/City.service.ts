@@ -2,16 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http"
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { CityResponse } from '../../_interfaces/DBresponse.model';
+import { City, RootResponse } from '../../_interfaces/DBresponse.model';
 @Injectable({
     providedIn: 'root',
 })
 export class CityService {
     response: any;
     constructor(public http: HttpClient, public Router: Router) { }
-    getCities(): Observable<CityResponse> {
+    getCities(): Observable<RootResponse<City>> {
         if (this.getApiUrl().length) {
-            return this.http.get<CityResponse>(this.getApiUrl() + '/api/City/List/100/1');
+            return this.http.get<RootResponse<City>>(this.getApiUrl() + '/api/City/List');
         }
         else {
             this.Router.navigateByUrl('/login')

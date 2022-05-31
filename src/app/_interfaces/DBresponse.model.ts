@@ -72,6 +72,13 @@ export class Brand{
   public brn_name: string;
   public save_datetime: Date;
 }
+export class BrandTypes{
+  public brn_typ_id:number;
+  public brn_typ_name:string;
+  public brn_name:string;
+  public brn_id:number;
+  public save_datetime:Date;
+}
 export class cords {
   public lat: number;
   public lng: number;
@@ -97,7 +104,7 @@ export class PagingResponse<T> {
   code: number;
   status: boolean;
   message: string;
-  data: T;
+  data: T[];
   total_count: number;
   total_pages: number;
   offset: number;
@@ -221,12 +228,6 @@ export class City{
   cnt_id:number;
   save_datetime:Date;
 }
-export class CountryResponse{
- code: number;
-  status: boolean;
-  message: string;
-  data: Country[];
-}
 export class Country{
   cnt_id: number;
   cnt_name: string;
@@ -234,6 +235,74 @@ export class Country{
   cnt_currency_abbr: string;
   save_datetime: Date;
 }
-export class SharedGridColumn{
-  name:string;
+export class BrandVersionType{
+  brn_typ_ver_id:number;
+  ver_name: string;
+  brn_typ_id: number;
+  brn_typ_name: string;
+  brn_id: number;
+  brn_name: string;
+  save_datetime: Date;
+}
+export class RootResponse<T>{
+    public code: number;
+    public status: boolean;
+    public message: string;
+    public data:Array<T>;
+}
+export enum GridActionType {
+  Edit,
+  Delete,
+  View,
+  Payment,
+  Revoke
+}
+export enum GridColumnType {
+  Text,
+  PhoneLink,
+  NameLink,
+  Toggle,
+  Checkbox,
+  Icon,
+  Device,
+  Image,
+  Enum,
+  Role,
+  Actions
+}
+export class SharedGridActions {
+  type: GridActionType;
+  icon: string;
+  name: string;
+  color:string;
+  constructor(type: GridActionType, icon: string, name: string,color:string) {
+    this.type = type;
+    this.icon = icon;
+    this.color = color;
+    this.name = name.toUpperCase();
+  }
+}
+export class SharedGridColumnModel {
+  dataField: string;
+  dataType: string;
+  Name:string;
+  visible: boolean;
+  columnType: GridColumnType;
+  hasCustomEvent:boolean;
+
+  /**
+   *
+   */constructor
+  (dataField, columnType = GridColumnType.Text, dataType = 'string', visible= true,Name,hasCustomEvent=false) {
+      this.dataField = dataField.trim();
+      this.dataType = dataType.trim();
+      this.visible = visible;
+      this.columnType = columnType;
+      this.hasCustomEvent=hasCustomEvent
+      this.Name=Name.trim();
+  }
+}
+export interface TableButtonAction {
+  name: string
+  value?: any
 }
